@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <TableRow>
+        <TextView
+            style="@style/first_column"
+            android:text="Город" />
+        <TextView
+            style="@style/second_column"
+            tools:text="Санкт-Петербург" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/first_column"
+            android:text="День рождения" />
+        <TextView
+            style="@style/second_column"
+            tools:text="14 декабря" />
+    </TableRow>
+
+    <TableRow>
+        <include
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="0.5dp"
+            android:layout_width="match_parent"
+            layout="@layout/single_gray_line"
+            android:layout_weight="2"
+            />
+    </TableRow>
+    <TableRow>
+        <TextView
+            style="@style/first_column"
+            android:text="Должность" />
+        <TextView
+            style="@style/second_column"
+            tools:text="участник ШБЛ" />
+    </TableRow>
+    <TableRow>
+        <TextView
+            style="@style/first_column"
+            android:text="Подразделение" />
+        <TextView
+            style="@style/second_column"
+            android:layout_gravity="left"
+            tools:text="Школа Лидеров Будущего > Санкт-Петербург > Набор 2021" />
+    </TableRow>
+    <TableRow
+        android:layout_marginTop="5dp"
+        >
+        <TextView
+            style="@style/first_column"
+            android:text="Стаж" />
+        <TextView
+            style="@style/second_column"
+            android:layout_gravity="center_vertical"
+            tools:text="5 месяцев 25 дней (c 01.11.2021)" />
+    </TableRow>
+    <TableRow>
+        <include
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="0.5dp"
+            android:layout_width="match_parent"
+            layout="@layout/single_gray_line"
+            android:layout_weight="2"
+            />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            style="@style/first_column"
+            android:text="Личный" />
+
+        <TextView
+            style="@style/second_column"
+            tools:text="+7 921 551-87-84" />
+    </TableRow>
+    <TableRow
+        android:background="@color/profile_info_background">
+        <TextView
+            style="@style/first_column"
+            android:text="Личный" />
+        <TextView
+            style="@style/second_column"
+            tools:text="gleb.rosin11@gmail.com" />
+    </TableRow>
+    <TableRow>
+        <TextView
+            style="@style/first_column"
+            android:text="telegram" />
+        <TextView
+            style="@style/second_column"
+            tools:text="Poxodnoe_vremiy" />
+    </TableRow>
+    <TableRow
+        android:background="@color/profile_info_background"
+        >
+        <TextView
+            style="@style/first_column"
+            android:text="WhatsApp" />
+        <TextView
+            style="@style/second_column"
+            tools:text="89215518784" />
+    </TableRow>
+
+</TableLayout>

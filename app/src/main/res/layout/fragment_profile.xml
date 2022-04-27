@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.ProfileFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:contentDescription="@string/profile_picture"
+            android:src="@color/secondary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="Глеб Росин"
+            android:textColor="@color/text_color1"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="@id/profile_picture"
+            app:layout_constraintLeft_toRightOf="@id/profile_picture"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/profile_picture"
+            app:layout_constraintVertical_bias="0.1" />
+
+        <TextView
+            android:id="@+id/profile_description"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            android:layout_marginLeft="15dp"
+            android:gravity="left|center"
+            android:text="Aut viam inveniam, aut faciam."
+            android:textColor="@color/text_color1"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@id/profile_picture"
+            app:layout_constraintLeft_toRightOf="@id/profile_picture"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_name"
+            tools:ignore="RtlHardcoded" />
+
+        <!--    <include -->
+        <!--        app:layout_constraintHorizontal_bias="9"-->
+        <!--        layout="@layout/menu_info"/>-->
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            app:layout_constraintTop_toBottomOf="@id/profile_picture">
+
+
+            <TableRow>
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="Город" />
+
+                <TextView
+                    style="@style/second_column"
+                    tools:text="Санкт-Петербург" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="День рождения" />
+
+                <TextView
+                    style="@style/second_column"
+                    tools:text="14 декабря" />
+            </TableRow>
+
+            <TableRow>
+
+                <include
+                    layout="@layout/single_gray_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="2" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="Должность" />
+
+                <TextView
+                    style="@style/second_column"
+                    tools:text="участник ШБЛ" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="Подразделение" />
+
+                <TextView
+                    style="@style/second_column"
+                    android:layout_gravity="left"
+                    tools:text="Школа Лидеров Будущего > Санкт-Петербург > Набор 2021" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="5dp">
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="Стаж" />
+
+                <TextView
+                    style="@style/second_column"
+                    android:layout_gravity="center_vertical"
+                    tools:text="5 месяцев 25 дней (c 01.11.2021)" />
+            </TableRow>
+
+            <TableRow>
+
+                <include
+                    layout="@layout/single_gray_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="2" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="Личный" />
+
+                <TextView
+                    style="@style/second_column"
+                    tools:text="+7 921 551-87-84" />
+            </TableRow>
+
+            <TableRow android:background="@color/profile_info_background">
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="Личный" />
+
+                <TextView
+                    style="@style/second_column"
+                    tools:text="gleb.rosin11@gmail.com" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="telegram" />
+
+                <TextView
+                    style="@style/second_column"
+                    tools:text="Poxodnoe_vremiy" />
+            </TableRow>
+
+            <TableRow android:background="@color/profile_info_background">
+
+                <TextView
+                    style="@style/first_column"
+                    android:text="WhatsApp" />
+
+                <TextView
+                    style="@style/second_column"
+                    tools:text="89215518784" />
+            </TableRow>
+        </TableLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
