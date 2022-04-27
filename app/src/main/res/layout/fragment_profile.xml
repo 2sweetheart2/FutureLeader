@@ -52,9 +52,6 @@
             app:layout_constraintTop_toBottomOf="@id/profile_name"
             tools:ignore="RtlHardcoded" />
 
-        <!--    <include -->
-        <!--        app:layout_constraintHorizontal_bias="9"-->
-        <!--        layout="@layout/menu_info"/>-->
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +67,7 @@
 
                 <TextView
                     style="@style/second_column"
-                    tools:text="Санкт-Петербург" />
+                    android:text="Санкт-Петербург" />
             </TableRow>
 
             <TableRow>
@@ -81,7 +78,7 @@
 
                 <TextView
                     style="@style/second_column"
-                    tools:text="14 декабря" />
+                    android:text="14 декабря" />
             </TableRow>
 
             <TableRow>
@@ -104,7 +101,7 @@
 
                 <TextView
                     style="@style/second_column"
-                    tools:text="участник ШБЛ" />
+                    android:text="участник ШБЛ" />
             </TableRow>
 
             <TableRow>
@@ -116,7 +113,7 @@
                 <TextView
                     style="@style/second_column"
                     android:layout_gravity="left"
-                    tools:text="Школа Лидеров Будущего > Санкт-Петербург > Набор 2021" />
+                    android:text="Школа Лидеров Будущего > Санкт-Петербург > Набор 2021" />
             </TableRow>
 
             <TableRow android:layout_marginTop="5dp">
@@ -128,7 +125,7 @@
                 <TextView
                     style="@style/second_column"
                     android:layout_gravity="center_vertical"
-                    tools:text="5 месяцев 25 дней (c 01.11.2021)" />
+                    android:text="5 месяцев 25 дней (c 01.11.2021)" />
             </TableRow>
 
             <TableRow>
@@ -151,7 +148,7 @@
 
                 <TextView
                     style="@style/second_column"
-                    tools:text="+7 921 551-87-84" />
+                    android:text="+7 921 551-87-84" />
             </TableRow>
 
             <TableRow android:background="@color/profile_info_background">
@@ -162,7 +159,7 @@
 
                 <TextView
                     style="@style/second_column"
-                    tools:text="gleb.rosin11@gmail.com" />
+                    android:text="gleb.rosin11@gmail.com" />
             </TableRow>
 
             <TableRow>
@@ -173,7 +170,7 @@
 
                 <TextView
                     style="@style/second_column"
-                    tools:text="Poxodnoe_vremiy" />
+                    android:text="Poxodnoe_vremiy" />
             </TableRow>
 
             <TableRow android:background="@color/profile_info_background">
@@ -184,7 +181,7 @@
 
                 <TextView
                     style="@style/second_column"
-                    tools:text="89215518784" />
+                    android:text="89215518784" />
             </TableRow>
         </TableLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
