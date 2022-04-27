@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+        <TextView
+            android:id="@+id/row_first"
+            style="@style/first_column"
+            android:text="Подразделение" />
+        <TextView
+            android:id="@+id/second"
+            style="@style/second_column"
+            tools:text="Школа Лидеров Будущего > Санкт-Петербург > Набор 2021" />
+</TableRow>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:layout_marginTop="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        android:background="@color/black"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="@id/text_with_line"
+        app:layout_constraintRight_toLeftOf="@id/text_with_line"
+        app:layout_constraintBottom_toBottomOf="@id/text_with_line"
+         />
+    <TextView
+        android:id="@+id/text_with_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="5dp"
+        android:background="@android:color/black"
+        app:layout_constraintTop_toTopOf="@id/text_with_line"
+        app:layout_constraintLeft_toRightOf="@id/text_with_line"
+        app:layout_constraintBottom_toBottomOf="@id/text_with_line"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,19 +1,22 @@
 package me.solo_team.futureleader;
 
 
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class MainActivity extends AppCompatActivity {
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,26 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+        computeWindowSizeClasses();
     }
 
+    public static WindowSizeClass wightwindowSizeClass;
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void computeWindowSizeClasses() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        WindowSizeClass widthWindowSizeClass;
+
+        if (width < 600f) {
+            widthWindowSizeClass = WindowSizeClass.COMPACT;
+        } else if (width < 840f) {
+            widthWindowSizeClass = WindowSizeClass.MEDIUM;
+        } else {
+            widthWindowSizeClass = WindowSizeClass.EXPANDED;
+        }
+
+        wightwindowSizeClass = widthWindowSizeClass;
+    }
 }
