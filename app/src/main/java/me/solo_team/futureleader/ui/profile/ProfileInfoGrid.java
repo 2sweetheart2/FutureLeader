@@ -17,13 +17,11 @@ import me.solo_team.futureleader.R;
 
 public class ProfileInfoGrid {
 
-    private TableLayout table;
-    private Context context;
+    private final TableLayout table;
     private final LayoutInflater inflater;
     private final ViewGroup container;
     public ProfileInfoGrid(TableLayout table, Context context, LayoutInflater inflater,ViewGroup container){
         this.table = table;
-        this.context = context;
         this.inflater = inflater;
         this.container = container;
     }

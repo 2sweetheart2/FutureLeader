@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import me.solo_team.futureleader.R;
 
@@ -19,10 +21,19 @@ public class MenuFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_menu, container, false);
         //создание настроек для сетки
         MenuGrid grid = new MenuGrid(root.findViewById(R.id.grid), root.getContext(), requireActivity().getWindowManager());
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView recyclerView = root.findViewById(R.id.menu_piace);
+        recyclerView.setLayoutManager(layoutManager);
+        RecycleAdapter rcd = new RecycleAdapter(this);
+        recyclerView.setAdapter(rcd);
+
         //динамическое добавление элементов в сетку
-        for (int i = 0; i < 10; i++) {
-            grid.addElement(null, String.valueOf(i));
-        }
+        grid.addElement(null, "заявки","16",false);
+        grid.addElement(null, "магазин","16",false);
+        grid.addElement(null, "FAQ","16",false);
+        grid.addElement(null, "заявки","16",false);
+        grid.addElement(null, "именниники","16",true);
         return root;
     }
 

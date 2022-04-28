@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="ContentDescription,UseCompoundDrawables,HardcodedText"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    >
+
+    <LinearLayout
+        android:id="@+id/obj_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/obj_2_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/menu_header_2_black"
+            android:padding="8dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_second_color"
+             />
+
+        <TextView
+            android:id="@+id/obj_2_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="программы"
+            android:textColor="@color/text_color1"
+            android:layout_gravity="center_horizontal"
+             />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/obj_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/obj_2"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/obj_1_image"
+            android:layout_width="80dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="80dp"
+            android:src="@drawable/menu_header_1_black"
+            android:padding="8dp"
+            android:background="@drawable/rounded_second_color" />
+
+        <TextView
+            android:id="@+id/obj_1_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="основатели"
+            android:textColor="@color/text_color1"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/obj_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toRightOf="@id/obj_2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/obj_3_image"
+            android:layout_width="80dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="80dp"
+            android:src="@drawable/menu_header_3_black"
+            android:padding="8dp"
+            android:background="@drawable/rounded_second_color" />
+
+        <TextView
+            android:id="@+id/obj_3_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="наставники"
+            android:textColor="@color/text_color1"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/obj_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/obj_2">
+
+        <ImageView
+            android:id="@+id/obj_5_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/menu_header_5_black"
+            android:padding="8dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_second_color" />
+
+        <TextView
+            android:id="@+id/obj_5_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="эндаумент"
+
+            android:textColor="@color/text_color1"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/obj_6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toRightOf="@id/obj_5"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/obj_5">
+
+        <ImageView
+            android:id="@+id/obj_6_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/menu_header_6_black"
+            android:padding="8dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_second_color" />
+
+        <TextView
+            android:id="@+id/obj_6_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+
+            android:layout_marginBottom="4dp"
+            android:text="команда\nфонда"
+            android:textColor="@color/text_color1"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/obj_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/obj_5"
+        app:layout_constraintTop_toTopOf="@id/obj_5">
+
+        <ImageView
+            android:id="@+id/obj_4_image"
+            android:layout_width="80dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="80dp"
+            android:src="@drawable/menu_header_4_black"
+            android:padding="8dp"
+            android:background="@drawable/rounded_second_color"
+            />
+
+        <TextView
+            android:id="@+id/obj_4_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="сообщество\nлидеров"
+            android:textColor="@color/text_color1"
+            android:textAlignment="center" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,9 +8,9 @@
         <TextView
             android:id="@+id/row_first"
             style="@style/first_column"
-            android:text="Подразделение" />
+            android:text="" />
         <TextView
             android:id="@+id/second"
             style="@style/second_column"
-            tools:text="Школа Лидеров Будущего > Санкт-Петербург > Набор 2021" />
+            tools:text="" />
 </TableRow>
