@@ -33,7 +33,7 @@ public class MenuGrid {
         this.windowManager = windowManager;
     }
 
-    public View addElement(String urlPhoto, String name, String textSize, boolean onAllColumn) {
+    public View addElement(Bitmap photo, String name, String textSize, boolean onAllColumn) {
         Point size = new Point();
         windowManager.getDefaultDisplay().getSize(size);
         int halfScreenWidth = (int) (size.x * 0.5) - 20;
@@ -67,31 +67,11 @@ public class MenuGrid {
         text.setText(name);
         if (textSize != null) text.setTextSize(Float.parseFloat(textSize));
         text.setTextAppearance(context, android.R.style.TextAppearance_Large_Inverse);
-        if (urlPhoto != null) Picasso.get().load(Uri.parse(urlPhoto)).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                text.setBackground(new BitmapDrawable(bitmap));
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });
+        if(photo!=null) text.setBackground(new BitmapDrawable(photo));
         text.setTextColor(context.getColor(R.color.text_color1));
         text.setBackground(context.getDrawable(R.drawable.gray_gradient_with_corners));
         gridLayout.addView(text, lp);
         return text;
     }
 
-    public void addElements(String[] urls, String[] names) {
-        for (int i = 0; i < names.length; i++) {
-            addElement(urls[i], names[i], null, false);
-        }
-    }
 }

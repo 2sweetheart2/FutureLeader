@@ -18,8 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.news.open_news.OpenNewsFragment"
-            />
+        <activity android:name=".ui.news.open_news.OpenNewsFragment"/>
+        <activity android:name=".ui.menu.statical.StaticalGridLayout"/>
     </application>
 
 </manifest>
