@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">Future Leader</string>
-    <string name="title_news">News</string>
-    <string name="title_menu">Menu</string>
-    <string name="title_profile">Profile</string>
-    <string name="graduation_cap">\u1F393</string>
+    <string name="title_news">Новости</string>
+    <string name="title_menu">Меню</string>
+    <string name="title_profile">Профиль</string>
 
 
 </resources>
