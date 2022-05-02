@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.ui.menu.statical.StaticalGridLayout;
+import me.solo_team.futureleader.ui.menu.statical.FounderLayout;
 
 public class MenuFragment extends Fragment {
     View root;
@@ -32,20 +32,20 @@ public class MenuFragment extends Fragment {
         recyclerView.setAdapter(rcd);
 
         //динамическое добавление элементов в сетку
-        Intent intent = new Intent(requireContext(), StaticalGridLayout.class);
-        grid.addElement(null, "заявки","16",false);
-        grid.addElement(null, "магазин","16",false);
-        grid.addElement(null, "FAQ","16",false);
-        grid.addElement(null, "заявки","16",false);
-        grid.addElement(null, "именниники","16",true);
+        Intent intent = new Intent(requireContext(), FounderLayout.class);
+        grid.addElement(null, "заявки", "16", false);
+        grid.addElement(null, "магазин", "16", false);
+        grid.addElement(null, "FAQ", "16", false);
+        grid.addElement(null, "заявки", "16", false);
+        grid.addElement(null, "именниники", "16", true);
 
         ConstraintLayout cn = root.findViewById(R.id.menu_header);
-        cn.getChildAt(0).setOnClickListener(v -> {
-            intent.putExtra("title","основатели");
-            intent.putExtra("obj","" +
-                    "приветсвие=https://futureleaders.hrbox.io/file/resize/800x800/01debe8d-5716-4c76-98ba-54950ac7aa6f.jpg][" +
-                    "биография=https://futureleaders.hrbox.io/file/resize/800x800/f10e0221-d698-4383-8c16-ea2b5d426046.jpg][" +
-                    "соцсети=https://futureleaders.hrbox.io/file/resize/800x800/786669e1-1db3-421f-a864-47ec1c713a9e.jpg");
+        cn.getChildAt(1).setOnClickListener(v -> {
+//            Constants.gsi.info.put("основатель", Arrays.asList(
+//                    new Obj(ObjTypes.PHOTO,"приветственное слово","https://sun9-23.userapi.com/s/v1/if2/tM_Y_sBfisMuQ09vhw82DSAYqDqDp1q5g9JUM57n-S4brhRcMiSYFkmo9_daGjjO_5fgEvfqN7mCo23DASCtxpON.jpg?size=800x800&quality=96&type=album",null,new String[]{"https://futureleaders.hrbox.io/file/open/b94c0001-0a8c-4996-b2a6-dbd118b8094e.jpg"}),
+//                    new Obj(ObjTypes.PHOTO,"Биография","https://sun9-43.userapi.com/s/v1/if2/7e1Wwc235L4IEQYbXOleM2ItyonRzOvNOcDaCe0WSSHPQnkXGGHexdr0gUIQEgx7PZlWJ1gSszwXbnHrmlCU1Wnb.jpg?size=800x800&quality=96&type=album",null,new String[]{"https://futureleaders.hrbox.io/file/open/51b0bb44-19d8-4b65-b32b-29fc4fa2ae9d.jpg"}),
+//                    new Obj(ObjTypes.BLOCKS,"Социальные сети","https://sun9-55.userapi.com/s/v1/if2/PrkagT_k8KcZVEliaC93v5HYHHxwBH0c2BVmfCZfapEoYV6Ho5A2BYZXNsQJIYadbgUgoWPJN1BFj178vIXNAL5i.jpg?size=800x800&quality=96&type=album",null,null)
+//                    ));
             startActivity(intent);
         });
         return root;

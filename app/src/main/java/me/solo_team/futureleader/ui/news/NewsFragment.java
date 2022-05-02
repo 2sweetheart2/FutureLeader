@@ -37,16 +37,16 @@ public class NewsFragment extends Fragment {
         this.inflater = inflater;
         this.container = container;
         List<String> uris = Arrays.asList(
-                "https://futureleaders.hrbox.io/file/resize/1024x450/fde053db-23e9-4072-8b44-2621e9d74f70.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/3331710e-5c99-4029-8b55-6528bf903a51.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/041b3ad4-5425-4444-b0e0-3f99adabf541.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/2c2fb9f7-ffac-43b1-89a0-d2aff03fb0ba.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/bcc0694b-44e0-46e0-9e6d-7be1105ca2b9.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/88671104-328d-47a9-a8f0-13f0608e6009.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/5626bbc5-f7ae-46c1-a7dc-697ba427c0de.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/c1d39521-c49c-49bc-9bfc-92802c60f493.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/74d7d115-b18b-4d50-9ed2-cfd71396d2b1.jpg",
-                "https://futureleaders.hrbox.io/file/resize/800x450/1ed81149-559f-4ec6-8bf3-c912a2dc7e8a.jpg"
+                "https://sun9-82.userapi.com/s/v1/if2/CPSHVmdt6BZ7xk5nMMXWpwslz51c8cbYALeG9qnmEeXFO5lncRh7di8sFHqr45iqWw9NkJ_zNY-I4bFTsnh9Jb6G.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-74.userapi.com/s/v1/if2/2TiaYMMsXjgPkmE79NYhVP4X1PUB3lLISIIR1iTOk-Qw_COIKmx9FS3NRNRLz2aPzONYS9whxRwk7Cr8hMrGaTXa.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-14.userapi.com/s/v1/if2/I9V15CFpKZ-Fyscc16XejFzOF2Idjj0MPILCVX7m298nBlySTwjuNdewkPs0n9zwk1JGs37Vh0Ogm_D0K12pp52B.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-44.userapi.com/s/v1/if2/1fvsNDYfxDE2Nk8Rg3GEz2c98w3gcVg6NyDw_-LH-sYvWi0VfIgRTs6-35SFJSaVOviFHwWsP_Cfo4lPV2FPPZC5.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-54.userapi.com/s/v1/if2/4wUcAqG3-UgKR4jJ-pz6GAVjps-3mPUFN7MKTeBaknK3lKStzw6sup4BBhq4Eimu2ulV4iFbHzK8ONjoyzl19Q51.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-77.userapi.com/s/v1/if2/6_cYhhKZbv6gjjV3DNHpl2wS-Z9gf4tz6XW6QY95TtYWqb29IfO-lLfcj4Q8zIutT0Ly6Mp_mVCWpffjpp-LRy94.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-7.userapi.com/s/v1/if2/AJXIRVo-KyP2418vOm6ZTYF3KYIulzDkw8coTB3WvmnNi94vQBdlT8X3-KU1KgbLM4FzP_IXs3vNAaphwfQg_0Jo.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-30.userapi.com/s/v1/if2/cMmdnmZO5prmwmKaeQEToEE40FcJkumuuVbUdMmT6MNHQeugxs7jfVgcci6BrCMWdtdSoDGnnM9Zt80aN3nGS1ax.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-81.userapi.com/s/v1/if2/KlWM1GdeqNoW-wynuB6sfm36CsXkYPGIxt9cIP2LZMbjBCSy1XdpLOLe_x_V9ygomWTUrpPhx1cQ2Vayc0wgyaA8.jpg?size=800x450&quality=96&type=album",
+                "https://sun9-80.userapi.com/s/v1/if2/ivDJeA1zC9WIli_gPYv3Jpt37_fDhUqYLUTj9UK69JFd10w5wAKLH9W1eW9jxN-5gpSKuGYSRdd4vOsxSZNJc8Sg.jpg?size=800x450&quality=96&type=album"
         );
         List<String> names = Arrays.asList(
                 "#КООРДИНАЦИОННЫЙ СОВЕТ",

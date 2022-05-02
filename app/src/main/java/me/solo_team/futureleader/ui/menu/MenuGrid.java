@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -69,6 +70,38 @@ public class MenuGrid {
         text.setTextAppearance(context, android.R.style.TextAppearance_Large_Inverse);
         if(photo!=null) text.setBackground(new BitmapDrawable(photo));
         text.setTextColor(context.getColor(R.color.text_color1));
+        text.setBackground(context.getDrawable(R.drawable.gray_gradient_with_corners));
+        gridLayout.addView(text, lp);
+        return text;
+    }
+
+    public ImageView addImageElement(Bitmap photo, boolean onAllColumn,int row,int column){
+        Point size = new Point();
+        windowManager.getDefaultDisplay().getSize(size);
+        int halfScreenWidth = (int) (size.x * 0.5) - 20;
+        GridLayout.Spec col_;
+        if (onAllColumn) col_ = GridLayout.spec(column, 2);
+        else col_ = GridLayout.spec(column);
+        GridLayout.Spec row_ = GridLayout.spec(row);
+        GridLayout.LayoutParams lp = new GridLayout.LayoutParams(row_, col_);
+        if (onAllColumn) {
+            offest += 2;
+            lp.width = halfScreenWidth * 2 + 5;
+
+        } else {
+            offest++;
+            lp.width = halfScreenWidth;
+        }
+        ImageView text = new ImageView(context);
+        text.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        lp.height = halfScreenWidth;
+        lp.leftMargin = 5;
+        lp.rightMargin = 5;
+        lp.bottomMargin = 5;
+        lp.topMargin = 5;
+        text.setLayoutParams(lp);
+        text.setBackgroundColor(Color.WHITE);
+        if(photo!=null) text.setImageBitmap(photo);
         text.setBackground(context.getDrawable(R.drawable.gray_gradient_with_corners));
         gridLayout.addView(text, lp);
         return text;

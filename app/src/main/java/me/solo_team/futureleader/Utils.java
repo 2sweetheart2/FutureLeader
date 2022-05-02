@@ -22,6 +22,7 @@ public class Utils {
 
                 URL url = new URL(src);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
                 connection.setDoInput(true);
                 connection.connect();
                 InputStream input = connection.getInputStream();
@@ -29,13 +30,14 @@ public class Utils {
                 callback.process(myBitmap);
 
             } catch (IOException e) {
-                // Log exception
+                e.printStackTrace();
                 callback.process(null);
             }
         }).start();
     }
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        if(bitmap == null) return null;
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
                 .getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);

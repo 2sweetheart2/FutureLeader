@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".ui.news.open_news.OpenNewsFragment"/>
         <activity android:name=".ui.menu.statical.StaticalGridLayout"/>
+        <activity android:name=".ui.menu.statical.FounderLayout"/>
     </application>
 
 </manifest>

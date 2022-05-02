@@ -8,7 +8,6 @@ public class Constants {
     public static MenuBitMap mv = new MenuBitMap();
     public static AchivementsBitmap ab = new AchivementsBitmap();
     public static ConstantsBitMaps cbm = new ConstantsBitMaps();
-
     public static class MenuBitMap{
         public HashMap<Integer,Bitmap> bitmaps = new HashMap<>();
     }

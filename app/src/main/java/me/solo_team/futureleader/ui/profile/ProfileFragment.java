@@ -40,7 +40,7 @@ public class ProfileFragment extends Fragment {
         name = root.findViewById(R.id.profile_name);
         description = root.findViewById(R.id.profile_description);
 
-        String imageGledUrl = "https://futureleaders.hrbox.io/file/resize/300x0/c37287bf-3cdf-4421-8113-869c733d568a.jpg";
+        String imageGledUrl = "https://sun9-63.userapi.com/s/v1/if2/ndSILCx38FMurteLrqMWT9JT5SsHSc7aUxRmX1_0kX2rb_MikptV6bznqP2Z3qU060QDdUZaPVkB6RpLXoIfeHX6.jpg?size=300x400&quality=96&type=album";
         name.setText("Глеб Росин");
         description.setText("Aut viam inveniam, aut faciam.");
         Utils.getBitmapFromURL(imageGledUrl,bitmap ->
