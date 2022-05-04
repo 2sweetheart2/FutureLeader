@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.ui.menu.statical.FounderLayout;
+import me.solo_team.futureleader.ui.menu.statical.Founder.FounderLayout;
 
 public class MenuFragment extends Fragment {
     View root;

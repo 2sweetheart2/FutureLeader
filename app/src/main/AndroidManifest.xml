@@ -20,7 +20,14 @@
         </activity>
         <activity android:name=".ui.news.open_news.OpenNewsFragment"/>
         <activity android:name=".ui.menu.statical.StaticalGridLayout"/>
-        <activity android:name=".ui.menu.statical.FounderLayout"/>
+        <activity android:name=".ui.menu.statical.Founder.FounderLayout"/>
+        <activity android:name=".ui.menu.statical.Founder.WelcomeSpeechLayout"/>
+        <activity android:name=".ui.menu.statical.Founder.BiographyLayout"/>
+        <activity android:name=".ui.menu.statical.Founder.ContactLayout"/>
+        <activity android:name=".ui.WebViewsContent.WebView"
+            android:label="Web"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
     </application>
 
 </manifest>
