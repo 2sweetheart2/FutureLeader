@@ -19,7 +19,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.news.open_news.OpenNewsFragment"/>
-        <activity android:name=".ui.menu.statical.StaticalGridLayout"/>
         <activity android:name=".ui.menu.statical.Founder.FounderLayout"/>
         <activity android:name=".ui.menu.statical.Founder.WelcomeSpeechLayout"/>
         <activity android:name=".ui.menu.statical.Founder.BiographyLayout"/>

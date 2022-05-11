@@ -19,6 +19,7 @@ import java.util.List;
 
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.MainActivity;
+import me.solo_team.futureleader.Objects.Image;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.ui.news.open_news.OpenNewsFragment;
@@ -77,9 +78,7 @@ public class NewsFragment extends Fragment {
                 "\n" +
                 "Следите за новостями, будет интересно!";
         for (int i = 0; i < uris.size(); i++) {
-            Bitmap bitmap = null;
-            if (Constants.mv.bitmaps.containsKey(i)) bitmap = Constants.mv.bitmaps.get(i);
-            addElement(uris.get(i), names.get(i), bitmap, i).setOnClickListener(v -> {
+            addElement(uris.get(i), names.get(i), i).setOnClickListener(v -> {
                 Intent intent = new Intent(requireContext(), OpenNewsFragment.class);
                 intent.putExtra("title", "Первый этап выборов Председателя Координационного Совета в самом разгаре!");
                 intent.putExtra("text", text);
@@ -89,20 +88,10 @@ public class NewsFragment extends Fragment {
         return root;
     }
 
-    private View addElement(String uri, String name, Bitmap bitmap_, int pos) {
+    private View addElement(String uri, String name, int pos) {
         ConstraintLayout row = (ConstraintLayout) inflater.inflate(R.layout.news_news, container, false);
         ConstraintLayout cn = row.findViewById(R.id.news_obj);
-        if (bitmap_ != null)
-            ((ImageView) cn.getChildAt(1)).setImageBitmap(Utils.getRoundedCornerBitmap(bitmap_, 10));
-        else {
-            Utils.getBitmapFromURL(uri, bitmap -> {
-                if (bitmap == null) {
-                    return;
-                }
-                Constants.mv.bitmaps.put(pos, bitmap);
-                requireActivity().runOnUiThread(() -> ((ImageView) cn.getChildAt(1)).setImageBitmap(Utils.getRoundedCornerBitmap(bitmap, 10)));
-            });
-        }
+        Constants.cache.addPhoto(uri,true,(ImageView) cn.getChildAt(1),this);
         ((TextView) cn.getChildAt(2)).setText(name);
         switch (MainActivity.wightwindowSizeClass) {
             case COMPACT:

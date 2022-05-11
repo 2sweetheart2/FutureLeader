@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Collections;
 
+import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.MainActivity;
 import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.R;
@@ -43,9 +44,7 @@ public class ProfileFragment extends Fragment {
         String imageGledUrl = "https://sun9-63.userapi.com/s/v1/if2/ndSILCx38FMurteLrqMWT9JT5SsHSc7aUxRmX1_0kX2rb_MikptV6bznqP2Z3qU060QDdUZaPVkB6RpLXoIfeHX6.jpg?size=300x400&quality=96&type=album";
         name.setText("Глеб Росин");
         description.setText("Aut viam inveniam, aut faciam.");
-        Utils.getBitmapFromURL(imageGledUrl,bitmap ->
-                requireActivity().runOnUiThread(()->
-                        picture.setImageBitmap(Utils.getRoundedCornerBitmap(bitmap,15))));
+        Constants.cache.addPhoto(imageGledUrl,true,picture,this);
         switch (MainActivity.wightwindowSizeClass){
             case COMPACT:
                 name.setTextSize(18);
@@ -87,7 +86,6 @@ public class ProfileFragment extends Fragment {
         ach.name = "Активное участие на мероприятии";
         ach.image_url = url;
         ach.id = 0;
-
         RecycleAchivementsAdapter adapter = new RecycleAchivementsAdapter(this,
                 Collections.singletonList(ach)
         );

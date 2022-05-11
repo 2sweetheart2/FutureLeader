@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.ui.menu.MenuGrid;
@@ -43,13 +44,8 @@ public class FounderLayout extends AppCompatActivity {
             boolean finalOnAllColumn = onAllColumn;
             ImageView v = grid.addImageElement(null, finalOnAllColumn,row, finalColumn);
             views.add(v);
-            Utils.getBitmapFromURL(urls.get(i), bitmap -> {
-                if (bitmap != null) {
-                    runOnUiThread(()->{
-                        v.setImageBitmap(Utils.getRoundedCornerBitmap(bitmap,10));
-                    });
-                }
-            });
+            Constants.cache.addPhoto(urls.get(i),true,v,this);
+
 
         }
         views.get(0).setOnClickListener(v -> {

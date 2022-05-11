@@ -46,7 +46,6 @@ public class RecycleAchivementsAdapter extends RecyclerView.Adapter<RecycleAchiv
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NotNull ViewHolder holder, int position) {
-        Bitmap bitmap = achievements.get(position).imageBitMap;
         holder.itemView.setOnClickListener(v -> {
             AlertAchivementDialog alc = new AlertAchivementDialog(achievements.get(position));
             alc.show(fragment.getFragmentManager(),null);
@@ -55,20 +54,7 @@ public class RecycleAchivementsAdapter extends RecyclerView.Adapter<RecycleAchiv
 //            intent.putExtra("text", text);
 //            startActivity(intent);
         });
-        if (bitmap != null)
-            holder.image.setImageBitmap(Utils.getRoundedCornerBitmap(bitmap, 10));
-        else {
-
-            Utils.getBitmapFromURL(achievements.get(position).image_url, bitmap1 -> {
-                if (bitmap1 == null) {
-                    return;
-                }
-                Constants.ab.bitmaps.put(position, bitmap1);
-                achievements.get(position).imageBitMap = bitmap1;
-                fragment.requireActivity().runOnUiThread(() -> holder.image.setImageBitmap(bitmap1));
-            });
-        }
-
+        Constants.cache.addPhoto(achievements.get(position).image_url,true,holder.image,fragment);
     }
 
 
