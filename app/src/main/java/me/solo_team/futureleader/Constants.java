@@ -21,6 +21,15 @@ public class Constants {
     public static class CachePhoto {
         private HashMap<ImageView, Bitmap> cache = new HashMap<>();
 
+        /**@author  фома
+         * Динамическое получени фото по URL  и кешерировани его в HashMap по URL и подстваление в {v:ImageView}
+         *
+         * @author  author
+         * @param url ссылка на фото
+         * @param needRoundCorners нужно ли закруглять фото
+         * @param v ImageView
+         * @param c AppCompatActivity для runOnUiThread
+         */
         public void addPhoto(String url,boolean needRoundCorners, ImageView v, AppCompatActivity c) {
             if(cache.containsKey(v)) {
                 c.runOnUiThread(() -> v.setImageBitmap(cache.get(v)));
@@ -38,6 +47,16 @@ public class Constants {
             });
         }
 
+        /**
+         * @author  фома
+         * Динамическое получени фото по URL {url} и кешерировани его в HashMap по URL и подстваление в {v:ImageView}
+         *
+         * @author  author
+         * @param url - ссылка на фото
+         * @param needRoundCorners - нужно ли закруглять картинку
+         * @param v - ImageView
+         * @param c - Fragment для runOnUiThread
+         */
         public void addPhoto(String url,boolean needRoundCorners, ImageView v, Fragment c) {
             if(cache.containsKey(v)) {
                 c.requireActivity().runOnUiThread(() -> v.setImageBitmap(cache.get(v)));
