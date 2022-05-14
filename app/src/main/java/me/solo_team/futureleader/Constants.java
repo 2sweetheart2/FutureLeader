@@ -1,46 +1,43 @@
 package me.solo_team.futureleader;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class Constants {
-    // классы для кешерирования картинок в меню ( что по 100 миллионов раз не зугружать их по новой)
+    // TODO: ТУТ ВСЕ КОНСТАНТЫ И НЕ ТОЛЬКО
     public static Resources res;
     public static CachePhoto cache = new CachePhoto();
 
     public static class CachePhoto {
         private HashMap<ImageView, Bitmap> cache = new HashMap<>();
 
-        /**@author  фома
-         * Динамическое получени фото по URL  и кешерировани его в HashMap по URL и подстваление в {v:ImageView}
+        /**
+         * Динамическое получени фото по URL  и кешерировани его в HashMap по URL и подстваление в {@link ImageView}
          *
-         * @author  author
-         * @param url ссылка на фото
-         * @param needRoundCorners нужно ли закруглять фото
-         * @param v ImageView
-         * @param c AppCompatActivity для runOnUiThread
+         * @param url              ссылка на фото, тип: {@link String}
+         * @param needRoundCorners нужно ли закруглять фото, тип: {@link Boolean}
+         * @param v                {@link ImageView}
+         * @param c                {@link AppCompatActivity} для {@link AppCompatActivity#runOnUiThread}
          */
-        public void addPhoto(String url,boolean needRoundCorners, ImageView v, AppCompatActivity c) {
-            if(cache.containsKey(v)) {
+        public void addPhoto(String url, boolean needRoundCorners, ImageView v, AppCompatActivity c) {
+            if (cache.containsKey(v)) {
                 c.runOnUiThread(() -> v.setImageBitmap(cache.get(v)));
                 return;
             }
             Utils.getBitmapFromURL(url, bitmap -> {
-                if(bitmap==null){
-                    c.runOnUiThread(()->v.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
+                if (bitmap == null) {
+                    c.runOnUiThread(() -> v.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
                     return;
                 }
-                if(needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap,10);
+                if (needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
                 cache.put(v, bitmap);
                 Bitmap finalBitmap = bitmap;
                 c.runOnUiThread(() -> v.setImageBitmap(finalBitmap));
@@ -48,26 +45,24 @@ public class Constants {
         }
 
         /**
-         * @author  фома
-         * Динамическое получени фото по URL {url} и кешерировани его в HashMap по URL и подстваление в {v:ImageView}
+         * Динамическое получени фото по URL  и кешерировани его в HashMap по URL и подстваление в {@link ImageView}
          *
-         * @author  author
-         * @param url - ссылка на фото
-         * @param needRoundCorners - нужно ли закруглять картинку
-         * @param v - ImageView
-         * @param c - Fragment для runOnUiThread
+         * @param url              ссылка на фото, тип: {@link String}
+         * @param needRoundCorners нужно ли закруглять фото, тип: {@link Boolean}
+         * @param v                {@link ImageView}
+         * @param c                {@link Fragment} для {@link Fragment#requireActivity}
          */
-        public void addPhoto(String url,boolean needRoundCorners, ImageView v, Fragment c) {
-            if(cache.containsKey(v)) {
+        public void addPhoto(String url, boolean needRoundCorners, ImageView v, Fragment c) {
+            if (cache.containsKey(v)) {
                 c.requireActivity().runOnUiThread(() -> v.setImageBitmap(cache.get(v)));
                 return;
             }
             Utils.getBitmapFromURL(url, bitmap -> {
-                if(bitmap==null){
-                    c.requireActivity().runOnUiThread(()->v.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
+                if (bitmap == null) {
+                    c.requireActivity().runOnUiThread(() -> v.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
                     return;
                 }
-                if(needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap,10);
+                if (needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
                 cache.put(v, bitmap);
                 Bitmap finalBitmap = bitmap;
                 c.requireActivity().runOnUiThread(() -> v.setImageBitmap(finalBitmap));
@@ -81,7 +76,7 @@ public class Constants {
         }
 
 
-        public interface ImageBitmaps{
+        public interface ImageBitmaps {
             void result(Bitmap bitmap);
         }
 

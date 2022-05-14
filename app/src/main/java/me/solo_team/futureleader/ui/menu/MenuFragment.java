@@ -40,7 +40,7 @@ public class MenuFragment extends Fragment {
         grid.addElement(null, "именниники", "16", true);
 
         ConstraintLayout cn = root.findViewById(R.id.menu_header);
-        cn.getChildAt(1).setOnClickListener(v -> {
+        cn.getChildAt(0).setOnClickListener(v -> {
 //            Constants.gsi.info.put("основатель", Arrays.asList(
 //                    new Obj(ObjTypes.PHOTO,"приветственное слово","https://sun9-23.userapi.com/s/v1/if2/tM_Y_sBfisMuQ09vhw82DSAYqDqDp1q5g9JUM57n-S4brhRcMiSYFkmo9_daGjjO_5fgEvfqN7mCo23DASCtxpON.jpg?size=800x800&quality=96&type=album",null,new String[]{"https://futureleaders.hrbox.io/file/open/b94c0001-0a8c-4996-b2a6-dbd118b8094e.jpg"}),
 //                    new Obj(ObjTypes.PHOTO,"Биография","https://sun9-43.userapi.com/s/v1/if2/7e1Wwc235L4IEQYbXOleM2ItyonRzOvNOcDaCe0WSSHPQnkXGGHexdr0gUIQEgx7PZlWJ1gSszwXbnHrmlCU1Wnb.jpg?size=800x800&quality=96&type=album",null,new String[]{"https://futureleaders.hrbox.io/file/open/51b0bb44-19d8-4b65-b32b-29fc4fa2ae9d.jpg"}),

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/obj_2"
-    android:layout_width="wrap_content"
+    android:layout_width="90dp"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:orientation="vertical">
@@ -10,10 +10,13 @@
     <ImageView
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/obj__image"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:elevation="5dp"
         android:layout_gravity="center_horizontal"
+
         android:background="@drawable/rounded_second_color"
         android:padding="8dp"
 
@@ -31,6 +34,7 @@
         android:textAlignment="center"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
+        android:elevation="5dp"
         android:text=""
         android:textSize="20sp"
         android:textColor="@color/text_color1" />

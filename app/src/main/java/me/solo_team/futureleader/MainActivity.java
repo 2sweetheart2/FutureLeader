@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public static WindowSizeClass wightwindowSizeClass;
 
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -56,4 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         wightwindowSizeClass = widthWindowSizeClass;
     }
+
+
 }
