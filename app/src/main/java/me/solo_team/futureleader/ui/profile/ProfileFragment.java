@@ -19,9 +19,8 @@ import org.json.JSONObject;
 import java.util.Collections;
 
 import me.solo_team.futureleader.API.API;
-import me.solo_team.futureleader.API.ApiHandler;
-import me.solo_team.futureleader.Constants;
-import me.solo_team.futureleader.MainActivity;
+import me.solo_team.futureleader.API.ApiListener;
+import me.solo_team.futureleader.API.FullApiListener;
 import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
@@ -92,7 +91,7 @@ public class ProfileFragment extends Fragment {
          * если в ответе SUCCESS==false, то сработает метод onError в котором будет response
          * если же иначе SUCCESS==true, то сработает метод onSuccess в котором будет response
          */
-        API.loginUser(new ApiHandler() {
+        API.loginUser(new ApiListener() {
             @Override
             public void onError(JSONObject json){
                 try {
@@ -107,6 +106,28 @@ public class ProfileFragment extends Fragment {
 
             }
         }, new CustomString("test", "test"));
+
+        API.getNews(new FullApiListener() {
+            @Override
+            public void inProgress() {
+                System.out.println("[GET NEWS] -> IN PROGRESS");
+            }
+
+            @Override
+            public void onFinish() {
+                System.out.println("[GET NEWS] -> FINISHED...GETTING RESULT");
+            }
+
+            @Override
+            public void onError(JSONObject json) {
+                System.out.println("[GET NEWS] -> ERROR");
+            }
+
+            @Override
+            public void onSuccess(JSONObject json) {
+                System.out.println("[GET NEWS] -> SUCCESS");
+            }
+        },new CustomString("test","test"));
         return root;
     }
 

@@ -34,20 +34,24 @@ public class API {
     /**
      * метод регистрации userА
      *
-     * @param listener new {@link ApiHandler}
+     * @param listener new {@link ApiListener}
      * @param params   {@link CustomString} через запятую
      */
-    public static void registerUser(ApiHandler listener, CustomString... params) {
+    public static void registerUser(ApiListener listener, CustomString... params) {
         HTTPS.sendPost(Methods.REGISTER_USER, Objects.requireNonNull(createJsonObj(params)), listener);
     }
 
     /**
      * метод авторизации userA
-     * @param listener new {@link ApiHandler}
+     * @param listener new {@link ApiListener}
      * @param params    {@link CustomString} через запятую
      */
-    public static void loginUser(ApiHandler listener, CustomString... params) {
+    public static void loginUser(ApiListener listener, CustomString... params) {
         HTTPS.sendPost(Methods.LOGIN_USER, Objects.requireNonNull(createJsonObj(params)), listener);
+    }
+
+    public static void getNews(FullApiListener listener, CustomString... params){
+        HTTPS.sendPost(Methods.GET_NEWS,Objects.requireNonNull(createJsonObj(params)),listener);
     }
 
 }

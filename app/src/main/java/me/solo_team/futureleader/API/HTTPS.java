@@ -22,7 +22,7 @@ public class HTTPS {
     private static final String URL = "https://future-leader.ru/api/";
 
 
-    public static void sendPost(Methods method, JSONObject params, ApiHandler apiHandler) {
+    public static void sendPost(Methods method, JSONObject params, ApiListener apiListener) {
         new Thread(() -> {
             try {
                 HttpURLConnection con = (HttpsURLConnection) new URL(URL + method.label).openConnection();
@@ -41,7 +41,7 @@ public class HTTPS {
                     while ((responseLine = br.readLine()) != null) {
                         response_.append(responseLine.trim());
                     }
-                    apiHandler.process(new JSONObject(response_.toString()));
+                    apiListener.process(new JSONObject(response_.toString()));
                 }
             } catch (IOException | JSONException e) {
                 try {
@@ -50,7 +50,42 @@ public class HTTPS {
                     JSONObject b = new JSONObject();
                     b.put("message", "can't connect to server");
                     o.put("error",b);
-                    apiHandler.process(o);
+                    apiListener.process(o);
+                } catch (JSONException ignored) {}
+            }
+        }).start();
+    }
+
+    public static void sendPost(Methods method, JSONObject params, FullApiListener apiListener) {
+        apiListener.inProgress();
+        new Thread(() -> {
+            try {
+                HttpURLConnection con = (HttpsURLConnection) new URL(URL + method.label).openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json; utf-8");
+                con.setRequestProperty("Accept", "application/json");
+                con.setDoOutput(true);
+                try (OutputStream os = con.getOutputStream()) {
+                    byte[] input = params.toString().getBytes(StandardCharsets.UTF_8);
+                    os.write(input, 0, input.length);
+                }
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                    StringBuilder response_ = new StringBuilder();
+                    String responseLine;
+                    while ((responseLine = br.readLine()) != null) {
+                        response_.append(responseLine.trim());
+                    }
+                    apiListener.process(new JSONObject(response_.toString()));
+                }
+            } catch (IOException | JSONException e) {
+                try {
+                    JSONObject o = new JSONObject();
+                    o.put("success",false);
+                    JSONObject b = new JSONObject();
+                    b.put("message", "can't connect to server");
+                    o.put("error",b);
+                    apiListener.process(o);
                 } catch (JSONException ignored) {}
             }
         }).start();

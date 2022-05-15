@@ -14,7 +14,7 @@ import org.json.JSONObject;
  * @author Фома
  */
 // TODO: ТУТ НИЧЕГО НЕ МЕНЯТЬ!
-public interface ApiHandler {
+public interface ApiListener {
 
     default void process(JSONObject jsonObject) throws JSONException {
         if (jsonObject.has("error"))
