@@ -33,6 +33,7 @@ public class ProfileFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().invalidateOptionsMenu();
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
         TableLayout tableLayout = root.findViewById(R.id.profile_table_layout);
         ProfileInfoGrid grid = new ProfileInfoGrid(tableLayout, root.getContext(), inflater, container);

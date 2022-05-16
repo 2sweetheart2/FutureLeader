@@ -21,6 +21,7 @@ public class MenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().invalidateOptionsMenu();
         root = inflater.inflate(R.layout.fragment_menu, container, false);
         //создание настроек для сетки
         MenuGrid grid = new MenuGrid(root.findViewById(R.id.grid), root.getContext(), requireActivity().getWindowManager());

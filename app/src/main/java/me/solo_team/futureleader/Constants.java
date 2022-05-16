@@ -10,9 +10,12 @@ import androidx.fragment.app.Fragment;
 
 import java.util.HashMap;
 
+import me.solo_team.futureleader.Objects.User;
+
 
 public class Constants {
     // TODO: ТУТ ВСЕ КОНСТАНТЫ И НЕ ТОЛЬКО
+    public static User user = new User();
     public static Resources res;
     public static CachePhoto cache = new CachePhoto();
 

@@ -26,6 +26,8 @@ public class User {
     public JSONArray info_fields;
     @JsonField(name="achievements_fields")
     public JSONArray achievements_fields;
+    @JsonField(name = "admin_status")
+    public int admin_status=0;
 
 
     public List<Achievement> getAchivements(){

@@ -28,10 +28,12 @@ public interface ApiListener {
     void onSuccess(JSONObject json);
 
     default void createNotification(View v,String message) {
-        Snackbar.make(v, message, Snackbar.LENGTH_LONG)
-                .setAction("CLOSE", view -> {
-                })
-                .setActionTextColor(Color.RED)
-                .show();
+        try {
+            Snackbar.make(v, message, Snackbar.LENGTH_LONG)
+                    .setAction("CLOSE", view -> {
+                    })
+                    .setActionTextColor(Color.RED)
+                    .show();
+        } catch (Exception ignored){}
     }
 }

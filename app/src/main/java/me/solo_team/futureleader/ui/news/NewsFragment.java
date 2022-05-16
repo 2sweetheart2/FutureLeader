@@ -1,9 +1,13 @@
 package me.solo_team.futureleader.ui.news;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,7 +36,7 @@ public class NewsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
+        requireActivity().invalidateOptionsMenu();
         View root = inflater.inflate(R.layout.fragment_news, container, false);
         nw = root.findViewById(R.id.news_list);
         this.inflater = inflater;
@@ -85,6 +89,7 @@ public class NewsFragment extends Fragment {
                 startActivity(intent);
             });
         }
+
         return root;
     }
 
