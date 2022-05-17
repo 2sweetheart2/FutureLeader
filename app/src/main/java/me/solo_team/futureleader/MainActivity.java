@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Constants.res = getResources();
         // КРЧ ТУТ НИЧЕГО НЕ ТРОГАЕМ, ЭТО ОСНОВНОЕ ОКНО В КОТОРОМ У НАС ВСЁ: НАЖНЯЯ ПАНЕЛЬ И ОСТАЛЬНЫЕ ФРАГМЕНТЫ
         super.onCreate(savedInstanceState);
-        // метод для опрделения ширины экрана
+        // метод для опрeделения ширины экрана
         computeWindowSizeClasses();
         setContentView(R.layout.activity_main);
         navView = findViewById(R.id.nav_view);
