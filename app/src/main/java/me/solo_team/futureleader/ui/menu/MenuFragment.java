@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.statical.Founder.FounderLayout;
+import me.solo_team.futureleader.ui.menu.statical.admining.AdminingLayout;
 
 public class MenuFragment extends Fragment {
     View root;
@@ -39,6 +41,10 @@ public class MenuFragment extends Fragment {
         grid.addElement(null, "FAQ", "16", false);
         grid.addElement(null, "заявки", "16", false);
         grid.addElement(null, "именниники", "16", true);
+        if(Constants.user.admin_status!=0) grid.addElement(null,"администрирование","16",true)
+                .setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), AdminingLayout.class));
+        });
 
         ConstraintLayout cn = root.findViewById(R.id.menu_header);
         cn.getChildAt(0).setOnClickListener(v -> {

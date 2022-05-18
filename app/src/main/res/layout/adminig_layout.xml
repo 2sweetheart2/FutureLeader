@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="ContentDescription,HardcodedText">
+
+        <LinearLayout
+            android:id="@+id/admining_menu_13"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/guideline13"
+            app:layout_constraintEnd_toEndOf="@+id/admining_menu_12"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline10"
+            app:layout_constraintRight_toLeftOf="@id/guideline12"
+            app:layout_constraintStart_toStartOf="@+id/admining_menu_11"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_13"
+            app:layout_constraintLeft_toRightOf="@+id/admining_menu_11"
+            app:layout_constraintRight_toRightOf="@id/guideline12"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/admining_menu_13"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline10"
+            app:layout_constraintRight_toLeftOf="@id/admining_menu_12"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_9"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_3"
+            app:layout_constraintEnd_toStartOf="@+id/admining_menu_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/guideline10"
+            app:layout_constraintTop_toTopOf="@+id/guideline11"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_5"
+            app:layout_constraintLeft_toLeftOf="@id/guideline10"
+            app:layout_constraintRight_toLeftOf="@id/admining_menu_4"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_1"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_7"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline10"
+            app:layout_constraintRight_toLeftOf="@id/admining_menu_6"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_3">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_9"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline10"
+            app:layout_constraintRight_toLeftOf="@id/admining_menu_8"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_5"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_11"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline10"
+            app:layout_constraintRight_toLeftOf="@id/admining_menu_10"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_7"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_4"
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/admining_menu_1"
+            app:layout_constraintTop_toTopOf="@+id/guideline11"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_6"
+            app:layout_constraintLeft_toRightOf="@id/admining_menu_3"
+            app:layout_constraintRight_toRightOf="@id/guideline12"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_2"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_8"
+            app:layout_constraintLeft_toRightOf="@id/admining_menu_5"
+            app:layout_constraintRight_toRightOf="@id/guideline12"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_4">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_10"
+            app:layout_constraintLeft_toRightOf="@+id/admining_menu_7"
+            app:layout_constraintRight_toRightOf="@id/guideline12"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_6"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admining_menu_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/admining_menu_12"
+            app:layout_constraintLeft_toRightOf="@+id/admining_menu_9"
+            app:layout_constraintRight_toRightOf="@id/guideline12"
+            app:layout_constraintTop_toBottomOf="@+id/admining_menu_8"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_header_6_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="Пользователи"
+                android:textColor="@color/text_color1" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.9" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

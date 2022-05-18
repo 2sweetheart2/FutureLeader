@@ -27,6 +27,7 @@
             android:label="Web"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
+        <activity android:name=".ui.menu.statical.admining.AdminingLayout"/>
     </application>
 
 </manifest>
