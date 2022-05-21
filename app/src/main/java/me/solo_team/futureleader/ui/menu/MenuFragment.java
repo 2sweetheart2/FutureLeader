@@ -16,6 +16,7 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.statical.Founder.FounderLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.AdminingLayout;
+import me.solo_team.futureleader.ui.menu.statical.programs.ProgramsLayout;
 
 public class MenuFragment extends Fragment {
     View root;
@@ -54,6 +55,9 @@ public class MenuFragment extends Fragment {
 //                    new Obj(ObjTypes.BLOCKS,"Социальные сети","https://sun9-55.userapi.com/s/v1/if2/PrkagT_k8KcZVEliaC93v5HYHHxwBH0c2BVmfCZfapEoYV6Ho5A2BYZXNsQJIYadbgUgoWPJN1BFj178vIXNAL5i.jpg?size=800x800&quality=96&type=album",null,null)
 //                    ));
             startActivity(intent);
+        });
+        cn.getChildAt(2).setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), ProgramsLayout.class));
         });
         return root;
     }

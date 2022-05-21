@@ -20,43 +20,33 @@ import me.solo_team.futureleader.ui.menu.MenuGrid;
 
 public class ContactLayout extends AppCompatActivity {
 
-    List<ImageView> views = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.founder_layout);
-        MenuGrid grid = new MenuGrid(findViewById(R.id.back__),getApplicationContext(),getWindowManager());
+        setContentView(R.layout.her_ne_eby_name);
+        ImageView contact1 = findViewById(R.id.contact_1);
+        ImageView contact2 = findViewById(R.id.contact_2);
+        ImageView contact3 = findViewById(R.id.contact_3);
         List<String> urls = Arrays.asList(
                 "https://sun9-83.userapi.com/s/v1/if2/1qwoppOAKK9qnchI-1yyEE0Pmn25GbrVI9VTrfElNouUkm1LkXcdkgewbNICwNV42fVP0MHotTZxx6x_HxhKXz_M.jpg?size=800x450&quality=96&type=album",
                 "https://sun9-47.userapi.com/s/v1/if2/Sk-2C5IRXmBhpQIxD39S2EXBP3UxumPA4GzYjsB1PtbIz-nucpmhNsHDr8UirJiyNUqEqxz3IQ98irYmk6r6vMV6.jpg?size=800x450&quality=96&type=album",
                 "https://sun9-71.userapi.com/s/v1/if2/OTjZPkR6jYRxMFwWmibDirRB_Pj5wjNO8VikI1dY0eTeZ0rymx1qKbKs_KU5JTk033P-oUUFMzRkqMwqH7NsbxLF.jpg?size=800x450&quality=96&type=album"
         );
-        for (int i =0;i<urls.size();i++){
-            int column=0;
-            if (i % 2 != 0)
-                column = 1;
-            int row = i / 2;
-            int finalColumn = column;
-            boolean onAllColumn = false;
-            if(i==2) onAllColumn=true;
-            boolean finalOnAllColumn = onAllColumn;
-            ImageView v = grid.addImageElement(null, finalOnAllColumn,row, finalColumn);
-            views.add(v);
-            Constants.cache.addPhoto(urls.get(i),true,v,this);
-
-        }
-        views.get(0).setOnClickListener(v -> {
+        Constants.cache.addPhoto(urls.get(0),true,contact1,this);
+        Constants.cache.addPhoto(urls.get(1),true,contact2,this);
+        Constants.cache.addPhoto(urls.get(2),true,contact3,this);
+        contact1.setOnClickListener(v -> {
             Intent intent = new Intent(this, WebView.class);
             intent.putExtra("url","https://vk.com/sheykin1980");
             startActivity(intent);
         });
-        views.get(1).setOnClickListener(v ->{
+        contact2.setOnClickListener(v ->{
             Intent intent = new Intent(this,WebView.class);
             intent.putExtra("url","https://www.instagram.com/a.sheikin/");
             startActivity(intent);
         });
-        views.get(2).setOnClickListener(v ->{
+        contact3.setOnClickListener(v ->{
             Intent intent = new Intent(this,WebView.class);
             intent.putExtra("url","https://www.facebook.com/sheykin.art");
             startActivity(intent);

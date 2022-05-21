@@ -16,11 +16,16 @@ public class WebView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.only_web_view);
         webView = findViewById(R.id.webView);
+
         // включаем поддержку JavaScript
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
         // указываем страницу загрузки
-        webView.loadUrl(getIntent().getStringExtra("url"));
+        if(getIntent().getStringExtra("localhost")!=null){
+            webView.loadUrl(getIntent().getStringExtra("localhost"));
+        }
+        else
+            webView.loadUrl(getIntent().getStringExtra("url"));
 
     }
 

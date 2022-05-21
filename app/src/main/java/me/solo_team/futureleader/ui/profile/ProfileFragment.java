@@ -1,5 +1,12 @@
 package me.solo_team.futureleader.ui.profile;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +16,9 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +26,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Collections;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.API.FullApiListener;
+import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
@@ -84,6 +97,19 @@ public class ProfileFragment extends Fragment {
         RecycleAchivementsAdapter adapter = new RecycleAchivementsAdapter(this,
                 Collections.singletonList(ach)
         );
+
+        picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!checkPerm(getContext(),Manifest.permission.READ_EXTERNAL_STORAGE)) return;
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                //Тип получаемых объектов - image:
+                photoPickerIntent.setType("image/*");
+                //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
+                startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
+            }
+        });
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -94,9 +120,9 @@ public class ProfileFragment extends Fragment {
          */
         API.loginUser(new ApiListener() {
             @Override
-            public void onError(JSONObject json){
+            public void onError(JSONObject json) {
                 try {
-                    this.createNotification(ProfileFragment.this.getView(),json.getString("message"));
+                    this.createNotification(ProfileFragment.this.getView(), json.getString("message"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -128,9 +154,38 @@ public class ProfileFragment extends Fragment {
             public void onSuccess(JSONObject json) {
                 System.out.println("[GET NEWS] -> SUCCESS");
             }
-        },new CustomString("test","test"));
+        }, new CustomString("test", "test"));
         return root;
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==1 && data!=null){
+            Uri selectedImage = data.getData();
+            try {
+                Bitmap image = BitmapFactory.decodeStream(requireActivity().getContentResolver().openInputStream(selectedImage));
+                picture.setImageBitmap(image);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    public boolean checkPerm(Context context, String permission){
+        int permissionStatus = ContextCompat.checkSelfPermission(context, permission);
+
+        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                    1);
+            return false;
+        }
+    }
 
 }

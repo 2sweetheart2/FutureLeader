@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.ui.menu.statical.Founder;
 
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -18,10 +19,12 @@ public class BiographyLayout extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.only_image_layout);
-        ImageView v = findViewById(R.id.only_image_view);
+
+        Utils.ScalingImage image = new Utils.ScalingImage(getBaseContext());
         setTitle("Биография");
         Constants.cache.addPhoto("https://sun9-78.userapi.com/s/v1/if2/mCBdZV048HGyy2PEGzIoUUX8e8GpvemTZ2eYArzYJhPF8kXaO1SC3d6cz4I4Sz4bbGF9kobtdQsihYwZwAHwqzsx.jpg?size=1527x2160&quality=96&type=album",
-                true,v,this);
+                true,image,this);
+        addContentView(image, findViewById(R.id.only_image_view).getLayoutParams());
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
     @Override

@@ -2,11 +2,13 @@ package me.solo_team.futureleader;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -17,9 +19,14 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import me.solo_team.futureleader.ui.WebViewsContent.WebView;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navView;
+    int id;
+
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,20 +35,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // метод для опрeделения ширины экрана
 
-        Constants.user.admin_status=1;
+        Constants.user.admin_status = 1;
 
         computeWindowSizeClasses();
         setContentView(R.layout.activity_main);
+        Constants.mainActivity = this;
         navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-                AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                        R.id.navigation_news, R.id.navigation_menu, R.id.navigation_profile)
-                        .build();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_news, R.id.navigation_menu, R.id.navigation_profile)
+                .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        id = navView.getSelectedItemId();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
+        findViewById(R.id.floatingActionButton).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, WebView.class);
+            intent.putExtra("localhost","file:///android_asset/index.html");
+            startActivity(intent);
+        });
     }
 
     /**
@@ -54,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ResourceType")
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(Constants.user.admin_status!=0) {
-            if (navView.getSelectedItemId() == 2131231046)
+        if (Constants.user.admin_status != 0 && navView.getSelectedItemId() == id) {
+            if(menu.size()==0)
                 menu.add(0, 1, 0, "")
                         .setIcon(R.drawable.plus)
                         .setOnMenuItemClickListener(item -> {
@@ -63,9 +76,7 @@ public class MainActivity extends AppCompatActivity {
                             return true;
                         })
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-            else menu.removeItem(1);
-        }
+        } else menu.removeItem(1);
         return super.onPrepareOptionsMenu(menu);
     }
 

@@ -16,6 +16,7 @@ import me.solo_team.futureleader.Objects.User;
 public class Constants {
     // TODO: ТУТ ВСЕ КОНСТАНТЫ И НЕ ТОЛЬКО
     public static User user = new User();
+    public static MainActivity mainActivity;
     public static Resources res;
     public static CachePhoto cache = new CachePhoto();
 
@@ -78,6 +79,11 @@ public class Constants {
             return cache.get(v);
         }
 
+        public void addPhoto(Bitmap bitmap, boolean needRoundCorners, ImageView v) {
+            if(needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap,10);
+            cache.put(v,bitmap);
+            v.setImageBitmap(bitmap);
+        }
 
         public interface ImageBitmaps {
             void result(Bitmap bitmap);

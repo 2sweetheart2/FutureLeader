@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.10" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.90" />
+
+        <ImageView
+            android:padding="5dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:id="@+id/contact_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            app:layout_constraintBottom_toTopOf="@id/contact_2"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintLeft_toLeftOf="@id/guideline12"
+            app:layout_constraintRight_toRightOf="@id/guideline13"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/contact_1"
+            app:layout_constraintRight_toRightOf="@id/contact_1"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="@id/contact_1"
+            android:text="Вконтакте"
+            android:textColor="@color/black"
+            />
+        <ImageView
+            android:padding="5dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:id="@+id/contact_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            app:layout_constraintBottom_toTopOf="@id/contact_3"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintLeft_toLeftOf="@id/guideline12"
+            app:layout_constraintRight_toRightOf="@id/guideline13"
+            app:layout_constraintTop_toBottomOf="@id/contact_1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/contact_2"
+            app:layout_constraintRight_toRightOf="@id/contact_2"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="@id/contact_2"
+            android:text="Instagram"
+            android:textColor="@color/black"
+            />
+        <ImageView
+            android:padding="5dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:id="@+id/contact_3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintLeft_toLeftOf="@id/guideline12"
+            app:layout_constraintRight_toRightOf="@id/guideline13"
+            app:layout_constraintTop_toBottomOf="@id/contact_2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/contact_3"
+            app:layout_constraintRight_toRightOf="@id/contact_3"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="@id/contact_3"
+            android:text="facebook"
+            android:textColor="@color/black"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
