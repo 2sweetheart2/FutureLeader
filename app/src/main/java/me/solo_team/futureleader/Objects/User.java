@@ -10,7 +10,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @JsonObject
 public class User {
@@ -23,12 +28,19 @@ public class User {
     @JsonField(name = "age")
     public int age;
     @JsonField(name = "info_fields")
-    public JSONArray info_fields;
+    public JSONObject info_fields;
     @JsonField(name="achievements_fields")
     public JSONArray achievements_fields;
     @JsonField(name = "admin_status")
     public int admin_status=0;
+    public HashMap<String,String> editedFieldsTypes = new HashMap<String, String>(){{
+        put("город","text");
+        put("телефон","phone");
+        put("telegram","text");
+        put("whatsapp","phone");
+    }};
 
+    public LinkedHashMap<String, String> enums;
 
     public List<Achievement> getAchivements(){
         List<Achievement> ls = new ArrayList<>();
@@ -40,6 +52,10 @@ public class User {
             }
         }
         return ls;
+    }
+
+    public enum FIELDS{
+
     }
 
 }

@@ -26,7 +26,7 @@ public class ProfileInfoGrid {
         this.container = container;
     }
 
-    public void addElement(String name,String value){
+    public TableRow addElement(String name,String value){
         TableRow row = (TableRow)inflater.inflate(R.layout.row_in_profile_info, container,false);
         ((TextView)row.getChildAt(0)).setText(name);
         ((TextView)row.getChildAt(1)).setText(value);
@@ -43,6 +43,7 @@ public class ProfileInfoGrid {
                 ((TextView)row.getChildAt(0)).setTextSize(20);
         }
         table.addView(row);
+        return row;
     }
 
     public void addRow(String name){

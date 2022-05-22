@@ -21,6 +21,18 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.StringJoiner;
+import java.util.TreeMap;
+
+import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.ui.WebViewsContent.WebView;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,6 +67,34 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("localhost","file:///android_asset/index.html");
             startActivity(intent);
         });
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        map.put("город","city");
+        map.put("день рождения","birthday");
+        map.put("line",null);
+        map.put("должность","division");
+        map.put("подразделение","post");
+        map.put("стаж","experience");
+        map.put("line2","контакты");
+        map.put("телефон","phone");
+        map.put("email","email");
+        map.put("telegram","telegram");
+        map.put("whatsapp","whatsapp");
+        Constants.user.enums = map;
+        System.out.println(map.keySet());
+
+        JSONObject fields = new JSONObject();
+        try {
+            fields.put("city","Санкт-Петербург");
+            fields.put("birthday",Utils.parseDateBirthday("14/12/2004"));
+            fields.put("division","участник ШБЛ");
+            fields.put("post","Школа Лидеров Будущего > Санкт-Петербург > Набор 2021");
+            fields.put("experience","5 месяцев 26 дней (c 01.11.2021)");
+            fields.put("phone","+79215518784");
+            fields.put("email","gleb.rosin11@gmail.com");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Constants.user.info_fields = fields;
     }
 
     /**

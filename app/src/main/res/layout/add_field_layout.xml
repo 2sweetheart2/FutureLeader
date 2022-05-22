@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/edit_fields_layout">
+
+    <Spinner
+        android:layout_margin="15dp"
+        android:id="@+id/edit_fields_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+    <EditText
+        android:tag="values"
+        android:visibility="visible"
+        android:id="@+id/edit_fields_value"
+        android:layout_marginTop="15dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="значение..."
+        android:inputType="text"
+        app:layout_constraintLeft_toLeftOf="@id/edit_fields_name"
+        app:layout_constraintRight_toRightOf="@id/edit_fields_name"
+        app:layout_constraintTop_toBottomOf="@id/edit_fields_name"
+        tools:ignore="Autofill,HardcodedText"
+        />
+
+    <Button
+        android:id="@+id/edit_fields_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="добавить"
+        android:elevation="5dp"
+        app:layout_constraintRight_toRightOf="@id/edit_fields_value"
+        app:layout_constraintTop_toBottomOf="@id/edit_fields_value"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        tools:ignore="HardcodedText" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_fields_btn"
+        android:text="Большая просьба вводить правдивые данные, т.к. они провериться автоматически не могут. В случае указа недостоверной информации, доступ к изменению данного поля будет закрыт"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:padding="5dp"
+        android:background="@drawable/gray_gradient_with_corners"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -33,6 +34,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +45,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
+    public static class ShowSnackBar {
+        public static void show(Context context, String message, View view) {
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+        }
+    }
 
+    public static String parseDateBirthday(String date){
+        System.out.println(date);
+        String[] nums = date.split("/");
+        StringBuilder text = new StringBuilder();
+        text.append(nums[0]).append(' ');
+        switch (nums[1]){
+            case "01":
+                text.append("января");
+                break;
+            case "02":
+                text.append("февраля");
+                break;
+            case "03":
+                text.append("марта");
+                break;
+            case "04":
+                text.append("апреля");
+                break;
+            case "05":
+                text.append("мая");
+                break;
+            case "06":
+                text.append("июня");
+                break;
+            case "07":
+                text.append("июля");
+                break;
+            case "08":
+                text.append("августа");
+                break;
+            case "09":
+                text.append("сентября");
+                break;
+            case "10":
+                text.append("октября");
+                break;
+            case "11":
+                text.append("ноября");
+                break;
+            case "12":
+                text.append("декабря");
+                break;
+        }
+        text.append(' ').append(nums[2]).append("г.");
+        return text.toString();
+    }
 
     // пост запрос для получения картинки и вывода её в Bitmap через interface(callback)
     // зачем интерфейс? а потому что мы не можем отправлять запросы из основного потока,
