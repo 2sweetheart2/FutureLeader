@@ -95,7 +95,7 @@
         android:layout_height="0dp"
         android:background="@drawable/gray_gradient_with_corners"
         android:backgroundTint="#CCCCCC"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintLeft_toLeftOf="@id/guideline13"
         app:layout_constraintTop_toTopOf="@id/admining_user_content_hyi"
         app:layout_constraintBottom_toBottomOf="@id/admining_user_content_hyi"
@@ -104,16 +104,10 @@
         android:elevation="5dp"
         >
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:weightSum="2">
 
             <TextView
                 android:id="@+id/admining_user_content_division"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:autoSizeMaxTextSize="14dp"
@@ -127,7 +121,7 @@
 
             <TextView
                 android:id="@+id/admining_user_content_post"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -136,14 +130,5 @@
                 android:textSize="10dp" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/admining_user_content_activity_status"
-            android:layout_width="15dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/dot"
-            app:layout_constraintDimensionRatio="0.5:0.5" />
-    </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

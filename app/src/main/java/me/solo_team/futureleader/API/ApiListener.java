@@ -25,6 +25,8 @@ public interface ApiListener {
 
     void onError(JSONObject json);
 
+    void inProcess();
+
     void onSuccess(JSONObject json);
 
     default void createNotification(View v,String message) {

@@ -41,9 +41,10 @@ public class Constants {
                     c.runOnUiThread(() -> v.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
                     return;
                 }
-                if (needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
-                cache.put(v, bitmap);
-                Bitmap finalBitmap = bitmap;
+                Bitmap bitmap_ = bitmap;
+                if (needRoundCorners) bitmap_ = Utils.getRoundedCornerBitmap(bitmap, 25);
+                cache.put(v, bitmap_);
+                Bitmap finalBitmap = bitmap_;
                 c.runOnUiThread(() -> v.setImageBitmap(finalBitmap));
             });
         }

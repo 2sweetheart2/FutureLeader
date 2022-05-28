@@ -77,7 +77,23 @@ public class EditFieldsLayout extends Her {
         EditFieldsDialog cl = new EditFieldsDialog(result -> {
             if(!result) return;
             Constants.user.user_fields.remove(Constants.user.editedFieldsTypes.get(value.toLowerCase()));
-            finish();
+            API.updateFields(new FullApiListener() {
+                @Override
+                public void inProgress() { }
+
+                @Override
+                public void onFinish() {
+                    finish();
+                }
+
+                @Override
+                public void onError(JSONObject json) { }
+
+                @Override
+                public void onSuccess(JSONObject json) { }
+            }, new CustomString("fields",Constants.user.getFields()),new CustomString("token",Constants.user.token));
+
+
         },value,"Вы действиетльно хотите удалить параметр \""+value+"\"?");
         cl.show(getSupportFragmentManager(),"myDialog");
         return true;

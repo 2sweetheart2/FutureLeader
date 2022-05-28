@@ -14,7 +14,10 @@ public enum Methods {
     UPD_PROFILE_PICTURE("update_profile_picture"),
     UPD_FIELDS("update_fields"),
     UPD_STATUS("update_status"),
-    UPD_ADMIN_ROLE("update_admin_role");
+    UPD_ADMIN_ROLE("update_admin_role"),
+    GET_ACHIEVEMENT("get_achievement"),
+    GET_USERS("get_users");
+
 
     public String label;
 

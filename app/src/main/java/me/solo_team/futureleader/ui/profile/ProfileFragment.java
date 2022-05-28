@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,8 +32,10 @@ import java.util.List;
 import java.util.Map;
 
 import me.solo_team.futureleader.API.API;
+import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.API.FullApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
@@ -54,7 +57,7 @@ public class ProfileFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
         tableLayout = root.findViewById(R.id.profile_table_layout);
         grid = new ProfileInfoGrid(tableLayout, root.getContext(), inflater, container);
-        TextView achivement_btn = root.findViewById(R.id.achiviment_btn);
+        Button achivement_btn = root.findViewById(R.id.achiviment_btn);
         picture = root.findViewById(R.id.profile_picture);
         name = root.findViewById(R.id.profile_name);
         description = root.findViewById(R.id.profile_description);
@@ -88,6 +91,44 @@ public class ProfileFragment extends Fragment {
             }
             intent.putExtra("values", String.join(",", arr));
             startActivity(intent);
+        });
+        achivement_btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                List<Integer> ids = new ArrayList<>();
+                for(String s: Constants.user.achievementsIds.split(",")){
+                    ids.add(Integer.parseInt(s));
+                }
+                API.getAchivement(new ApiListener() {
+                    @Override
+                    public void onError(JSONObject json) {
+                        try {
+                            this.createNotification(getView(),json.getString("message"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void inProcess() {
+
+                    }
+
+                    @Override
+                    public void onSuccess(JSONObject json) {
+                        try {
+                            Constants.user.achievements =  json.getJSONArray("achievements");
+                            AlertAchivementListDialog alertAchivementListDialog = new AlertAchivementListDialog();
+                            alertAchivementListDialog.show(getParentFragmentManager(),null);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },new CustomString("ids",Constants.user.achievementsIds), new CustomString("token",Constants.user.token));
+
+
+            }
         });
         return root;
     }

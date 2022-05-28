@@ -1,12 +1,9 @@
 package me.solo_team.futureleader.Objects;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,10 +18,10 @@ public class User {
     public int id;
     public String profilePictureLink;
     public String token;
-    public String fields;
-    public JSONObject user_fields= new JSONObject();
+    public JSONObject user_fields = new JSONObject();
     public String achievementsIds;
     public int adminStatus = 0;
+    public JSONArray achievements;
     public HashMap<String, String> editedFieldsTypes = new HashMap<String, String>() {{
         put("город", "text");
         put("телефон", "phone");
@@ -44,11 +41,6 @@ public class User {
         }
     }
 
-    public void addAchivement(String achivementString){
-        for(String a : achivementString.split("&")){
-
-        }
-    }
 
     public LinkedHashMap<String, String> enums;
 
@@ -65,7 +57,7 @@ public class User {
         return ls;
     }
 
-    public String getFields(){
+    public String getFields() {
         StringBuilder text = new StringBuilder();
         for (Iterator<String> it = user_fields.keys(); it.hasNext(); ) {
             String s = it.next();
@@ -75,7 +67,7 @@ public class User {
                 e.printStackTrace();
             }
         }
-        return text.toString().substring(0,text.toString().length()-1);
+        return text.toString().substring(0, text.toString().length() - 1);
     }
 
 

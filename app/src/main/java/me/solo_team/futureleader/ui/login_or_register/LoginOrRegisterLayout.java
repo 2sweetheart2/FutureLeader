@@ -49,6 +49,11 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
                     }
 
                     @Override
+                    public void inProcess() {
+
+                    }
+
+                    @Override
                     public void onSuccess(JSONObject json) {
                         try {
                             System.out.println(json);

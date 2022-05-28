@@ -62,5 +62,12 @@ public class API {
     public static void updateFields(FullApiListener listener, CustomString... fields){
         HTTPS.sendPost(Methods.UPD_FIELDS,Objects.requireNonNull(createJsonObj(fields)),listener);
     }
+    public static void getAchivement(ApiListener listener, CustomString... ids){
+        HTTPS.sendPost(Methods.GET_ACHIEVEMENT,Objects.requireNonNull(createJsonObj(ids)),listener);
+    }
+
+    public static void getUsers(ApiListener listener, CustomString... params){
+        HTTPS.sendPost(Methods.GET_USERS,Objects.requireNonNull(createJsonObj(params)),listener);
+    }
 
 }

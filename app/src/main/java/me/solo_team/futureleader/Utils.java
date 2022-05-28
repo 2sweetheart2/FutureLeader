@@ -124,7 +124,6 @@ public class Utils {
 //                callback.process(myBitmap);
 
             } catch (IOException e) {
-                e.printStackTrace();
                 callback.process(null);
             }
         }).start();

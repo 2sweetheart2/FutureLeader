@@ -19,6 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import me.solo_team.futureleader.API.API;
+import me.solo_team.futureleader.API.ApiListener;
+import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
@@ -37,86 +42,99 @@ public class UsersLayout extends Her {
         noResult = findViewById(R.id.layout_with_users_no_result);
         // TODO: делается запрос на серв для получения пользователей
 
-        JSONObject users = new JSONObject();
-        JSONObject user = new JSONObject();
-        JSONArray us = new JSONArray();
-        try {
-            user.put("picture",null);
-            user.put("name","Test Name");
-            user.put("post","Участник ШБЛ");
-            user.put("email","test@test");
-            user.put("division","Набор 2020");
-            user.put("status",1);
-            users.put("users",us.put(user));
-            JSONObject user1 = new JSONObject();
-            user1.put("picture",null);
-            user1.put("name","Anastasia Kostina");
-            user1.put("post","Участник ШБЛ");
-            user1.put("email","kostinalipsoon@gmail.com");
-            user1.put("division","Набор 2020");
-            user1.put("status",0);
-            users.put("users",us.put(user1));
 
-            addUsers(users.getJSONArray("users"),null);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        searchUser.addTextChangedListener(new TextWatcher() {
+        API.getUsers(new ApiListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onError(JSONObject json) {
                 try {
-                    addUsers(users.getJSONArray("users"),s.toString());
+                    createNotification(findViewById(R.id.admining_users_layout),json.getString("message"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
-        });
+            public void inProcess() {
+
+            }
+
+            @Override
+            public void onSuccess(JSONObject json) {
+                try {
+                    JSONArray arr = json.getJSONArray("users");
+                    addUsers(arr,null);
+                    System.out.println(arr.toString());
+                    searchUser.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            try {
+                                addUsers(arr,s.toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {}
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        },new CustomString("token", Constants.user.token));
 
     }
 
     private void addUsers(JSONArray arr, String filterName) throws JSONException {
-        usersList.removeAllViews();
+        runOnUiThread(()->usersList.removeAllViews());
         int count = 0;
-        for(int i=0;i<arr.length();i++){
 
+        for(int i=0;i<arr.length();i++){
             JSONObject o = arr.getJSONObject(i);
             if(filterName!=null) {
                 if(!filterName.equals(""))
-                    if(!o.getString("name").toLowerCase().contains(filterName.toLowerCase())) continue;
+                    if(!(o.getString("first_name")+" "+o.getString("last_name")).toLowerCase().contains(filterName.toLowerCase())) continue;
             }
-            ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout,null);
-            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_name)).setText(o.getString("name"));
-            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: "+o.getString("email"));
-            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_division)).setText(o.getString("division"));
-            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_post)).setText(o.getString("post"));
-            switch (o.getInt("status")){
-                case 0:
-                    ((ImageView)constraintLayout.findViewById(R.id.admining_user_content_activity_status)).setColorFilter(Color.RED);
-                    break;
-//                по дефолту уже 1
-//                case 1:
-//                    break;
-                case 2:
-                    ((ImageView)constraintLayout.findViewById(R.id.admining_user_content_activity_status)).setColorFilter(Color.YELLOW);
-                    break;
+            User user = new User();
+            user.lastName = o.getString("last_name");
+            user.firstName = o.getString("first_name");
+            user.addFields(o.getString("fields"));
 
+            String division;
+            if(user.user_fields.has("division")) {
+                String[] str = user.user_fields.getString("division").split(">");
+                division = str[str.length-1];
             }
-            usersList.addView(constraintLayout);
+            else
+                division = "Отсутствует";
+            String post;
+            if(user.user_fields.has("post"))
+                post = user.user_fields.getString("post");
+            else
+                post = "Отсутствует";
+
+            ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout,null);
+            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_name)).setText(user.firstName+" "+user.lastName);
+            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: "+o.getString("email"));
+            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_division)).setText(division);
+            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_post)).setText(post);
+            Constants.cache.addPhoto(o.getString("profile_picture"),true, constraintLayout.findViewById(R.id.admining_user_content_logo),this);
+            runOnUiThread(()-> usersList.addView(constraintLayout));
             count++;
         }
-        if(count==0){
+        int finalCount = count;
+        runOnUiThread(()->{
+        if(finalCount ==0){
             noResult.setText("По вашему запросу \""+filterName+"\" нет результатов :(");
             noResult.setVisibility(View.VISIBLE);
         }
         else{
             noResult.setVisibility(View.GONE);
         }
+        });
     }
 }
