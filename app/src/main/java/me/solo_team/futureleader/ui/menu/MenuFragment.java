@@ -42,7 +42,7 @@ public class MenuFragment extends Fragment {
         grid.addElement(null, "FAQ", "16", false);
         grid.addElement(null, "заявки", "16", false);
         grid.addElement(null, "именниники", "16", true);
-        if(Constants.user.admin_status!=0) grid.addElement(null,"администрирование","16",true)
+        if(Constants.user.adminStatus!=0) grid.addElement(null,"администрирование","16",true)
                 .setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), AdminingLayout.class));
         });

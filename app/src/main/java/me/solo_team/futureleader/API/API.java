@@ -1,5 +1,7 @@
 package me.solo_team.futureleader.API;
 
+import android.graphics.Bitmap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,6 +54,13 @@ public class API {
 
     public static void getNews(FullApiListener listener, CustomString... params){
         HTTPS.sendPost(Methods.GET_NEWS,Objects.requireNonNull(createJsonObj(params)),listener);
+    }
+
+    public static void uploadProfilePicture(FullApiListener listener, Bitmap photo, CustomString... params){
+        HTTPS.u(Methods.UPD_PROFILE_PICTURE,Objects.requireNonNull(createJsonObj(params)),photo,listener);
+    }
+    public static void updateFields(FullApiListener listener, CustomString... fields){
+        HTTPS.sendPost(Methods.UPD_FIELDS,Objects.requireNonNull(createJsonObj(fields)),listener);
     }
 
 }

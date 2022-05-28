@@ -1,7 +1,6 @@
 package me.solo_team.futureleader.ui.profile;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -12,11 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import me.solo_team.futureleader.API.API;
+import me.solo_team.futureleader.API.FullApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
@@ -60,7 +61,7 @@ public class EditFieldsLayout extends Her {
                     editInfo(name, data);
                     break;
                 case "phone":
-                    if (data.length() != 12 || data.indexOf("+") != 0) {
+                    if (data.length() != 12 || data.indexOf("+") != 0 || !data.startsWith("+7")) {
                         Utils.ShowSnackBar.show(getApplicationContext(), "Номер телефона введен некоректно\nПример: +79112220000", v);
                         return;
                     }
@@ -75,7 +76,7 @@ public class EditFieldsLayout extends Her {
     private boolean cr(String value,View v){
         EditFieldsDialog cl = new EditFieldsDialog(result -> {
             if(!result) return;
-            Constants.user.info_fields.remove(Constants.user.enums.get(value.toLowerCase()));
+            Constants.user.user_fields.remove(Constants.user.editedFieldsTypes.get(value.toLowerCase()));
             finish();
         },value,"Вы действиетльно хотите удалить параметр \""+value+"\"?");
         cl.show(getSupportFragmentManager(),"myDialog");
@@ -84,10 +85,32 @@ public class EditFieldsLayout extends Her {
 
     private void editInfo(String name, String value) {
         try {
-            Constants.user.info_fields.put(Constants.user.enums.get(name.toLowerCase()), value);
+            Constants.user.user_fields.put(Constants.user.editedFieldsTypes.get(name.toLowerCase()), value);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        API.updateFields(new FullApiListener() {
+            @Override
+            public void inProgress() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onError(JSONObject json) {
+
+            }
+
+            @Override
+            public void onSuccess(JSONObject json) {
+
+            }
+        }, new CustomString("fields",Constants.user.getFields()),new CustomString("token",Constants.user.token));
+
         finish();
     }
 

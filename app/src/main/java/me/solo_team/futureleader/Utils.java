@@ -37,6 +37,8 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -45,6 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
+
+
     public static class ShowSnackBar {
         public static void show(Context context, String message, View view) {
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -108,18 +112,19 @@ public class Utils {
     public static void getBitmapFromURL(String src, CallBackBitMap callback) {
         new Thread(() -> {
             try {
-
                 URL url = new URL(src);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                callback.process(myBitmap);
+                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                callback.process(image);
+//                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//                connection.setRequestMethod("POST");
+//                connection.setDoInput(true);
+//                connection.connect();
+//                InputStream input = connection.getInputStream();
+//                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+//                callback.process(myBitmap);
 
             } catch (IOException e) {
-
+                e.printStackTrace();
                 callback.process(null);
             }
         }).start();

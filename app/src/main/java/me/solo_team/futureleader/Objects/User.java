@@ -1,8 +1,6 @@
 package me.solo_team.futureleader.Objects;
 
-import com.bluelinelabs.logansquare.LoganSquare;
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,52 +8,75 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
-@JsonObject
 public class User {
-    @JsonField(name = "first_name")
-    public String first_name;
-    @JsonField(name = "last_name")
-    public String last_name;
-    @JsonField(name = "status")
+    public String firstName;
+    public String lastName;
     public String status;
-    @JsonField(name = "age")
     public int age;
-    @JsonField(name = "info_fields")
-    public JSONObject info_fields;
-    @JsonField(name="achievements_fields")
-    public JSONArray achievements_fields;
-    @JsonField(name = "admin_status")
-    public int admin_status=0;
-    public HashMap<String,String> editedFieldsTypes = new HashMap<String, String>(){{
-        put("город","text");
-        put("телефон","phone");
-        put("telegram","text");
-        put("whatsapp","phone");
+    public int id;
+    public String profilePictureLink;
+    public String token;
+    public String fields;
+    public JSONObject user_fields= new JSONObject();
+    public String achievementsIds;
+    public int adminStatus = 0;
+    public HashMap<String, String> editedFieldsTypes = new HashMap<String, String>() {{
+        put("город", "text");
+        put("телефон", "phone");
+        put("telegram", "text");
+        put("whatsapp", "phone");
     }};
 
-    public LinkedHashMap<String, String> enums;
 
-    public List<Achievement> getAchivements(){
-        List<Achievement> ls = new ArrayList<>();
-        for(int i =0;i<achievements_fields.length();i++){
+    public void addFields(String fields) {
+
+        for (String i : fields.split("&")) {
             try {
-                ls.add(LoganSquare.parse(achievements_fields.getJSONObject(i).toString(), Achievement.class));
-            } catch (JSONException | IOException e) {
+                user_fields.put(i.split("=")[0], i.split("=")[1]);
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void addAchivement(String achivementString){
+        for(String a : achivementString.split("&")){
+
+        }
+    }
+
+    public LinkedHashMap<String, String> enums;
+
+    public List<Achievement> getAchivements() {
+        List<Achievement> ls = new ArrayList<>();
+//        for (int i = 0; i < achievementsFields.length(); i++) {
+//            try {
+//                Achievement achievement = new Achievement();
+//                achievement.coins = achievementsFields.getJSONObject(i).getInt("coins");
+//            } catch (JSONException | IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
         return ls;
     }
 
-    public enum FIELDS{
-
+    public String getFields(){
+        StringBuilder text = new StringBuilder();
+        for (Iterator<String> it = user_fields.keys(); it.hasNext(); ) {
+            String s = it.next();
+            try {
+                text.append(s).append("=").append(user_fields.getString(s)).append("&");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return text.toString().substring(0,text.toString().length()-1);
     }
+
 
 }

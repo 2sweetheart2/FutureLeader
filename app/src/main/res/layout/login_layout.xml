@@ -14,7 +14,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/screen_background_light" />
+        app:srcCompat="@drawable/gray_gradient_with_corners" />
 
     <EditText
         android:id="@+id/edit_login_or_email"

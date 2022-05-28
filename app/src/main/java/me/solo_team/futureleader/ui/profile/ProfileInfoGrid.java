@@ -46,7 +46,7 @@ public class ProfileInfoGrid {
         return row;
     }
 
-    public void addRow(String name){
+    public View addRow(String name){
         View view = inflater.inflate(R.layout.single_gray_line_withtext_contact,container,false);
         ((TextView)view.findViewById(R.id.text_with_line)).setText(name);
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT);
@@ -54,10 +54,12 @@ public class ProfileInfoGrid {
         params.setMarginStart(50);
         params.setMarginEnd(50);
         table.addView(view,params);
+        return view;
     }
 
-    public void addRow(){
+    public View addRow(){
         View view = inflater.inflate(R.layout.single_gray_line,container,false);
         table.addView(view);
+        return view;
     }
 }

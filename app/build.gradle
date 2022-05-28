@@ -27,10 +27,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
 dependencies {
 // https://mavenlibs.com/maven/dependency/com.bluelinelabs/logansquare
-    implementation 'com.bluelinelabs:logansquare:1.3.7'
+// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.3'
     //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:23.4.0'
     implementation 'com.squareup.picasso:picasso:2.71828'

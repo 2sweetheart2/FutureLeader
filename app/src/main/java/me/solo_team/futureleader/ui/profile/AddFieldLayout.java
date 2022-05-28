@@ -1,12 +1,9 @@
 package me.solo_team.futureleader.ui.profile;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,13 +14,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuItemCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import me.solo_team.futureleader.API.API;
+import me.solo_team.futureleader.API.FullApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
@@ -47,13 +47,17 @@ public class AddFieldLayout extends Her {
                 text.setText("");
                 String type = Constants.user.editedFieldsTypes.get(values[position]);
                 System.out.println(values[position]);
-                switch (type){
+                try{
+                switch (type) {
                     case "text":
                         text.setInputType(InputType.TYPE_CLASS_TEXT);
                         break;
                     case "phone":
                         text.setInputType(InputType.TYPE_CLASS_PHONE);
                         break;
+                }
+                }catch (NullPointerException e){
+                    text.setInputType(InputType.TYPE_CLASS_TEXT);
                 }
             }
 
@@ -73,7 +77,7 @@ public class AddFieldLayout extends Her {
                     editInfo(values[spinner.getSelectedItemPosition()],data);
                     break;
                 case "phone":
-                    if(data.length()!=12 || data.indexOf("+")!=0) {
+                    if(data.length()!=12 || data.indexOf("+")!=0 || !data.startsWith("+7")) {
                         Utils.ShowSnackBar.show(getApplicationContext(), "Номер телефона введен некоректно\nПример: +79112220000", v);return;}
                     editInfo(values[spinner.getSelectedItemPosition()],data);
                     break;
@@ -84,10 +88,32 @@ public class AddFieldLayout extends Her {
     }
     private void editInfo(String name, String value){
         try {
-            Constants.user.info_fields.put(Constants.user.enums.get(name.toLowerCase()),value);
+            Constants.user.user_fields.put(Constants.user.editedFieldsTypes.get(name.toLowerCase()),value);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        API.updateFields(new FullApiListener() {
+            @Override
+            public void inProgress() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onError(JSONObject json) {
+
+            }
+
+            @Override
+            public void onSuccess(JSONObject json) {
+
+            }
+        }, new CustomString("fields",Constants.user.getFields()),new CustomString("token",Constants.user.token));
+
         finish();
     }
     public class MyCustomAdapter extends ArrayAdapter<String> {

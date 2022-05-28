@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.squareup.picasso.Picasso;
 
 import me.solo_team.futureleader.MainActivity;
