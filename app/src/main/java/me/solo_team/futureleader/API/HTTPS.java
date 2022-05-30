@@ -14,6 +14,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -27,8 +31,20 @@ public class HTTPS {
     // TODO: ТУТ НИЧЕГО НЕ МЕНЯТЬ!!!
     private static final String URL = "https://future-leaders.ru/api/";
 
+    /**
+     * все изходящие запросы могут быть обработы только один раз
+     * в случае создания двух слушателей на один и тот же запрос, будет задействован только первый слушатель
+     */
+    private static final Procesor procesor = new Procesor();
+    public static class Procesor{
+        public HashMap<Methods, ApiListener> queue = new HashMap<>();
+    }
 
     public static void sendPost(Methods method, JSONObject params, ApiListener apiListener) {
+
+        if(procesor.queue.containsKey(method)) return;
+        else procesor.queue.put(method,apiListener);
+
         new Thread(() -> {
             try {
                 HttpURLConnection con = (HttpsURLConnection) new URL(URL + method.label).openConnection();
@@ -47,16 +63,20 @@ public class HTTPS {
                     while ((responseLine = br.readLine()) != null) {
                         response_.append(responseLine.trim());
                     }
-                    apiListener.process(new JSONObject(response_.toString()));
+                    procesor.queue.get(method).process(new JSONObject(response_.toString()));
+                    Thread.sleep(1000);
+                    procesor.queue.remove(method);
+
                 }
-            } catch (IOException | JSONException e) {
+            } catch (IOException | JSONException | InterruptedException e) {
                 try {
                     JSONObject o = new JSONObject();
                     o.put("success", false);
                     JSONObject b = new JSONObject();
                     b.put("message", "can't connect to server");
                     o.put("error", b);
-                    apiListener.process(o);
+                    procesor.queue.get(method).process(o);
+                    procesor.queue.remove(method);
                 } catch (JSONException ignored) {
                 }
             }

@@ -15,9 +15,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.stream.Stream;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
@@ -32,6 +36,14 @@ public class UsersLayout extends Her {
     LinearLayout usersList;
     EditText searchUser;
     TextView noResult;
+    int offset = 0;
+    int oldOffset;
+    int size=0;
+    int curentSize=0;
+    TextView count;
+    LinearLayout menu;
+    JSONArray arr;
+    JSONArray filteredList;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +52,10 @@ public class UsersLayout extends Her {
         usersList = findViewById(R.id.layout_with_users);
         searchUser = findViewById(R.id.adminig_users_serach);
         noResult = findViewById(R.id.layout_with_users_no_result);
+        menu = findViewById(R.id.layout_with_users_result);
+        count = findViewById(R.id.layout_with_users_offset);
+        TextView back = findViewById(R.id.layout_with_users_btn_back);
+        TextView next = findViewById(R.id.layout_with_users_btn_next);
         // TODO: делается запрос на серв для получения пользователей
 
 
@@ -61,8 +77,9 @@ public class UsersLayout extends Her {
             @Override
             public void onSuccess(JSONObject json) {
                 try {
-                    JSONArray arr = json.getJSONArray("users");
-                    addUsers(arr,null);
+                    arr = json.getJSONArray("users");
+
+                    addUsers(null);
                     System.out.println(arr.toString());
                     searchUser.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -71,7 +88,12 @@ public class UsersLayout extends Her {
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
                             try {
-                                addUsers(arr,s.toString());
+                                if(s.toString().length()==0) offset = oldOffset;
+                                else {
+                                    oldOffset = offset;
+                                    offset = 0;
+                                }
+                                addUsers(s.toString());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -86,19 +108,62 @@ public class UsersLayout extends Her {
 
             }
         },new CustomString("token", Constants.user.token));
-
+        back.setOnClickListener(v -> {
+            if(offset==0) Snackbar.make(v, "Это начало списка", Snackbar.LENGTH_LONG)
+                    .show();
+            else {
+                offset--;
+                try {
+                    String text = null;
+                    if(searchUser.getText().toString().length()!=0) text = searchUser.getText().toString();
+                    addUsers(text);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        next.setOnClickListener(v -> {
+            if(offset==curentSize/10) Snackbar.make(v, "Это конец списка", Snackbar.LENGTH_LONG)
+                    .show();
+            else {
+                offset++;
+                try {
+                    String text = null;
+                    if(searchUser.getText().toString().length()!=0) text = searchUser.getText().toString();
+                    addUsers(text);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    private void addUsers(JSONArray arr, String filterName) throws JSONException {
-        runOnUiThread(()->usersList.removeAllViews());
-        int count = 0;
+    private void copy(){
+        filteredList = arr;
+        curentSize = filteredList.length();
+    }
 
+    private void filterArray(String filterName) throws JSONException {
+        if(filterName==null) {copy();return;}
+        if(filterName.equals(""))  {copy();return;}
+        filteredList = new JSONArray();
         for(int i=0;i<arr.length();i++){
             JSONObject o = arr.getJSONObject(i);
-            if(filterName!=null) {
-                if(!filterName.equals(""))
-                    if(!(o.getString("first_name")+" "+o.getString("last_name")).toLowerCase().contains(filterName.toLowerCase())) continue;
-            }
+            if(!(o.getString("first_name")+" "+o.getString("last_name")).toLowerCase().contains(filterName.toLowerCase())) continue;
+            filteredList.put(o);
+        }
+        curentSize = filteredList.length();
+    }
+
+    private void addUsers(String filterName) throws JSONException {
+        runOnUiThread(()->usersList.removeAllViews());
+        int count = 0;
+        int lastIndex = 0;
+        filterArray(filterName);
+        for(int i = (10 * offset); i<(10*offset)+10; i++){
+            if(i>=curentSize) continue;
+            JSONObject o = filteredList.getJSONObject(i);
+            lastIndex = i+1;
             User user = new User();
             user.lastName = o.getString("last_name");
             user.firstName = o.getString("first_name");
@@ -116,7 +181,6 @@ public class UsersLayout extends Her {
                 post = user.user_fields.getString("post");
             else
                 post = "Отсутствует";
-
             ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout,null);
             ((TextView) constraintLayout.findViewById(R.id.admining_user_content_name)).setText(user.firstName+" "+user.lastName);
             ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: "+o.getString("email"));
@@ -127,13 +191,20 @@ public class UsersLayout extends Her {
             count++;
         }
         int finalCount = count;
+        int finalLastIndex = lastIndex;
         runOnUiThread(()->{
         if(finalCount ==0){
+            menu.setVisibility(View.GONE);
             noResult.setText("По вашему запросу \""+filterName+"\" нет результатов :(");
             noResult.setVisibility(View.VISIBLE);
         }
         else{
             noResult.setVisibility(View.GONE);
+            menu.setVisibility(View.VISIBLE);
+            String text_;
+            if(offset==0) text_ = "1";
+            else text_ = String.valueOf((10 * offset));
+            this.count.setText("Показаны пользователи с "+text_+" по "+ finalLastIndex +" (из "+(curentSize)+" )");
         }
         });
     }

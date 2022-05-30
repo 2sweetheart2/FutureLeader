@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Objects;
 
+import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 
 /**
@@ -14,6 +16,7 @@ import me.solo_team.futureleader.Objects.CustomString;
  *
  */
 public class API {
+
 
     /**
      * метод для создания из {@link CustomString} единого {@link JSONObject}
@@ -69,5 +72,7 @@ public class API {
     public static void getUsers(ApiListener listener, CustomString... params){
         HTTPS.sendPost(Methods.GET_USERS,Objects.requireNonNull(createJsonObj(params)),listener);
     }
+
+
 
 }

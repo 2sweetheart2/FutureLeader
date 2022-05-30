@@ -31,7 +31,6 @@ public class User {
 
 
     public void addFields(String fields) {
-
         for (String i : fields.split("&")) {
             try {
                 user_fields.put(i.split("=")[0], i.split("=")[1]);
