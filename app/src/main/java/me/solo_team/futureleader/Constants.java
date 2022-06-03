@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.HashMap;
 
 import me.solo_team.futureleader.API.ApiListener;
@@ -21,6 +23,7 @@ public class Constants {
     public static MainActivity mainActivity;
     public static Resources res;
     public static CachePhoto cache = new CachePhoto();
+
 
     public static class CachePhoto {
         private HashMap<ImageView, Bitmap> cache = new HashMap<>();

@@ -27,7 +27,7 @@ public interface ApiListener {
 
     void inProcess();
 
-    void onSuccess(JSONObject json);
+    void onSuccess(JSONObject json) throws JSONException;
 
     default void createNotification(View v,String message) {
         try {

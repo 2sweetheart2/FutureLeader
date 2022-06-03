@@ -42,7 +42,14 @@
         <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Layout"/>
         <activity android:name=".ui.profile.EditFieldsLayout"/>
         <activity android:name=".ui.profile.AddFieldLayout"/>
-
+        <activity android:name=".ui.menu.statical.admining.layouts.users.StructurLayout"/>
+        <service
+            android:name=".FireBaseSendings"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

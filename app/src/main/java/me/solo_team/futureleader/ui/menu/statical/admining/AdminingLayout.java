@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.StructurLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.UsersLayout;
 
 public class AdminingLayout extends AppCompatActivity {
@@ -84,22 +85,20 @@ public class AdminingLayout extends AppCompatActivity {
 
         ExpandableListView expandableListView = findViewById(R.id.expListView);
         expandableListView.setAdapter(adapter);
+
+
         HashMap<Integer,HashMap<Integer,Class>> classes = new HashMap<>();
         HashMap<Integer,Class> m = new HashMap<>();
         m.put(0, UsersLayout.class);
+        m.put(1, StructurLayout.class);
+
         classes.put(0,m);
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                System.out.println(groupPosition+" "+childPosition);
-                startActivity(new Intent(AdminingLayout.this,classes.get(groupPosition).get(childPosition)));
-                Snackbar.make(findViewById(R.id.admining_layout_view).getRootView(), "132", Snackbar.LENGTH_LONG)
-                        .setAction("CLOSE", view -> {
-                        })
-                        .setActionTextColor(Color.RED)
-                        .show();
-                return true;
-            }
+
+
+        expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            System.out.println(groupPosition+" "+childPosition);
+            startActivity(new Intent(AdminingLayout.this,classes.get(groupPosition).get(childPosition)));
+            return true;
         });
     }
 

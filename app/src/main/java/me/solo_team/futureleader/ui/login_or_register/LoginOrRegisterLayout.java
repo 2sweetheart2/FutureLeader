@@ -7,8 +7,13 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +43,7 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 API.loginUser(new ApiListener() {
                     @Override
                     public void onError(JSONObject json) {
@@ -74,7 +80,10 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                }, new CustomString("email", "sweet-heart@swht.one"), new CustomString("password", "f1779008"));
+                },
+                        new CustomString("email", "sweet-heart@swht.one"),
+                        new CustomString("password", "f1779008")
+                );
 
             }
         });

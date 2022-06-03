@@ -2,6 +2,8 @@ package me.solo_team.futureleader.API;
 
 import android.graphics.Bitmap;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +24,8 @@ import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import me.solo_team.futureleader.Objects.CustomString;
+
 /**
  * реквесты на сервер
  *
@@ -36,39 +40,37 @@ public class HTTPS {
      * в случае создания двух слушателей на один и тот же запрос, будет задействован только первый слушатель
      */
     private static final Procesor procesor = new Procesor();
-    public static class Procesor{
+
+    public static class Procesor {
         public HashMap<Methods, ApiListener> queue = new HashMap<>();
+    }
+
+    private interface GetToken {
+        void process(String token) throws JSONException;
+    }
+
+
+    private static void getMobileToken(GetToken callback) {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    try {
+                        if (!task.isSuccessful()) {
+                            callback.process(null);
+                            return;
+                        }
+                        callback.process(task.getResult());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     public static void sendPost(Methods method, JSONObject params, ApiListener apiListener) {
 
-        if(procesor.queue.containsKey(method)) return;
-        else procesor.queue.put(method,apiListener);
-
-        new Thread(() -> {
-            try {
-                HttpURLConnection con = (HttpsURLConnection) new URL(URL + method.label).openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-Type", "application/json; utf-8");
-                con.setDoOutput(true);
-                System.out.println(con.getURL());
-                try (OutputStream os = con.getOutputStream()) {
-                    byte[] input = params.toString().getBytes(StandardCharsets.UTF_8);
-                    os.write(input, 0, input.length);
-                }
-                try (BufferedReader br = new BufferedReader(
-                        new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
-                    StringBuilder response_ = new StringBuilder();
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        response_.append(responseLine.trim());
-                    }
-                    procesor.queue.get(method).process(new JSONObject(response_.toString()));
-                    Thread.sleep(1000);
-                    procesor.queue.remove(method);
-
-                }
-            } catch (IOException | JSONException | InterruptedException e) {
+        if (procesor.queue.containsKey(method)) return;
+        else procesor.queue.put(method, apiListener);
+        getMobileToken(token -> {
+            if (token == null) {
                 try {
                     JSONObject o = new JSONObject();
                     o.put("success", false);
@@ -79,8 +81,47 @@ public class HTTPS {
                     procesor.queue.remove(method);
                 } catch (JSONException ignored) {
                 }
+                return;
             }
-        }).start();
+            params.put("mobile_token",token);
+            System.out.println(params);
+            new Thread(() -> {
+                try {
+                    HttpURLConnection con = (HttpsURLConnection) new URL(URL + method.label).openConnection();
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("Content-Type", "application/json; utf-8");
+                    con.setRequestProperty("Accept", "application/json");
+                    con.setDoOutput(true);
+                    System.out.println(con.getURL());
+                    try (OutputStream os = con.getOutputStream()) {
+                        byte[] input = params.toString().getBytes(StandardCharsets.UTF_8);
+                        os.write(input, 0, input.length);
+                    }
+                    try (BufferedReader br = new BufferedReader(
+                            new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+                        StringBuilder response_ = new StringBuilder();
+                        String responseLine;
+                        while ((responseLine = br.readLine()) != null) {
+                            response_.append(responseLine.trim());
+                        }
+                        procesor.queue.get(method).process(new JSONObject(response_.toString()));
+                        procesor.queue.remove(method);
+
+                    }
+                } catch (IOException | JSONException e) {
+                    try {
+                        JSONObject o = new JSONObject();
+                        o.put("success", false);
+                        JSONObject b = new JSONObject();
+                        b.put("message", "can't connect to server");
+                        o.put("error", b);
+                        procesor.queue.get(method).process(o);
+                        procesor.queue.remove(method);
+                    } catch (JSONException ignored) {
+                    }
+                }
+            }).start();
+        });
     }
 
     public static void sendPost(Methods method, JSONObject params, FullApiListener apiListener) {
@@ -166,7 +207,7 @@ public class HTTPS {
                         response_.append(responseLine.trim());
                     }
                     callback.process(new JSONObject(response_.toString()));
-                }catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                     try {
                         callback.process(o);
@@ -174,20 +215,20 @@ public class HTTPS {
                         jsonException.printStackTrace();
                     }
                 }
-            } catch(IOException e){
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
                 try {
                     callback.process(o);
                 } catch (JSONException jsonException) {
                     jsonException.printStackTrace();
                 }
-        } catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }).
 
-    start();
+                start();
 
-}
+    }
 
 }

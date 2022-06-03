@@ -16,7 +16,8 @@ public enum Methods {
     UPD_STATUS("update_status"),
     UPD_ADMIN_ROLE("update_admin_role"),
     GET_ACHIEVEMENT("get_achievement"),
-    GET_USERS("get_users");
+    GET_USERS("get_users"),
+    GET_STRUCTURE("get_structure");
 
 
     public String label;
