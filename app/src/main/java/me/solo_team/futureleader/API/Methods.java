@@ -17,7 +17,10 @@ public enum Methods {
     UPD_ADMIN_ROLE("update_admin_role"),
     GET_ACHIEVEMENT("get_achievement"),
     GET_USERS("get_users"),
-    GET_STRUCTURE("get_structure");
+    GET_STRUCTURE("get_structure"),
+    GET_NEW("get_new"),
+    ADD_NEW("add_new"),
+    UPL_IMAGE("upload_image");
 
 
     public String label;

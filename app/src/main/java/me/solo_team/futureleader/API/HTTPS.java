@@ -16,15 +16,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import me.solo_team.futureleader.Objects.CustomString;
 
 /**
  * реквесты на сервер
@@ -83,8 +78,7 @@ public class HTTPS {
                 }
                 return;
             }
-            params.put("mobile_token",token);
-            System.out.println(params);
+            params.put("mobile_token", token);
             new Thread(() -> {
                 try {
                     HttpURLConnection con = (HttpsURLConnection) new URL(URL + method.label).openConnection();
@@ -163,71 +157,86 @@ public class HTTPS {
     }
 
 
-    public static void u(Methods method, JSONObject data, Bitmap image, FullApiListener callback) {
-        callback.inProgress();
+    public static void u(Methods method, JSONObject data, Bitmap image, ApiListener callback) {
+        callback.inProcess();
         JSONObject o = new JSONObject();
-        try {
-            o.put("success", false);
-            JSONObject b = new JSONObject();
-            b.put("message", "can't connect to server");
-            o.put("error", b);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        new Thread(() -> {
-            try {
-                HttpURLConnection connection = (HttpsURLConnection) new URL(URL + method.label).openConnection();
-                connection.setRequestMethod("POST");
-                String boundary = UUID.randomUUID().toString();
-
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                DataOutputStream request = new DataOutputStream(connection.getOutputStream());
-                request.writeBytes("--" + boundary + "\r\n");
-                request.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"file.bmp\"\r\n\r\n");
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                request.write(byteArray);
-                request.writeBytes("\r\n");
-                for (int i = 0; i < data.names().length(); i++) {
-                    request.writeBytes("--" + boundary + "\r\n");
-                    request.writeBytes("Content-Disposition: form-data; name=\"" + data.names().getString(i) + "\"\r\n\r\n");
-                    request.writeBytes(data.get(data.names().getString(i)) + "\r\n");
+        getMobileToken(token -> {
+            if (token == null) {
+                try {
+                    JSONObject o1 = new JSONObject();
+                    o1.put("success", false);
+                    JSONObject b = new JSONObject();
+                    b.put("message", "can't connect to server");
+                    o1.put("error", b);
+                    procesor.queue.get(method).process(o1);
+                    procesor.queue.remove(method);
+                } catch (JSONException ignored) {
                 }
-                request.writeBytes("--" + boundary + "--\r\n");
-                request.flush();
+                return;
+            }
+            data.put("mobile_token", token);
+            try {
+                o.put("success", false);
+                JSONObject b = new JSONObject();
+                b.put("message", "can't connect to server");
+                o.put("error", b);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-                try (BufferedReader br = new BufferedReader(
-                        new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-                    StringBuilder response_ = new StringBuilder();
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        response_.append(responseLine.trim());
+            new Thread(() -> {
+                try {
+                    HttpURLConnection connection = (HttpsURLConnection) new URL(URL + method.label).openConnection();
+                    connection.setRequestMethod("POST");
+                    String boundary = UUID.randomUUID().toString();
+
+                    connection.setDoOutput(true);
+                    connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                    DataOutputStream request = new DataOutputStream(connection.getOutputStream());
+                    request.writeBytes("--" + boundary + "\r\n");
+                    request.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"file.bmp\"\r\n\r\n");
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    request.write(byteArray);
+                    request.writeBytes("\r\n");
+                    for (int i = 0; i < data.names().length(); i++) {
+                        request.writeBytes("--" + boundary + "\r\n");
+                        request.writeBytes("Content-Disposition: form-data; name=\"" + data.names().getString(i) + "\"\r\n\r\n");
+                        request.writeBytes(data.get(data.names().getString(i)) + "\r\n");
                     }
-                    callback.process(new JSONObject(response_.toString()));
-                } catch (JSONException e) {
+                    request.writeBytes("--" + boundary + "--\r\n");
+                    request.flush();
+
+                    try (BufferedReader br = new BufferedReader(
+                            new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                        StringBuilder response_ = new StringBuilder();
+                        String responseLine;
+                        while ((responseLine = br.readLine()) != null) {
+                            response_.append(responseLine.trim());
+                        }
+                        callback.process(new JSONObject(response_.toString()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        try {
+                            callback.process(o);
+                        } catch (JSONException jsonException) {
+                            jsonException.printStackTrace();
+                        }
+                    }
+                } catch (IOException e) {
                     e.printStackTrace();
                     try {
                         callback.process(o);
                     } catch (JSONException jsonException) {
                         jsonException.printStackTrace();
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                try {
-                    callback.process(o);
-                } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }).
+            }).start();
+        });
 
-                start();
 
     }
 

@@ -56,26 +56,22 @@ public class NewsFragment extends Fragment {
 
             @Override
             public void onSuccess(JSONObject json) throws JSONException {
-                System.out.println(json.toString());
-                JSONArray news = json.getJSONArray("news");
-                for (int i = 0; i <= news.length(); i++) {
-                    JSONObject o = news.getJSONObject(i);
-                    News new_ = new News(
-                            o.getInt("id"),
-                            o.getString("photo_paths"),
-                            o.getString("text"),
-                            o.getString("name"),
-                            o.getString("title"));
-                    requireActivity().runOnUiThread(() -> {
-                        addElement(new_.photoUrl, new_.title).setOnClickListener(v -> {
+                    System.out.println(json.toString());
+                    JSONArray news = json.getJSONArray("news");
+                    Constants.newsCache.news = news;
+                    for (int i = 0; i < news.length(); i++) {
+                        JSONObject o = news.getJSONObject(i);
+                        News new_ = new News(
+                                o.getInt("id"),
+                                o.getString("photo"),
+                                o.getString("title"));
+                        requireActivity().runOnUiThread(() -> addElement(new_.photoUrl, new_.title).setOnClickListener(v -> {
                             Intent intent = new Intent(requireContext(), OpenNewsFragment.class);
-                            intent.putExtra("tag",new_.title);
-                            intent.putExtra("title", new_.name);
-                            intent.putExtra("text", new_.text);
+                            intent.putExtra("tag", new_.title);
+                            intent.putExtra("id", new_.id);
                             startActivity(intent);
-                        });
-                    });
-                }
+                        }));
+                    }
             }
         }, new CustomString("token", Constants.user.token));
 //        List<String> uris = Arrays.asList(

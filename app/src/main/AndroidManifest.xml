@@ -43,6 +43,8 @@
         <activity android:name=".ui.profile.EditFieldsLayout"/>
         <activity android:name=".ui.profile.AddFieldLayout"/>
         <activity android:name=".ui.menu.statical.admining.layouts.users.StructurLayout"/>
+        <activity android:name=".ui.news.open_news.EditNews"/>
+        <activity android:name=".ui.news.open_news.CreateChieldNew"/>
         <service
             android:name=".FireBaseSendings"
             android:exported="false">

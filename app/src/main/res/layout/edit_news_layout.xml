@@ -25,29 +25,69 @@
             android:layout_margin="15dp"
             android:hint="  имя"
             />
-
+        <TextView
+            android:id="@+id/eeeef"
+            android:layout_width="0dp"
+            android:text="Изображение:"
+            android:textColor="@color/black"
+            app:layout_constraintRight_toRightOf="@id/edit_new_title"
+            app:layout_constraintLeft_toLeftOf="@id/edit_new_title"
+            app:layout_constraintTop_toBottomOf="@id/edit_new_title"
+            android:layout_height="wrap_content"
+            />
+        <ImageView
+            android:id="@+id/edit_new_logo"
+            app:layout_constraintLeft_toLeftOf="@id/edit_new_title"
+            app:layout_constraintRight_toRightOf="@id/edit_new_title"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="200dp"
+            app:layout_constraintTop_toBottomOf="@id/eeeef"
+            app:layout_constraintDimensionRatio="1:1"
+            android:src="@drawable/resize_300x0"
+            />
         <LinearLayout
             android:id="@+id/edit_new_item_list"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edit_new_title"
+            app:layout_constraintTop_toBottomOf="@id/edit_new_logo"
             app:layout_constraintLeft_toLeftOf="@id/edit_new_title"
             app:layout_constraintRight_toRightOf="@id/edit_new_title"
             android:layout_marginTop="15dp"
+            android:orientation="vertical"
             >
 
-            <TextView
-                android:id="@+id/edit_new_add_item_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gray_gradient_with_corners"
-                android:layout_margin="15dp"
-                android:text="Добавить элемент"
-                android:textColor="@color/black"
-                android:textAlignment="center"
-                android:padding="8dp"
-                />
+
         </LinearLayout>
+        <TextView
+            android:id="@+id/edit_new_add_item_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:layout_margin="15dp"
+            android:text="Добавить элемент"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/edit_new_item_list"
+            />
+        <TextView
+            android:id="@+id/edit_new_save_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:layout_margin="15dp"
+            android:text="Сохранить"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/edit_new_add_item_btn"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            app:layout_constraintTop_toBottomOf="@id/edit_new_save_btn"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -20,7 +20,12 @@ public interface ApiListener {
         if (jsonObject.has("error"))
             onError(jsonObject.getJSONObject("error"));
         else
-            onSuccess(jsonObject.getJSONObject("response"));
+            try {
+                if(jsonObject.isNull("response")) onSuccess(null);
+                else onSuccess(jsonObject.getJSONObject("response"));
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
     }
 
     void onError(JSONObject json);

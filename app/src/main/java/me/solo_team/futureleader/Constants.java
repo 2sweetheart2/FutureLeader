@@ -8,22 +8,41 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.messaging.FirebaseMessaging;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import me.solo_team.futureleader.API.ApiListener;
-import me.solo_team.futureleader.API.Methods;
 import me.solo_team.futureleader.Objects.User;
 
 
 public class Constants {
     // TODO: ТУТ ВСЕ КОНСТАНТЫ И НЕ ТОЛЬКО
     public static User user;
+    public static NewsCache newsCache = new NewsCache();
     public static MainActivity mainActivity;
     public static Resources res;
     public static CachePhoto cache = new CachePhoto();
 
+
+    public static class NewsCache {
+        public JSONArray news = new JSONArray();
+        public JSONObject curentNew;
+
+        public void updObjects() {
+            try {
+                for (int i = 0; i < news.length(); i++) {
+                    if (news.getJSONObject(i).getInt("id") == curentNew.getInt("id")) {
+                        news.getJSONObject(i).put("objects", curentNew.getJSONArray("objects"));
+                        return;
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public static class CachePhoto {
         private HashMap<ImageView, Bitmap> cache = new HashMap<>();
@@ -86,8 +105,8 @@ public class Constants {
         }
 
         public void addPhoto(Bitmap bitmap, boolean needRoundCorners, ImageView v) {
-            if(needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap,10);
-            cache.put(v,bitmap);
+            if (needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
+            cache.put(v, bitmap);
             v.setImageBitmap(bitmap);
         }
 

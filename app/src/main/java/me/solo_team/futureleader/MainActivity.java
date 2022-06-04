@@ -20,12 +20,15 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceIdReceiver;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
 
 import me.solo_team.futureleader.ui.WebViewsContent.WebView;
+import me.solo_team.futureleader.ui.news.open_news.EditNews;
+import me.solo_team.futureleader.ui.news.open_news.OpenNewsFragment;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navView;
@@ -90,7 +93,17 @@ public class MainActivity extends AppCompatActivity {
                 menu.add(0, 1, 0, "")
                         .setIcon(R.drawable.plus)
                         .setOnMenuItemClickListener(item -> {
-                            System.out.println("CLICK");
+                            Intent intent = new Intent(this, EditNews.class);
+                            JSONObject o = new JSONObject();
+                            try {
+                                o.put("title","");
+                                o.put("name","");
+                                o.put("objects",new JSONArray());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Constants.newsCache.curentNew=o;
+                            startActivity(intent);
                             return true;
                         })
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);

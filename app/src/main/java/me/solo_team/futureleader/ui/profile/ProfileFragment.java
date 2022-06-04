@@ -192,19 +192,14 @@ public class ProfileFragment extends Fragment {
             try {
                 Bitmap image = BitmapFactory.decodeStream(requireActivity().getContentResolver().openInputStream(selectedImage));
                 //picture.setImageBitmap(image);
-                API.uploadProfilePicture(new FullApiListener() {
-                    @Override
-                    public void inProgress() {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-
+                API.uploadProfilePicture(new ApiListener() {
                     @Override
                     public void onError(JSONObject json) {
+
+                    }
+
+                    @Override
+                    public void inProcess() {
 
                     }
 
@@ -217,6 +212,7 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                 }, image, new CustomString("token", Constants.user.token));
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

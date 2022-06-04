@@ -27,7 +27,6 @@ public class API {
             for (CustomString s : params) {
                 jsonObject.put(s.name, s.value);
             }
-            System.out.println(jsonObject);
             return jsonObject;
         } catch (JSONException e) {
             return null;
@@ -59,7 +58,7 @@ public class API {
         HTTPS.sendPost(Methods.GET_NEWS, Objects.requireNonNull(createJsonObj(params)), listener);
     }
 
-    public static void uploadProfilePicture(FullApiListener listener, Bitmap photo, CustomString... params) {
+    public static void uploadProfilePicture(ApiListener listener, Bitmap photo, CustomString... params) {
         HTTPS.u(Methods.UPD_PROFILE_PICTURE, Objects.requireNonNull(createJsonObj(params)), photo, listener);
     }
 
@@ -79,5 +78,21 @@ public class API {
         HTTPS.sendPost(Methods.GET_STRUCTURE, Objects.requireNonNull(createJsonObj(params)), listener);
     }
 
+    public static void getNew(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_NEW, Objects.requireNonNull(createJsonObj(params)), listener);
+    }
+
+    public static void addNew(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.ADD_NEW, Objects.requireNonNull(createJsonObj(params)), listener);
+    }
+
+    public static void addNew(ApiListener listener, JSONObject params) {
+        HTTPS.sendPost(Methods.ADD_NEW, params, listener);
+    }
+
+    public static void uploadImage(ApiListener listener, Bitmap bitmap, CustomString... params){
+        HTTPS.u(Methods.UPL_IMAGE, Objects.requireNonNull(createJsonObj(params)), bitmap, listener);
+
+    }
 
 }
