@@ -13,8 +13,6 @@
         android:layout_height="match_parent"
         />
 
-    <!-- Фон опять же та же херь-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:elevation="10dp"

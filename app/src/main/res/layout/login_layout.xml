@@ -3,75 +3,103 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/login_or_register_layout"
+    >
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="301dp"
-        android:layout_height="449dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/gray_gradient_with_corners" />
+    <WebView
+        android:id="@+id/webvuiew_login_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
-    <EditText
-        android:id="@+id/edit_login_or_email"
-        android:layout_width="252dp"
-        android:layout_height="44dp"
-        android:hint="Введите почту или логин..."
-        android:inputType="text"
-        android:tag="values"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:elevation="10dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.299"
-        tools:ignore="Autofill,HardcodedText" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/guideline16"
+        app:layout_constraintRight_toRightOf="@id/guideline17"
+        android:background="@drawable/gray_gradient_with_corners"
+        android:paddingTop="400dp"
+        android:paddingBottom="30dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
 
-    <Button
-        android:id="@+id/button_entrance"
-        android:layout_width="253dp"
-        android:layout_height="55dp"
-        android:text="Войти"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.718" />
+        <EditText
+            android:id="@+id/edit_login_or_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/secondary"
+            android:hint="Введите логин или почту..."
+            android:inputType="text"
+            android:tag="values"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/edit_password"
+            android:layout_marginBottom="300dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="Autofill,HardcodedText" />
 
-    <EditText
-        android:id="@+id/edit_password"
-        android:layout_width="252dp"
-        android:layout_height="44dp"
-        android:hint="Введите пароль..."
-        android:inputType="text"
-        android:tag="values"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.397"
-        tools:ignore="Autofill,HardcodedText" />
+        <EditText
+            android:id="@+id/edit_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Введите пароль..."
+            android:inputType="text"
+            android:tag="values"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/button_lost_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="@color/secondary"
+            android:layout_marginBottom="300dp"
+            tools:ignore="Autofill,HardcodedText" />
 
-    <!--Как блять уменьшить размер текста?.. Фон вот то видео-->
-    <!--которое я хер знает как прикрепить.-->
-    <Button
-        android:id="@+id/button_lost_password"
-        android:layout_width="113dp"
-        android:layout_height="40dp"
-        android:text="Забыли пароль?"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+
+        <Button
+            android:id="@+id/button_lost_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="120dp"
+            android:backgroundTint="@color/secondary"
+            android:elevation="5dp"
+            android:text="Забыли пароль?"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/button_entrance"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_entrance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Войти"
+            android:elevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="@color/secondary"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.10" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.90" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
