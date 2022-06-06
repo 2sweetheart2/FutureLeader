@@ -107,7 +107,6 @@
             android:backgroundTint="@color/secondary"
             android:layout_marginBottom="200dp"
             tools:ignore="Autofill,HardcodedText" />
-
         <Button
             android:id="@+id/button_entrance"
             android:layout_width="0dp"
