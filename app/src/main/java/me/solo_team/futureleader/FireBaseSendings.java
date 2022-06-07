@@ -1,5 +1,8 @@
 package me.solo_team.futureleader;
 
+import android.content.Context;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -14,33 +17,24 @@ public class FireBaseSendings extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
+        System.out.println("TOKEN: "+token );
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         System.out.println(remoteMessage.getData());
-        handleNow(new JSONObject(remoteMessage.getData()));
+        if (remoteMessage.getData().size() > 0) {
+            System.out.println("Message data payload: " + remoteMessage.getData());
+            handleNow(new JSONObject(remoteMessage.getData()));
+        }
     }
-
-    // Идентификатор уведомления
-    private static final int NOTIFY_ID = 101;
 
     // Идентификатор канала
     private void handleNow(JSONObject data) {
         try {
-            NotificationCompat.Builder builder
-                    = new NotificationCompat.Builder(getApplicationContext(), "fcm_default_channel")
-                        .setSmallIcon(R.drawable.resize_300x0)
-                        .setContentTitle(data.getString("title"))
-                        .setContentText(data.getString("body"))
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            NotificationManagerCompat notificationManager =
-                    NotificationManagerCompat.from(getApplicationContext());
-            notificationManager.notify(101, builder.build());
-        } catch (JSONException e) {
+            MyNotificationManager.getInstance(this).displayNotification(data.getString("title"),data.getString("body"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

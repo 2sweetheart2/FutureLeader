@@ -3,6 +3,8 @@
     <string name="title_news">Новости</string>
     <string name="title_menu">Меню</string>
     <string name="title_profile">Профиль</string>
+    <string name="previous">\uD83E\uDC60 предыдущие</string>
+    <string name="next">следующие \uD83E\uDC62</string>
 
 
 </resources>

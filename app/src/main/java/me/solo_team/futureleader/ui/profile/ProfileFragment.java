@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.ui.profile;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,6 +38,7 @@ import me.solo_team.futureleader.API.FullApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
@@ -63,9 +65,17 @@ public class ProfileFragment extends Fragment {
         description = root.findViewById(R.id.profile_description);
         button = root.findViewById(R.id.profile_add_field_btn);
 
-        name.setText(Constants.user.firstName + " " + Constants.user.lastName);
-        description.setText(Constants.user.status);
-        Constants.cache.addPhoto(Constants.user.profilePictureLink, true, picture, this);
+
+        if(savedInstanceState!=null)
+            if(savedInstanceState.getString("id")!=null)
+                System.out.println("I NEED LOAD ANOTHER USER!!!");
+            else Constants.currentUser = Constants.user;
+        else Constants.currentUser = Constants.user;
+
+
+        name.setText(Constants.currentUser.firstName + " " + Constants.currentUser.lastName);
+        description.setText(Constants.currentUser.status);
+        Constants.cache.addPhoto(Constants.currentUser.profilePictureLink, true, picture, this);
 
         picture.requestLayout();
         updateGrid(grid);
@@ -86,7 +96,7 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(requireContext(), AddFieldLayout.class);
             List<String> arr = new ArrayList<>();
             for(String s : notAddedItems.keySet()){
-                if(Constants.user.editedFieldsTypes.containsKey(s))
+                if(Constants.currentUser.editedFieldsTypes.containsKey(s))
                     arr.add(s);
             }
             intent.putExtra("values", String.join(",", arr));
@@ -97,10 +107,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Integer> ids = new ArrayList<>();
-                for(String s: Constants.user.achievementsIds.split(",")){
+                for(String s: Constants.currentUser.achievementsIds.split(",")){
                     ids.add(Integer.parseInt(s));
                 }
                 API.getAchivement(new ApiListener() {
+                    Dialog d;
                     @Override
                     public void onError(JSONObject json) {
                         try {
@@ -112,20 +123,21 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void inProcess() {
-
+                        d = this.openWaiter(requireContext());
                     }
 
                     @Override
                     public void onSuccess(JSONObject json) {
                         try {
-                            Constants.user.achievements =  json.getJSONArray("achievements");
+                            d.dismiss();
+                            Constants.currentUser.achievements =  json.getJSONArray("achievements");
                             AlertAchivementListDialog alertAchivementListDialog = new AlertAchivementListDialog();
                             alertAchivementListDialog.show(getParentFragmentManager(),null);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                },new CustomString("ids",Constants.user.achievementsIds), new CustomString("token",Constants.user.token));
+                },new CustomString("ids",Constants.currentUser.achievementsIds), new CustomString("token",Constants.user.token));
 
 
             }
@@ -138,7 +150,7 @@ public class ProfileFragment extends Fragment {
         notAddedItems.clear();
         LinkedHashMap<String, Integer> rows = new LinkedHashMap<>();
         int index = 0;
-        for (Map.Entry<String, String> s : Constants.user.enums.entrySet()) {
+        for (Map.Entry<String, String> s : Constants.currentUser.enums.entrySet()) {
             String key = s.getKey();
             String value = s.getValue();
             if (key.contains("line")) {
@@ -148,17 +160,17 @@ public class ProfileFragment extends Fragment {
                 index++;
                 continue;
             }
-            if (!Constants.user.user_fields.has(value)) {
+            if (!Constants.currentUser.user_fields.has(value)) {
                 notAddedItems.put(s.getKey(), s.getValue());
                 continue;
             }
             try {
                 String name = key.substring(0, 1).toUpperCase() + key.substring(1);
-                if (!Constants.user.editedFieldsTypes.containsKey(key))
-                    grid.addElement(name, Utils.parseDateBirthday(Constants.user.user_fields.getString(value)));
+                if (!Constants.currentUser.editedFieldsTypes.containsKey(key))
+                    grid.addElement(name, Utils.parseDateBirthday(Constants.currentUser.user_fields.getString(value)));
                 else
-                    grid.addElement(name, Constants.user.user_fields.getString(value))
-                            .setOnLongClickListener(v -> cr(key, Constants.user.editedFieldsTypes.get(key)));
+                    grid.addElement(name, Constants.currentUser.user_fields.getString(value))
+                            .setOnLongClickListener(v -> cr(key, Constants.currentUser.editedFieldsTypes.get(key)));
                 index++;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -169,7 +181,7 @@ public class ProfileFragment extends Fragment {
             button.setVisibility(View.GONE);
         else
             button.setVisibility(View.VISIBLE);
-        List<String> val = new ArrayList<>(Constants.user.enums.keySet());
+        List<String> val = new ArrayList<>(Constants.currentUser.enums.keySet());
         boolean removeFirstLine = true;
         boolean removeSecondLine = true;
         for(int i=val.indexOf("line")+1;i<val.indexOf("line1");i++){
@@ -193,6 +205,7 @@ public class ProfileFragment extends Fragment {
                 Bitmap image = BitmapFactory.decodeStream(requireActivity().getContentResolver().openInputStream(selectedImage));
                 //picture.setImageBitmap(image);
                 API.uploadProfilePicture(new ApiListener() {
+                    Dialog d;
                     @Override
                     public void onError(JSONObject json) {
 
@@ -200,18 +213,20 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void inProcess() {
-
+                        d = openWaiter(requireContext());
                     }
 
                     @Override
                     public void onSuccess(JSONObject json) {
                         try {
+                            d.dismiss();
+                            Constants.currentUser.profilePictureLink = json.getString("url");
                             Constants.cache.addPhoto(json.getString("url"), true, picture, ProfileFragment.this);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                }, image, new CustomString("token", Constants.user.token));
+                }, image, new CustomString("token", Constants.user.token),new CustomString("current_id",String.valueOf(Constants.currentUser.id)));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

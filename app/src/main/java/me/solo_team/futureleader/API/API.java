@@ -62,7 +62,7 @@ public class API {
         HTTPS.u(Methods.UPD_PROFILE_PICTURE, Objects.requireNonNull(createJsonObj(params)), photo, listener);
     }
 
-    public static void updateFields(FullApiListener listener, CustomString... fields) {
+    public static void updateFields(ApiListener listener, CustomString... fields) {
         HTTPS.sendPost(Methods.UPD_FIELDS, Objects.requireNonNull(createJsonObj(fields)), listener);
     }
 

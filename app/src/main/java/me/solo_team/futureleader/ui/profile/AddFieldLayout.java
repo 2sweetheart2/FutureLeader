@@ -1,5 +1,6 @@
 package me.solo_team.futureleader.ui.profile;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
@@ -21,7 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.solo_team.futureleader.API.API;
-import me.solo_team.futureleader.API.FullApiListener;
+import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
@@ -30,6 +31,7 @@ import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class AddFieldLayout extends Her {
     EditText text;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,16 +49,16 @@ public class AddFieldLayout extends Her {
                 text.setText("");
                 String type = Constants.user.editedFieldsTypes.get(values[position]);
                 System.out.println(values[position]);
-                try{
-                switch (type) {
-                    case "text":
-                        text.setInputType(InputType.TYPE_CLASS_TEXT);
-                        break;
-                    case "phone":
-                        text.setInputType(InputType.TYPE_CLASS_PHONE);
-                        break;
-                }
-                }catch (NullPointerException e){
+                try {
+                    switch (type) {
+                        case "text":
+                            text.setInputType(InputType.TYPE_CLASS_TEXT);
+                            break;
+                        case "phone":
+                            text.setInputType(InputType.TYPE_CLASS_PHONE);
+                            break;
+                    }
+                } catch (NullPointerException e) {
                     text.setInputType(InputType.TYPE_CLASS_TEXT);
                 }
             }
@@ -69,38 +71,38 @@ public class AddFieldLayout extends Her {
         setTitle("Добавить поле");
         button.setOnClickListener(v -> {
             String type = Constants.user.editedFieldsTypes.get(values[spinner.getSelectedItemPosition()]);
-            if(text.getText().length()==0)
+            if (text.getText().length() == 0)
                 Snackbar.make(v, "Данные введены некоректно", Snackbar.LENGTH_LONG).show();
             String data = text.getText().toString();
-            switch (type){
+            switch (type) {
                 case "text":
-                    editInfo(values[spinner.getSelectedItemPosition()],data);
+                    editInfo(values[spinner.getSelectedItemPosition()], data);
                     break;
                 case "phone":
-                    if(data.length()!=12 || data.indexOf("+")!=0 || !data.startsWith("+7")) {
-                        Utils.ShowSnackBar.show(getApplicationContext(), "Номер телефона введен некоректно\nПример: +79112220000", v);return;}
-                    editInfo(values[spinner.getSelectedItemPosition()],data);
+                    if (data.length() != 12 || data.indexOf("+") != 0 || !data.startsWith("+7")) {
+                        Utils.ShowSnackBar.show(getApplicationContext(), "Номер телефона введен некоректно\nПример: +79112220000", v);
+                        return;
+                    }
+                    editInfo(values[spinner.getSelectedItemPosition()], data);
                     break;
             }
         });
         //
 
     }
-    private void editInfo(String name, String value){
+
+    private void editInfo(String name, String value) {
         try {
-            Constants.user.user_fields.put(Constants.user.editedFieldsTypes.get(name.toLowerCase()),value);
+            Constants.user.user_fields.put(Constants.user.editedFieldsTypes.get(name.toLowerCase()), value);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        API.updateFields(new FullApiListener() {
-            @Override
-            public void inProgress() {
-
-            }
+        API.updateFields(new ApiListener() {
+            Dialog d;
 
             @Override
-            public void onFinish() {
-
+            public void inProcess() {
+                d = openWaiter(AddFieldLayout.this);
             }
 
             @Override
@@ -110,14 +112,16 @@ public class AddFieldLayout extends Her {
 
             @Override
             public void onSuccess(JSONObject json) {
-
+                d.dismiss();
             }
-        }, new CustomString("fields",Constants.user.getFields()),new CustomString("token",Constants.user.token));
+        }, new CustomString("fields", Constants.currentUser.getFields()), new CustomString("token", Constants.user.token),new CustomString("current_id",String.valueOf(Constants.currentUser.id)));
 
         finish();
     }
+
     public class MyCustomAdapter extends ArrayAdapter<String> {
         String[] objects;
+
         public MyCustomAdapter(Context context, int textViewResourceId,
                                String[] objects) {
             super(context, textViewResourceId, objects);

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/login_or_register_layout"
+
     >
 
     <WebView
@@ -70,5 +71,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.80" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:background="@android:color/transparent"
+        android:id="@+id/blocker"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,6 +37,9 @@ public class User {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            catch (ArrayIndexOutOfBoundsException e){
+                e.printStackTrace();
+            }
         }
     }
 

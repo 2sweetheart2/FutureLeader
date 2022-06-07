@@ -20,6 +20,7 @@ import me.solo_team.futureleader.Objects.User;
 public class Constants {
     // TODO: ТУТ ВСЕ КОНСТАНТЫ И НЕ ТОЛЬКО
     public static User user;
+    public static User currentUser;
     public static NewsCache newsCache = new NewsCache();
     public static MainActivity mainActivity;
     public static Resources res;

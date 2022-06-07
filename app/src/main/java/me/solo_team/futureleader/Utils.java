@@ -3,6 +3,7 @@ package me.solo_team.futureleader;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -27,12 +29,15 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -46,9 +51,31 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class Utils {
+
+
+    public static void OpenBlockerLayout(AppCompatActivity app,View v){
+        RelativeLayout rl = new RelativeLayout(app.getApplicationContext());
+        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        rl.setBackgroundColor(Color.TRANSPARENT);
+        rl.setLayoutParams(lp);
+        ConstraintLayout cn = (ConstraintLayout) app.getLayoutInflater().inflate(R.layout.wait_layout,null);
+        cn.setLayoutParams(lp);
+        cn.setVisibility(View.VISIBLE);
+        System.out.println(v.getClass());
+        System.out.println(v instanceof ConstraintLayout);
+        if(v instanceof ConstraintLayout){
+            for(int i=0;i<((ConstraintLayout) v).getChildCount();i++){
+                ((ConstraintLayout) v).getChildAt(i).setClickable(false);
+            }
+        }
+        app.addContentView(cn,lp);
+
+    }
 
 
     public static class ShowSnackBar {

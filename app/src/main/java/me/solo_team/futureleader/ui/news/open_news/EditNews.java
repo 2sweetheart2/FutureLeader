@@ -1,21 +1,19 @@
 package me.solo_team.futureleader.ui.news.open_news;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -27,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -36,7 +33,6 @@ import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.news.AlertDialogForDeleteField;
 
@@ -71,24 +67,35 @@ public class EditNews extends Her {
         }
 
         addItem.setOnClickListener(v -> {
-            Intent intent = new Intent(this,CreateChieldNew.class);
+            Intent intent = new Intent(this, CreateChieldNew.class);
             startActivity(intent);
         });
 
         saveBtn.setOnClickListener(v -> {
-            if(tag.getText().length()==0) {error("Тэг не может быть пустым",v);return;}
-            if(name.getText().length()==0) {error("Имя не может быть пустым",v);return;}
-            if(list.getChildCount()==0) {error("Объектов не может быть 0",v);return;}
+            if (tag.getText().length() == 0) {
+                error("Тэг не может быть пустым", v);
+                return;
+            }
+            if (name.getText().length() == 0) {
+                error("Имя не может быть пустым", v);
+                return;
+            }
+            if (list.getChildCount() == 0) {
+                error("Объектов не может быть 0", v);
+                return;
+            }
             try {
-                Constants.newsCache.curentNew.put("title",tag.getText());
-                Constants.newsCache.curentNew.put("name",name.getText());
+                Constants.newsCache.curentNew.put("title", tag.getText());
+                Constants.newsCache.curentNew.put("name", name.getText());
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             try {
-                Constants.newsCache.curentNew.put("token",Constants.user.token);
+                Constants.newsCache.curentNew.put("token", Constants.user.token);
                 API.addNew(new ApiListener() {
+                    Dialog d;
+
                     @Override
                     public void onError(JSONObject json) {
 
@@ -96,16 +103,17 @@ public class EditNews extends Her {
 
                     @Override
                     public void inProcess() {
-
+                        d = openWaiter(EditNews.this);
                     }
 
                     @Override
                     public void onSuccess(JSONObject json) throws JSONException {
+                        d.dismiss();
                         System.out.println(json);
                         Constants.newsCache.curentNew = null;
                         finish();
                     }
-                },Constants.newsCache.curentNew);
+                }, Constants.newsCache.curentNew);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -138,14 +146,15 @@ public class EditNews extends Her {
         }
     }
 
-    private void error(String mess,View v){
+    private void error(String mess, View v) {
         try {
             Snackbar.make(v, mess, Snackbar.LENGTH_LONG)
                     .setAction("CLOSE", view -> {
                     })
                     .setActionTextColor(Color.RED)
                     .show();
-        } catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
@@ -175,11 +184,11 @@ public class EditNews extends Her {
                     int finalI = i;
                     textView.setOnLongClickListener(v -> {
                         AlertDialogForDeleteField al = new AlertDialogForDeleteField((result, view) -> {
-                               if(!result) return;
-                               Constants.newsCache.curentNew.getJSONArray("objects").remove(view);
-                               drawObject(Constants.newsCache.curentNew.getJSONArray("objects"));
+                            if (!result) return;
+                            Constants.newsCache.curentNew.getJSONArray("objects").remove(view);
+                            drawObject(Constants.newsCache.curentNew.getJSONArray("objects"));
                         }, finalI);
-                        al.show(getSupportFragmentManager(),null);
+                        al.show(getSupportFragmentManager(), null);
                         return true;
                     });
                     runOnUiThread(() -> list.addView(textView));
@@ -189,15 +198,15 @@ public class EditNews extends Her {
                     lp2.setMargins(0, 5, 0, 5);
                     ImageView imageView = new ImageView(getApplicationContext(), null);
                     imageView.setLayoutParams(lp2);
-                    Constants.cache.addPhoto(o.getString("value"),true,imageView,EditNews.this);
+                    Constants.cache.addPhoto(o.getString("value"), true, imageView, EditNews.this);
                     int finalI1 = i;
                     imageView.setOnLongClickListener(v -> {
                         AlertDialogForDeleteField al = new AlertDialogForDeleteField((result, view) -> {
-                            if(!result) return;
+                            if (!result) return;
                             Constants.newsCache.curentNew.getJSONArray("objects").remove(view);
                             drawObject(Constants.newsCache.curentNew.getJSONArray("objects"));
                         }, finalI1);
-                        al.show(getSupportFragmentManager(),null);
+                        al.show(getSupportFragmentManager(), null);
                         return true;
                     });
                     runOnUiThread(() -> list.addView(imageView));
@@ -206,6 +215,7 @@ public class EditNews extends Her {
             }
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -227,10 +237,10 @@ public class EditNews extends Her {
 
                     @Override
                     public void onSuccess(JSONObject json) throws JSONException {
-                        Constants.newsCache.curentNew.put("photo",json.getString("url"));
-                        Constants.cache.addPhoto(json.getString("url"),true,logo,EditNews.this);
+                        Constants.newsCache.curentNew.put("photo", json.getString("url"));
+                        Constants.cache.addPhoto(json.getString("url"), true, logo, EditNews.this);
                     }
-                },bitmap,new CustomString("token",Constants.user.token));
+                }, bitmap, new CustomString("token", Constants.user.token));
             } catch (IOException e) {
                 e.printStackTrace();
             }

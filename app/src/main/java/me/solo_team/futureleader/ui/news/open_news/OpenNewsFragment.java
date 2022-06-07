@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.ui.news.open_news;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class OpenNewsFragment extends Her {
         setTitle(getIntent().getStringExtra("tag"));
 
         API.getNew(new ApiListener() {
+            Dialog d;
                        @Override
                        public void onError(JSONObject json) {
 
@@ -42,7 +44,7 @@ public class OpenNewsFragment extends Her {
 
                        @Override
                        public void inProcess() {
-
+                            d = openWaiter(OpenNewsFragment.this);
                        }
 
                        @Override
@@ -55,6 +57,7 @@ public class OpenNewsFragment extends Her {
                            oldJson = new_;
                            runOnUiThread(() -> {
                                try {
+                                   d.dismiss();
                                    ((TextView) findViewById(R.id.news_open_title)).setText(new_.getString("name"));
                                } catch (JSONException e) {
                                    e.printStackTrace();

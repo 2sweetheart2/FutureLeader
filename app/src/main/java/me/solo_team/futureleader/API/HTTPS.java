@@ -64,6 +64,7 @@ public class HTTPS {
 
         if (procesor.queue.containsKey(method)) return;
         else procesor.queue.put(method, apiListener);
+        apiListener.inProcess();
         getMobileToken(token -> {
             if (token == null) {
                 try {

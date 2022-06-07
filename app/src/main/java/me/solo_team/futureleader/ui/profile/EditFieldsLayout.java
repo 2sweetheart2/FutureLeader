@@ -1,5 +1,6 @@
 package me.solo_team.futureleader.ui.profile;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
@@ -15,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.solo_team.futureleader.API.API;
+import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.API.FullApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
@@ -76,22 +78,20 @@ public class EditFieldsLayout extends Her {
     private boolean cr(String value,View v){
         EditFieldsDialog cl = new EditFieldsDialog(result -> {
             if(!result) return;
-            Constants.user.user_fields.remove(Constants.user.editedFieldsTypes.get(value.toLowerCase()));
-            API.updateFields(new FullApiListener() {
+            Constants.currentUser.user_fields.remove(Constants.currentUser.editedFieldsTypes.get(value.toLowerCase()));
+            API.updateFields(new ApiListener() {
+                Dialog d;
                 @Override
-                public void inProgress() { }
-
-                @Override
-                public void onFinish() {
-                    finish();
+                public void inProcess() {
+                    d = openWaiter(EditFieldsLayout.this);
                 }
 
                 @Override
                 public void onError(JSONObject json) { }
 
                 @Override
-                public void onSuccess(JSONObject json) { }
-            }, new CustomString("fields",Constants.user.getFields()),new CustomString("token",Constants.user.token));
+                public void onSuccess(JSONObject json) {d.dismiss(); }
+            }, new CustomString("fields",Constants.currentUser.getFields()),new CustomString("token",Constants.user.token),new CustomString("current_id",String.valueOf(Constants.currentUser.id)));
 
 
         },value,"Вы действиетльно хотите удалить параметр \""+value+"\"?");
@@ -101,31 +101,23 @@ public class EditFieldsLayout extends Her {
 
     private void editInfo(String name, String value) {
         try {
-            Constants.user.user_fields.put(Constants.user.editedFieldsTypes.get(name.toLowerCase()), value);
+            Constants.currentUser.user_fields.put(Constants.currentUser.editedFieldsTypes.get(name.toLowerCase()), value);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        API.updateFields(new FullApiListener() {
+        API.updateFields(new ApiListener() {
+            Dialog d;
             @Override
-            public void inProgress() {
-
+            public void inProcess() {
+                d = openWaiter(EditFieldsLayout.this);
             }
 
             @Override
-            public void onFinish() {
-
-            }
+            public void onError(JSONObject json) { }
 
             @Override
-            public void onError(JSONObject json) {
-
-            }
-
-            @Override
-            public void onSuccess(JSONObject json) {
-
-            }
-        }, new CustomString("fields",Constants.user.getFields()),new CustomString("token",Constants.user.token));
+            public void onSuccess(JSONObject json) {d.dismiss(); }
+        }, new CustomString("fields",Constants.currentUser.getFields()),new CustomString("token",Constants.user.token),new CustomString("current_id",String.valueOf(Constants.currentUser.id)));
 
         finish();
     }

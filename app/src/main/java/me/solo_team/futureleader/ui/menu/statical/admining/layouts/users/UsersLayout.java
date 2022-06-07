@@ -1,5 +1,7 @@
 package me.solo_team.futureleader.ui.menu.statical.admining.layouts.users;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,6 +32,7 @@ import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
+import me.solo_team.futureleader.ui.profile.ProfileFragment;
 
 public class UsersLayout extends Her {
 
@@ -38,7 +41,6 @@ public class UsersLayout extends Her {
     TextView noResult;
     int offset = 0;
     int oldOffset;
-    int size=0;
     int curentSize=0;
     TextView count;
     LinearLayout menu;
@@ -60,6 +62,7 @@ public class UsersLayout extends Her {
 
 
         API.getUsers(new ApiListener() {
+            Dialog d;
             @Override
             public void onError(JSONObject json) {
                 try {
@@ -71,7 +74,7 @@ public class UsersLayout extends Her {
 
             @Override
             public void inProcess() {
-
+                d = openWaiter(UsersLayout.this);
             }
 
             @Override
@@ -81,6 +84,7 @@ public class UsersLayout extends Her {
 
                     addUsers(null);
                     System.out.println(arr.toString());
+                    d.dismiss();
                     searchUser.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -168,7 +172,7 @@ public class UsersLayout extends Her {
             user.lastName = o.getString("last_name");
             user.firstName = o.getString("first_name");
             user.addFields(o.getString("fields"));
-
+            user.id = o.getInt("id");
             String division;
             if(user.user_fields.has("division")) {
                 String[] str = user.user_fields.getString("division").split(">");
@@ -188,6 +192,18 @@ public class UsersLayout extends Her {
             ((TextView) constraintLayout.findViewById(R.id.admining_user_content_post)).setText(post);
             Constants.cache.addPhoto(o.getString("profile_picture"),true, constraintLayout.findViewById(R.id.admining_user_content_logo),this);
             runOnUiThread(()-> usersList.addView(constraintLayout));
+            constraintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    Constants.currentUser = new User();
+                    bundle.putString("id", String.valueOf(user.id));
+// set Fragmentclass Arguments
+                    ProfileFragment fragobj = new ProfileFragment();
+                    fragobj.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.admining_users_layout,fragobj).commit();
+                }
+            });
             count++;
         }
         int finalCount = count;
