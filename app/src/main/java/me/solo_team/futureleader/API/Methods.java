@@ -20,7 +20,8 @@ public enum Methods {
     GET_STRUCTURE("get_structure"),
     GET_NEW("get_new"),
     ADD_NEW("add_new"),
-    UPL_IMAGE("upload_image");
+    UPL_IMAGE("upload_image"),
+    GET_YT_LOGO("get_yt_logo");
 
 
     public String label;

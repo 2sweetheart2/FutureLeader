@@ -17,6 +17,7 @@ import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.ui.WebViewsContent.WebView;
 import me.solo_team.futureleader.ui.menu.MenuGrid;
+import me.solo_team.futureleader.ui.news.open_news.OpenNewsFragment;
 
 public class ContactLayout extends AppCompatActivity {
 
@@ -29,10 +30,9 @@ public class ContactLayout extends AppCompatActivity {
         ImageView contact2 = findViewById(R.id.contact_2);
         ImageView contact3 = findViewById(R.id.contact_3);
         List<String> urls = Arrays.asList(
-                "https://sun9-83.userapi.com/s/v1/if2/1qwoppOAKK9qnchI-1yyEE0Pmn25GbrVI9VTrfElNouUkm1LkXcdkgewbNICwNV42fVP0MHotTZxx6x_HxhKXz_M.jpg?size=800x450&quality=96&type=album",
-                "https://sun9-47.userapi.com/s/v1/if2/Sk-2C5IRXmBhpQIxD39S2EXBP3UxumPA4GzYjsB1PtbIz-nucpmhNsHDr8UirJiyNUqEqxz3IQ98irYmk6r6vMV6.jpg?size=800x450&quality=96&type=album",
-                "https://sun9-71.userapi.com/s/v1/if2/OTjZPkR6jYRxMFwWmibDirRB_Pj5wjNO8VikI1dY0eTeZ0rymx1qKbKs_KU5JTk033P-oUUFMzRkqMwqH7NsbxLF.jpg?size=800x450&quality=96&type=album"
-        );
+                "https://future-leaders.ru/resuorces/others/c-zYqjYNapfNFe6UP06NEY2X9lKt-mkBgt9XeWKLiV5lHwwQnX49XmJRJl3bek6E0xrjRJIwy4YyGeJP687wiA.png",
+                "https://future-leaders.ru/resuorces/others/cADo7gjVkXdXh_chRmCigAYzz6iYnneDiJhdrqRlebePmE4g8qb2VAHMIJKYnpyzfn4JZtn00MGc9fzDcZggPw.png",
+                "https://future-leaders.ru/resuorces/others/U6GvkkrKYEQcRSTGZCdG9J0V4woA5PmRlxDB89iuIvJizLLFHOe1zRKJHu8L7XCz7RcGFPebEVuuC2MwWUx-sA.png"        );
         Constants.cache.addPhoto(urls.get(0),true,contact1,this);
         Constants.cache.addPhoto(urls.get(1),true,contact2,this);
         Constants.cache.addPhoto(urls.get(2),true,contact3,this);

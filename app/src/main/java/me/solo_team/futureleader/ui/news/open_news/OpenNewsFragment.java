@@ -1,13 +1,19 @@
 package me.solo_team.futureleader.ui.news.open_news;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,25 +24,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.List;
+
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
+import me.solo_team.futureleader.ui.OnlyImage;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class OpenNewsFragment extends Her {
     String news;
     JSONObject oldJson;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_open);
         setTitle(getIntent().getStringExtra("tag"));
-
         API.getNew(new ApiListener() {
-            Dialog d;
+                       Dialog d;
+
                        @Override
                        public void onError(JSONObject json) {
 
@@ -44,14 +55,14 @@ public class OpenNewsFragment extends Her {
 
                        @Override
                        public void inProcess() {
-                            d = openWaiter(OpenNewsFragment.this);
+                           d = openWaiter(OpenNewsFragment.this);
                        }
 
                        @Override
                        public void onSuccess(JSONObject json) throws JSONException {
                            JSONObject new_ = json.getJSONObject("new");
                            String objects_ = new_.getString("objects");
-                           new_.put("objects",pareseStringToJSAray(objects_));
+                           new_.put("objects", pareseStringToJSAray(objects_));
                            JSONArray objects = new_.getJSONArray("objects");
                            Constants.newsCache.curentNew = new_;
                            oldJson = new_;
@@ -78,7 +89,7 @@ public class OpenNewsFragment extends Her {
     protected void onResumeFragments() {
         super.onResumeFragments();
         try {
-            if(Constants.newsCache.curentNew==null) return;
+            if (Constants.newsCache.curentNew == null) return;
             draw(Constants.newsCache.curentNew.getJSONArray("objects"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -86,12 +97,13 @@ public class OpenNewsFragment extends Her {
     }
 
     private void draw(JSONArray objects) throws JSONException {
-        runOnUiThread(()->((LinearLayout) findViewById(R.id.news_open_list)).removeAllViews());
+        runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).removeAllViews());
 
         for (int i = 0; i < objects.length(); i++) {
             JSONObject o = new JSONObject(objects.getString(i));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             lp.setMargins(0, 2, 0, 2);
+            System.out.println(o);
             switch (o.getString("type")) {
                 case "text":
                     TextView textView = new TextView(getApplicationContext(), null);
@@ -101,15 +113,62 @@ public class OpenNewsFragment extends Her {
                     runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(textView));
                     break;
                 case "photo":
+                    List<String> params = Arrays.asList(o.getString("extras").split(","));
                     ImageView imageView = new ImageView(getApplicationContext(), null);
-                    lp.height = 200;
-                    lp.weight = 200;
-                    imageView.setLayoutParams(lp);
-                    lp.gravity = Gravity.CENTER_HORIZONTAL;
-                    Constants.cache.addPhoto(o.getString("value"),true,imageView,OpenNewsFragment.this);
-                    runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView));
-                    break;
+                    if (params.contains("full_screen_v2")) {
+                        Point size = new Point();
+                        getWindowManager().getDefaultDisplay().getSize(size);
+                        lp.height = (int) (size.y / 1.5);
 
+                        imageView.setLayoutParams(lp);
+                        Constants.cache.addPhoto(o.getString("value"), true, imageView, OpenNewsFragment.this);
+                        runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView));
+                        break;
+                    }
+                    lp.width = 200;
+                    lp.gravity = Gravity.CENTER_HORIZONTAL;
+                    imageView.setLayoutParams(lp);
+
+                    Constants.cache.addPhoto(o.getString("value"), true, imageView, OpenNewsFragment.this);
+                    runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView));
+                    if (params.contains("full_screen")) {
+                        System.out.println("FULL SCREEN");
+                        imageView.setOnClickListener(v -> {
+                            Intent intent = new Intent(OpenNewsFragment.this, OnlyImage.class);
+                            intent.putExtra("title", "Биография");
+                            try {
+                                intent.putExtra("link", o.getString("value"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            startActivity(intent);
+                        });
+                    }
+                    break;
+                case "text_link":
+                    String url = o.getString("value");
+                    SpannableString ss = new SpannableString(url);
+                    ClickableSpan clickableSpan = new ClickableSpan() {
+                        @Override
+                        public void onClick(View textView) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                        }
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            super.updateDrawState(ds);
+                            ds.setUnderlineText(false);
+                        }
+                    };
+                    ss.setSpan(clickableSpan,  0,url.length(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    TextView textView1 = new TextView(getApplicationContext());
+                    textView1.setText(ss);
+                    textView1.setMovementMethod(LinkMovementMethod.getInstance());
+                    textView1.setHighlightColor(Color.TRANSPARENT);
+                    textView1.setLayoutParams(lp);
+                    runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(textView1));
+                    break;
             }
         }
     }
@@ -118,22 +177,5 @@ public class OpenNewsFragment extends Her {
         return new JSONArray(s);
     }
 
-//    @SuppressLint("ResourceType")
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        if (Constants.user.adminStatus != 0) {
-//            if (menu.size() == 0)
-//                menu.add(0, 1, 0, "")
-//                        .setIcon(R.drawable.plus)
-//                        .setOnMenuItemClickListener(item -> {
-//                            Intent intent = new Intent(OpenNewsFragment.this, EditNews.class);
-//                            intent.putExtra("new", news);
-//                            startActivity(intent);
-//                            return true;
-//                        })
-//                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//        } else menu.removeItem(1);
-//        return super.onPrepareOptionsMenu(menu);
-//    }
 
 }

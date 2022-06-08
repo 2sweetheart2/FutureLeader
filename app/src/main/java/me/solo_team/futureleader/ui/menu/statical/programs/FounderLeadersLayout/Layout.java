@@ -1,6 +1,8 @@
 package me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -13,6 +15,7 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.MenuGrid;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
+import me.solo_team.futureleader.ui.news.open_news.OpenNewsFragment;
 
 public class Layout extends Her {
     List<ImageView> views = new ArrayList<>();
@@ -23,9 +26,9 @@ public class Layout extends Her {
         setContentView(R.layout.founder_layout);
         MenuGrid grid = new MenuGrid(findViewById(R.id.back__), this, getWindowManager());
         List<String> urls = Arrays.asList(
-                "https://sun9-54.userapi.com/s/v1/if2/4FEl1v_9N9EWGeze7X8jgPyXmEh9O0GIT-DzKgqUn8rCUDvl8IjT6VHyU_0gfZYHhMuP6zb57KEsLKyFGgYH8bGr.jpg?size=800x800&quality=96&type=album",
-                "https://sun9-22.userapi.com/s/v1/if2/Y4fRZeViEl7jE-bOtjA5gs3hcjlUeJldXzs8pQnH5K1EHUh8skhC9qdo6K5kKCoI7vmvYZdhez52QbJwRUqfrqot.jpg?size=800x800&quality=96&type=album",
-                "https://sun9-48.userapi.com/s/v1/if2/PmCrNWsQdniIMink5IbU-6wLxc9y7vkDqwqHTFXUex3cCk4oz3IVuhQF_S1DsNf4pOhfsrTc3M5PqKR5_Atyt0Ls.jpg?size=800x800&quality=96&type=album"
+                "https://future-leaders.ru/resuorces/others/wv2vhjWEV9V30YEf1IO_ailL1ruWgii_DewdH4brYhsmZ1Q7__M1JBl8JRBeFWc6b65ckp44GYgAT7IVE_gMvQ.png",
+                "https://future-leaders.ru/resuorces/others/EnZXGZoaxKmdsAqH28FqVkXlv4pRLRtTMl-Hhj9Ia-RTxatkMJXj2ErBkYpjkilyhCK2o-LEMphQ8-qt7ceQmQ.png",
+                "https://future-leaders.ru/resuorces/others/JCFwcMnMhfzavY7lZ_T8BSEJhR6qWwfj1WNvjI2ofDNbcJNqwaDYKvZ3Zmv6juHMfJSrDmgtyEXzqsOnZGFOyg.png"
         );
         for (int i = 0; i < urls.size(); i++) {
             int column = 0;
@@ -39,6 +42,12 @@ public class Layout extends Her {
             Constants.cache.addPhoto(urls.get(i), true, v, this);
         }
         setTitle("Будущие Лидеры");
+        views.get(0).setOnClickListener(v -> {
+            Intent intent = new Intent(this, OpenNewsFragment.class);
+            intent.putExtra("tag","О проекте");
+            intent.putExtra("id",5);
+            startActivity(intent);
+        });
     }
 
 }

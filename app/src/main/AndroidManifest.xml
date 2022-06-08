@@ -4,10 +4,13 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_MEDIA"/>
     <application
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:windowSoftInputMode="adjustResize"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/resize_300x0"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -25,8 +28,6 @@
         </intent-filter></activity>
         <activity android:name=".ui.news.open_news.OpenNewsFragment"/>
         <activity android:name=".ui.menu.statical.Founder.FounderLayout"/>
-        <activity android:name=".ui.menu.statical.Founder.WelcomeSpeechLayout"/>
-        <activity android:name=".ui.menu.statical.Founder.BiographyLayout"/>
         <activity android:name=".ui.menu.statical.Founder.ContactLayout"/>
         <activity android:name=".ui.WebViewsContent.WebView"
             android:label="Web"
@@ -48,6 +49,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <activity android:name=".ui.OnlyImage"/>
     </application>
 
 </manifest>

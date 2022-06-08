@@ -21,6 +21,8 @@ import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import kotlin.coroutines.jvm.internal.SuspendFunction;
+
 /**
  * реквесты на сервер
  *
@@ -118,6 +120,7 @@ public class HTTPS {
             }).start();
         });
     }
+
 
     public static void sendPost(Methods method, JSONObject params, FullApiListener apiListener) {
         if (method == Methods.UPD_PROFILE_PICTURE)
