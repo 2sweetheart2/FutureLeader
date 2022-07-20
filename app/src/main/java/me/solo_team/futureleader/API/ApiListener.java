@@ -24,6 +24,7 @@ public interface ApiListener {
     default void process(JSONObject jsonObject) throws JSONException {
         if (jsonObject.has("error"))
             onError(jsonObject.getJSONObject("error"));
+
         else
             try {
                 if(jsonObject.isNull("response")) onSuccess(null);
@@ -33,7 +34,7 @@ public interface ApiListener {
             }
     }
 
-    void onError(JSONObject json);
+    void onError(JSONObject json) throws JSONException;
 
     void inProcess();
 

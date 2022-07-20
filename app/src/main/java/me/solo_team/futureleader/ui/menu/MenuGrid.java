@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,6 +15,13 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.CornerSize;
+import com.google.android.material.shape.EdgeTreatment;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -75,10 +83,15 @@ public class MenuGrid {
         return text;
     }
 
-    public ImageView addImageElement(Bitmap photo, boolean onAllColumn,int row,int column){
+    public ImageView addImageElement(Bitmap bitmap, boolean onAllColumn){
         Point size = new Point();
         windowManager.getDefaultDisplay().getSize(size);
         int halfScreenWidth = (int) (size.x * 0.5) - 20;
+        int column = 0;
+        if (offest % 2 != 0)
+            column = 1;
+        int row = offest / 2;
+
         GridLayout.Spec col_;
         if (onAllColumn) col_ = GridLayout.spec(column, 2);
         else col_ = GridLayout.spec(column);
@@ -86,25 +99,27 @@ public class MenuGrid {
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams(row_, col_);
         if (onAllColumn) {
             offest += 2;
-            lp.width = halfScreenWidth * 2 + 5;
-
+            lp.width = halfScreenWidth * 2;
         } else {
             offest++;
-            lp.width = halfScreenWidth;
+            lp.width = halfScreenWidth-5;
         }
-        ImageView text = new ImageView(context);
-        text.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ShapeableImageView image = new ShapeableImageView(context);
+
         lp.height = halfScreenWidth;
         lp.leftMargin = 5;
         lp.rightMargin = 5;
         lp.bottomMargin = 5;
         lp.topMargin = 5;
-        text.setLayoutParams(lp);
-        text.setBackgroundColor(Color.WHITE);
-        if(photo!=null) text.setImageBitmap(photo);
-        text.setBackground(context.getDrawable(R.drawable.gray_gradient_with_corners));
-        gridLayout.addView(text, lp);
-        return text;
+        image.setLayoutParams(lp);
+        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        image.setBackgroundColor(Color.WHITE);
+        image.setShapeAppearanceModel(image.getShapeAppearanceModel().toBuilder()
+        .setAllCornerSizes(15)
+        .build());
+        image.setBackground(new BitmapDrawable(bitmap));
+        gridLayout.addView(image, lp);
+        return image;
     }
 
 }

@@ -6,5 +6,13 @@
     <string name="previous">\uD83E\uDC60 предыдущие</string>
     <string name="next">следующие \uD83E\uDC62</string>
 
+    <string name="back"><![CDATA[<-]]></string>
+    <string name="forward"><![CDATA[->]]></string>
 
+    <string-array name="add_event_type">
+        <item>Корпоративное мероприятие</item>
+        <item>Встреча</item>
+        <item>Государственный праздник</item>
+        <item>Событие</item>
+    </string-array>
 </resources>

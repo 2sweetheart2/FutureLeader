@@ -17,9 +17,9 @@ import org.json.JSONObject;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
-import me.solo_team.futureleader.API.FullApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
@@ -31,12 +31,19 @@ public class EditFieldsLayout extends Her {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String type = getIntent().getStringExtra("type");
         String name = getIntent().getStringExtra("name");
-        if (type == null || name == null) {
+        Field editField = null;
+        for(Field fields : Constants.user.fieldsStuff.fieldsCanEdit){
+            if (fields.visualName.equals(name)) {
+                editField = fields;
+                break;
+            }
+        }
+        if (editField == null) {
             finish();
             return;
         }
+        String type = editField.type;
         setContentView(R.layout.edit_fields_layout);
         EditText editText = findViewById(R.id.edit_fields_value);
         TextView textView = findViewById(R.id.edit_fields_name);
@@ -52,22 +59,23 @@ public class EditFieldsLayout extends Her {
                 editText.setInputType(InputType.TYPE_CLASS_PHONE);
                 break;
         }
+        Field finalEditField = editField;
         button.setOnClickListener(v -> {
             if (editText.getText().length() == 0) {
-                cr(name,getCurrentFocus());
+                cr(finalEditField, getCurrentFocus());
                 return;
             }
-            String data = editText.getText().toString();
+            finalEditField.value = editText.getText().toString();
             switch (type) {
                 case "text":
-                    editInfo(name, data);
+                    editInfo(finalEditField,getCurrentFocus());
                     break;
                 case "phone":
-                    if (data.length() != 12 || data.indexOf("+") != 0 || !data.startsWith("+7")) {
+                    if (finalEditField.value.length() != 12 || finalEditField.value.indexOf("+") != 0 || !finalEditField.value.startsWith("+7")) {
                         Utils.ShowSnackBar.show(getApplicationContext(), "Номер телефона введен некоректно\nПример: +79112220000", v);
                         return;
                     }
-                    editInfo(name, data);
+                    editInfo(finalEditField,getCurrentFocus());
                     break;
             }
         });
@@ -75,51 +83,59 @@ public class EditFieldsLayout extends Her {
 
     }
 
-    private boolean cr(String value,View v){
+    private void cr(Field field, View v) {
         EditFieldsDialog cl = new EditFieldsDialog(result -> {
-            if(!result) return;
-            Constants.currentUser.user_fields.remove(Constants.currentUser.editedFieldsTypes.get(value.toLowerCase()));
+            if (!result) return;
             API.updateFields(new ApiListener() {
                 Dialog d;
+
                 @Override
                 public void inProcess() {
                     d = openWaiter(EditFieldsLayout.this);
                 }
 
                 @Override
-                public void onError(JSONObject json) { }
+                public void onError(JSONObject json) throws JSONException {
+                    this.createNotification(v,json.getString("message"));
+                    d.dismiss();
+                }
 
                 @Override
-                public void onSuccess(JSONObject json) {d.dismiss(); }
-            }, new CustomString("fields",Constants.currentUser.getFields()),new CustomString("token",Constants.user.token),new CustomString("current_id",String.valueOf(Constants.currentUser.id)));
+                public void onSuccess(JSONObject json) throws JSONException {
+                    Constants.user.addFields(json.getString("fields"));
+                    d.dismiss();
+                    finish();
+                }
+            }, new CustomString("name", field.name), new CustomString("token", Constants.user.token), new CustomString("value", ""));
 
 
-        },value,"Вы действиетльно хотите удалить параметр \""+value+"\"?");
-        cl.show(getSupportFragmentManager(),"myDialog");
-        return true;
+        }, field.visualName, "Вы действиетльно хотите удалить параметр \"" + field.visualName + "\"?");
+        cl.show(getSupportFragmentManager(), "myDialog");
     }
 
-    private void editInfo(String name, String value) {
-        try {
-            Constants.currentUser.user_fields.put(Constants.currentUser.editedFieldsTypes.get(name.toLowerCase()), value);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private void editInfo(Field field, View rootView) {
         API.updateFields(new ApiListener() {
             Dialog d;
+
             @Override
             public void inProcess() {
                 d = openWaiter(EditFieldsLayout.this);
             }
 
             @Override
-            public void onError(JSONObject json) { }
+            public void onError(JSONObject json) throws JSONException {
+                this.createNotification(rootView,json.getString("message"));
+                d.dismiss();
+            }
 
             @Override
-            public void onSuccess(JSONObject json) {d.dismiss(); }
-        }, new CustomString("fields",Constants.currentUser.getFields()),new CustomString("token",Constants.user.token),new CustomString("current_id",String.valueOf(Constants.currentUser.id)));
+            public void onSuccess(JSONObject json) throws JSONException {
+                Constants.user.addFields(json.getString("fields"));
+                d.dismiss();
+                finish();
+            }
+        }, new CustomString("name", field.name), new CustomString("token", Constants.user.token), new CustomString("value", field.value));
 
-        finish();
     }
 
     private void uncorrectDate(Context c, View v) {

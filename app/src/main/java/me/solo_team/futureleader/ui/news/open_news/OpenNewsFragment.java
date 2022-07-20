@@ -2,7 +2,6 @@ package me.solo_team.futureleader.ui.news.open_news;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
@@ -33,7 +32,8 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
-import me.solo_team.futureleader.ui.OnlyImage;
+import me.solo_team.futureleader.dialogs.SaveOrSeePhoto;
+import me.solo_team.futureleader.ui.WebViewsContent.WebView;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class OpenNewsFragment extends Her {
@@ -45,6 +45,7 @@ public class OpenNewsFragment extends Her {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_open);
         setTitle(getIntent().getStringExtra("tag"));
+        //TODO: нужно сделать +1 к просмотру в API
         API.getNew(new ApiListener() {
                        Dialog d;
 
@@ -114,18 +115,17 @@ public class OpenNewsFragment extends Her {
                     break;
                 case "photo":
                     List<String> params = Arrays.asList(o.getString("extras").split(","));
+                    Point size = new Point();
+                    getWindowManager().getDefaultDisplay().getSize(size);
                     ImageView imageView = new ImageView(getApplicationContext(), null);
                     if (params.contains("full_screen_v2")) {
-                        Point size = new Point();
-                        getWindowManager().getDefaultDisplay().getSize(size);
                         lp.height = (int) (size.y / 1.5);
-
                         imageView.setLayoutParams(lp);
                         Constants.cache.addPhoto(o.getString("value"), true, imageView, OpenNewsFragment.this);
                         runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView));
                         break;
                     }
-                    lp.width = 200;
+                    lp.height = (int) (size.y / 1.5);
                     lp.gravity = Gravity.CENTER_HORIZONTAL;
                     imageView.setLayoutParams(lp);
 
@@ -133,15 +133,35 @@ public class OpenNewsFragment extends Her {
                     runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView));
                     if (params.contains("full_screen")) {
                         System.out.println("FULL SCREEN");
+                        int finalI = i;
                         imageView.setOnClickListener(v -> {
-                            Intent intent = new Intent(OpenNewsFragment.this, OnlyImage.class);
-                            intent.putExtra("title", "Биография");
-                            try {
-                                intent.putExtra("link", o.getString("value"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            startActivity(intent);
+                            SaveOrSeePhoto saveOrSeePhoto = new SaveOrSeePhoto(new SaveOrSeePhoto.PressSee() {
+                                @Override
+                                public void pressSee(boolean result) {
+                                    if(result){
+                                        Intent intent = new Intent(OpenNewsFragment.this, WebView.class);
+                                        try {
+                                            intent.putExtra("photo", o.getString("value"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        startActivity(intent);
+                                    }
+                                    else{
+                                        try {
+                                            Utils.getBitmapFromURL(o.getString("value"),bitmap -> {
+                                                if(bitmap==null)
+                                                    return;
+                                                Utils.saveImage(bitmap,"Future-leaders",getApplicationContext(),getIntent().getStringExtra("tag")+"-"+ finalI);
+                                            });
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+                            saveOrSeePhoto.show(getSupportFragmentManager(),null);
+
                         });
                     }
                     break;
@@ -155,13 +175,14 @@ public class OpenNewsFragment extends Her {
                             intent.setData(Uri.parse(url));
                             startActivity(intent);
                         }
+
                         @Override
                         public void updateDrawState(TextPaint ds) {
                             super.updateDrawState(ds);
                             ds.setUnderlineText(false);
                         }
                     };
-                    ss.setSpan(clickableSpan,  0,url.length(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(clickableSpan, 0, url.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     TextView textView1 = new TextView(getApplicationContext());
                     textView1.setText(ss);
                     textView1.setMovementMethod(LinkMovementMethod.getInstance());

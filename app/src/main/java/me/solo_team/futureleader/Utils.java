@@ -1,15 +1,9 @@
 package me.solo_team.futureleader;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,6 +17,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.util.Log;
@@ -31,67 +29,162 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
+import java.io.OutputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.List;
 
 public class Utils {
 
+    public static class getVideo{
 
-    public static void OpenBlockerLayout(AppCompatActivity app,View v){
+
+        public static File getVideoFromUri(Uri uri, Context context) {
+            return new File(getPath(uri, context));
+        }
+
+        private static String getPath(Uri uri, Context context) {
+            String[] projection = { MediaStore.Video.Media.DATA };
+            Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            if (cursor != null) {
+                // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+                // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+                int column_index = cursor
+                        .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            } else
+                return null;
+        }
+    }
+
+
+    private static void saveImageToStream(Bitmap bitmap, OutputStream outputStream) {
+        if (outputStream != null) {
+            try {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static ContentValues contentValues() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        return values;
+    }
+
+    public static void saveImage(Bitmap bitmap, String folderName, Context context, String fileName) {
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + folderName);
+            values.put(MediaStore.Images.Media.IS_PENDING, true);
+
+            Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            if (uri != null) {
+                try {
+                    saveImageToStream(bitmap, context.getContentResolver().openOutputStream(uri));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                values.put(MediaStore.Images.Media.IS_PENDING, false);
+                context.getContentResolver().update(uri, values, null, null);
+            }
+
+        } else {
+            File directory = new File(Environment.getExternalStorageDirectory().toString() + "/" + folderName);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            String fileName_ = fileName + ".png";
+            File file = new File(directory, fileName_);
+            try {
+                saveImageToStream(bitmap, new FileOutputStream(file));
+
+                if (file.getAbsolutePath() != null) {
+                    ContentValues values = contentValues();
+                    values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+                    // .DATA is deprecated in API 29
+                    context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+//
+//
+//        File myDir = new File("/sdcard/saved_images");
+//        myDir.mkdirs();
+//        String fname = name + ".jpg";
+//        File file = new File(myDir, fname);
+//        if (file.exists()) file.delete();
+//        try {
+//            FileOutputStream out = new FileOutputStream(file);
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//            out.flush();
+//            out.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    public static void OpenBlockerLayout(AppCompatActivity app, View v) {
         RelativeLayout rl = new RelativeLayout(app.getApplicationContext());
         ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         rl.setBackgroundColor(Color.TRANSPARENT);
         rl.setLayoutParams(lp);
-        ConstraintLayout cn = (ConstraintLayout) app.getLayoutInflater().inflate(R.layout.wait_layout,null);
+        ConstraintLayout cn = (ConstraintLayout) app.getLayoutInflater().inflate(R.layout.wait_layout, null);
         cn.setLayoutParams(lp);
         cn.setVisibility(View.VISIBLE);
         System.out.println(v.getClass());
         System.out.println(v instanceof ConstraintLayout);
-        if(v instanceof ConstraintLayout){
-            for(int i=0;i<((ConstraintLayout) v).getChildCount();i++){
+        if (v instanceof ConstraintLayout) {
+            for (int i = 0; i < ((ConstraintLayout) v).getChildCount(); i++) {
                 ((ConstraintLayout) v).getChildAt(i).setClickable(false);
             }
         }
-        app.addContentView(cn,lp);
+        app.addContentView(cn, lp);
 
     }
 
 
     public static class ShowSnackBar {
         public static void show(Context context, String message, View view) {
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            try {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }catch (Exception ignored){}
             Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
         }
     }
 
-    public static String parseDateBirthday(String date){
+    public static String parseDateBirthday(String date) {
         System.out.println(date);
         String[] nums = date.split("/");
         StringBuilder text = new StringBuilder();
         text.append(nums[0]).append(' ');
-        switch (nums[1]){
+        switch (nums[1]) {
             case "01":
                 text.append("января");
                 break;
@@ -406,19 +499,19 @@ public class Utils {
 
     }
 
-    public static String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+    public static String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
     }
 
-    public static Bitmap StringToBitMap(String encodedString){
+    public static Bitmap StringToBitMap(String encodedString) {
         try {
-            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             return null;
         }

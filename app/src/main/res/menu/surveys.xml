@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/surveys_for_me"
+
+        android:title="для меня" />
+
+    <item
+        android:id="@+id/surveys_for_all"
+        android:title="для всех" />
+
+    <item
+        android:id="@+id/surveys_complete"
+
+        android:title="завершённые" />
+</menu>

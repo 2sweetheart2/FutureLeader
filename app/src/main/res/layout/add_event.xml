@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:id="@+id/add_event"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/add_event_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:hint="название события"
+            android:maxLines="1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/add_event_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="выбрана дата: 18.05.2022"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/add_event_label" />
+
+        <LinearLayout
+            android:id="@+id/huina"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            app:layout_constraintTop_toBottomOf="@id/add_event_date">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/add_event_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="начало: 00:00"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/add_event_button_edit_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/secondary_gradient_with_corners"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="3dp"
+                    android:text="изменить"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/add_event_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="конец: 12:00"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/add_event_button_edit_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/secondary_gradient_with_corners"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="3dp"
+                    android:text="изменить"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/huina2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="максимум участников: "
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/huina" />
+
+        <EditText
+            android:id="@+id/add_event_max_people"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:inputType="number"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/huina2"
+            app:layout_constraintLeft_toRightOf="@id/huina2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/huina2" />
+
+
+        <TextView
+            android:id="@+id/huina3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Тип мероприятия:"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textColor="@color/black"
+            android:layout_margin="15dp"
+            app:layout_constraintTop_toBottomOf="@id/add_event_max_people" />
+
+        <Spinner
+            app:layout_constraintTop_toTopOf="@id/huina3"
+            app:layout_constraintLeft_toRightOf="@id/huina3"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/add_event_ebanyi_spiner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            tools:entries="@array/add_event_type" />
+
+    <TextView
+        android:id="@+id/huina4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="15dp"
+        android:text="Фото 1:1 :"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/huina3" />
+
+    <ImageView
+        android:id="@+id/add_event_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/gray_gradient_with_corners"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toRightOf="@id/huina4"
+        app:layout_constraintRight_toRightOf="@id/guideline21"
+
+        app:layout_constraintTop_toBottomOf="@id/huina3"
+        tools:entries="@array/add_event_type" />
+
+    <EditText
+        android:id="@+id/add_event_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:hint="Описание..."
+        app:layout_constraintTop_toBottomOf="@id/add_event_image" />
+
+    <Button
+        android:id="@+id/add_event_complete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginBottom="15dp"
+        android:elevation="25dp"
+        android:text="сохранить"
+        app:layout_constraintCircleRadius="45dp"
+        app:layout_constraintTop_toBottomOf="@id/add_event_description" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        app:layout_constraintTop_toBottomOf="@id/add_event_complete_button" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+</androidx.constraintlayout.widget.ConstraintLayout></androidx.core.widget.NestedScrollView>

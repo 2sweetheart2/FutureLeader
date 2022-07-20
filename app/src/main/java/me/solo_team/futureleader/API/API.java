@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Objects;
 
 import me.solo_team.futureleader.Objects.CustomString;
@@ -63,7 +64,7 @@ public class API {
     }
 
     public static void updateFields(ApiListener listener, CustomString... fields) {
-        HTTPS.sendPost(Methods.UPD_FIELDS, Objects.requireNonNull(createJsonObj(fields)), listener);
+        HTTPS.sendPost(Methods.UPD_FIELD, Objects.requireNonNull(createJsonObj(fields)), listener);
     }
 
     public static void getAchivement(ApiListener listener, CustomString... ids) {
@@ -90,11 +91,37 @@ public class API {
         HTTPS.sendPost(Methods.ADD_NEW, params, listener);
     }
 
-    public static void uploadImage(ApiListener listener, Bitmap bitmap, CustomString... params){
+    public static void uploadImage(ApiListener listener, Bitmap bitmap, CustomString... params) {
         HTTPS.u(Methods.UPL_IMAGE, Objects.requireNonNull(createJsonObj(params)), bitmap, listener);
 
     }
 
 
+    public static void getUser(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_USER, Objects.requireNonNull(createJsonObj(params)), listener);
+    }
 
+    public static void getIdeas(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_IDEAS, Objects.requireNonNull(createJsonObj(params)), listener);
+    }
+
+    public static void sendVideo(ApiListener listener, File video, CustomString... params) {
+        HTTPS.sendVideoFile(Methods.SEND_VIDEO, createJsonObj(params), video, listener);
+    }
+
+    public static void getEventsDate(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_EVENTS_DATE,createJsonObj(params),listener);
+    }
+    public static void getEvents(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_EVENTS,createJsonObj(params),listener);
+    }
+    public static void addEvents(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.ADD_EVENT,createJsonObj(params),listener);
+    }
+    public static void deleteEvent(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.DELETE_EVENT,createJsonObj(params),listener);
+    }
+    public static void createTicket(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.ADD_TICKET,createJsonObj(params),listener);
+    }
 }

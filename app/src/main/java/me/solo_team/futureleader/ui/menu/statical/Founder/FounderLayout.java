@@ -42,22 +42,23 @@ public class FounderLayout extends AppCompatActivity {
             boolean onAllColumn = false;
             if(i==2) onAllColumn=true;
             boolean finalOnAllColumn = onAllColumn;
-            ImageView v = grid.addImageElement(null, finalOnAllColumn,row, finalColumn);
-            views.add(v);
-            Constants.cache.addPhoto(urls.get(i),true,v,this);
 
+
+            ImageView v = (ImageView) grid.addImageElement(null,onAllColumn);
+            Constants.cache.addPhoto(urls.get(i),false,v,this);
+            views.add(v);
 
         }
         views.get(0).setOnClickListener(v -> {
             Intent intent = new Intent(this, OpenNewsFragment.class);
             intent.putExtra("tag","Приветственное слово");
-            intent.putExtra("id",4);
+            intent.putExtra("id",-2);
             startActivity(intent);
         });
         views.get(1).setOnClickListener(v ->{
             Intent intent = new Intent(this, OpenNewsFragment.class);
             intent.putExtra("tag","Биография");
-            intent.putExtra("id",3);
+            intent.putExtra("id",-1);
             startActivity(intent);
         });
         views.get(2).setOnClickListener(v ->{

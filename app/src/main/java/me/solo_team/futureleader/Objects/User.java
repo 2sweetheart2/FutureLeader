@@ -19,9 +19,11 @@ public class User {
     public String profilePictureLink;
     public String token;
     public JSONObject user_fields = new JSONObject();
+    public List<Field> fields = new ArrayList<>();
     public String achievementsIds;
     public int adminStatus = 0;
     public JSONArray achievements;
+    public FieldsStuff fieldsStuff;
     public HashMap<String, String> editedFieldsTypes = new HashMap<String, String>() {{
         put("город", "text");
         put("телефон", "phone");
@@ -30,17 +32,20 @@ public class User {
     }};
 
 
-    public void addFields(String fields) {
-        for (String i : fields.split("&")) {
-            try {
-                user_fields.put(i.split("=")[0], i.split("=")[1]);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            catch (ArrayIndexOutOfBoundsException e){
-                e.printStackTrace();
-            }
+    public List<Field> convertToFields(String fields_) throws JSONException {
+        List<Field> fieldsList = new ArrayList<>();
+        JSONArray fields = new JSONArray(fields_);
+        for(int i =0;i<fields.length();i++)
+        {
+            JSONObject l = fields.getJSONObject(i);
+            Field field = new Field(l.getString("name"),l.getString("visual_name"),l.getString("value"),l.getString("type"),l.getBoolean("can_edit"));
+            fieldsList.add(field);
         }
+        return fieldsList;
+    }
+
+    public void addFields(String fields_) throws JSONException {
+        this.fields = convertToFields(fields_);
     }
 
 

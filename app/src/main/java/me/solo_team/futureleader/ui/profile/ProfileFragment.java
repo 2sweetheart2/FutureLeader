@@ -22,7 +22,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,15 +29,12 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
-import me.solo_team.futureleader.API.FullApiListener;
 import me.solo_team.futureleader.Constants;
-import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
-import me.solo_team.futureleader.Objects.User;
+import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
@@ -65,12 +61,7 @@ public class ProfileFragment extends Fragment {
         description = root.findViewById(R.id.profile_description);
         button = root.findViewById(R.id.profile_add_field_btn);
 
-
-        if(savedInstanceState!=null)
-            if(savedInstanceState.getString("id")!=null)
-                System.out.println("I NEED LOAD ANOTHER USER!!!");
-            else Constants.currentUser = Constants.user;
-        else Constants.currentUser = Constants.user;
+        Constants.currentUser = Constants.user;
 
 
         name.setText(Constants.currentUser.firstName + " " + Constants.currentUser.lastName);
@@ -94,12 +85,6 @@ public class ProfileFragment extends Fragment {
 
         button.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), AddFieldLayout.class);
-            List<String> arr = new ArrayList<>();
-            for(String s : notAddedItems.keySet()){
-                if(Constants.currentUser.editedFieldsTypes.containsKey(s))
-                    arr.add(s);
-            }
-            intent.putExtra("values", String.join(",", arr));
             startActivity(intent);
         });
         achivement_btn.setOnClickListener(new View.OnClickListener() {
@@ -107,15 +92,16 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<Integer> ids = new ArrayList<>();
-                for(String s: Constants.currentUser.achievementsIds.split(",")){
+                for (String s : Constants.currentUser.achievementsIds.split(",")) {
                     ids.add(Integer.parseInt(s));
                 }
                 API.getAchivement(new ApiListener() {
                     Dialog d;
+
                     @Override
                     public void onError(JSONObject json) {
                         try {
-                            this.createNotification(getView(),json.getString("message"));
+                            this.createNotification(getView(), json.getString("message"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -130,14 +116,14 @@ public class ProfileFragment extends Fragment {
                     public void onSuccess(JSONObject json) {
                         try {
                             d.dismiss();
-                            Constants.currentUser.achievements =  json.getJSONArray("achievements");
+                            Constants.currentUser.achievements = json.getJSONArray("achievements");
                             AlertAchivementListDialog alertAchivementListDialog = new AlertAchivementListDialog();
-                            alertAchivementListDialog.show(getParentFragmentManager(),null);
+                            alertAchivementListDialog.show(getParentFragmentManager(), null);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                },new CustomString("ids",Constants.currentUser.achievementsIds), new CustomString("token",Constants.user.token));
+                }, new CustomString("ids", Constants.currentUser.achievementsIds), new CustomString("token", Constants.user.token));
 
 
             }
@@ -148,50 +134,26 @@ public class ProfileFragment extends Fragment {
     private void updateGrid(ProfileInfoGrid grid) {
         tableLayout.removeAllViews();
         notAddedItems.clear();
-        LinkedHashMap<String, Integer> rows = new LinkedHashMap<>();
-        int index = 0;
-        for (Map.Entry<String, String> s : Constants.currentUser.enums.entrySet()) {
-            String key = s.getKey();
-            String value = s.getValue();
-            if (key.contains("line")) {
-                if (value == null) grid.addRow();
-                else grid.addRow(value);
-                rows.put(s.getKey(), index);
-                index++;
+        List<Field> fields = Constants.user.fields;
+        for (Field field : fields) {
+            if (field.name.equals("line")) {
+                if (field.visualName.length() == 0)
+                    grid.addRow();
+                else grid.addRow(field.visualName);
                 continue;
             }
-            if (!Constants.currentUser.user_fields.has(value)) {
-                notAddedItems.put(s.getKey(), s.getValue());
-                continue;
+            String name = field.visualName.substring(0, 1).toUpperCase() + field.visualName.substring(1);
+            if (field.name.equals("birthday"))
+                grid.addElement(name, Utils.parseDateBirthday(field.value));
+            else {
+                View v = grid.addElement(name, field.value);
+                if(field.canEdit)
+                    v.setOnLongClickListener(v_ -> cr(field.visualName, field.value));
             }
-            try {
-                String name = key.substring(0, 1).toUpperCase() + key.substring(1);
-                if (!Constants.currentUser.editedFieldsTypes.containsKey(key))
-                    grid.addElement(name, Utils.parseDateBirthday(Constants.currentUser.user_fields.getString(value)));
-                else
-                    grid.addElement(name, Constants.currentUser.user_fields.getString(value))
-                            .setOnLongClickListener(v -> cr(key, Constants.currentUser.editedFieldsTypes.get(key)));
-                index++;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
         }
-        if (notAddedItems.size() == 0)
-            button.setVisibility(View.GONE);
-        else
+        if(Constants.user.fieldsStuff.maxSize!=fields.size()){
             button.setVisibility(View.VISIBLE);
-        List<String> val = new ArrayList<>(Constants.currentUser.enums.keySet());
-        boolean removeFirstLine = true;
-        boolean removeSecondLine = true;
-        for(int i=val.indexOf("line")+1;i<val.indexOf("line1");i++){
-            if(!notAddedItems.containsKey(val.get(i))) removeFirstLine=false;
         }
-        for(int i=val.indexOf("line1")+1;i<val.size();i++){
-            if(!notAddedItems.containsKey(val.get(i))) removeSecondLine=false;
-        }
-        if(removeFirstLine) tableLayout.removeViewAt(rows.get("line"));
-        if(removeSecondLine) tableLayout.removeViewAt(rows.get("line1")-1);
     }
 
 
@@ -206,6 +168,7 @@ public class ProfileFragment extends Fragment {
                 //picture.setImageBitmap(image);
                 API.uploadProfilePicture(new ApiListener() {
                     Dialog d;
+
                     @Override
                     public void onError(JSONObject json) {
 
@@ -226,7 +189,7 @@ public class ProfileFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                }, image, new CustomString("token", Constants.user.token),new CustomString("current_id",String.valueOf(Constants.currentUser.id)));
+                }, image, new CustomString("token", Constants.user.token), new CustomString("current_id", String.valueOf(Constants.currentUser.id)));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

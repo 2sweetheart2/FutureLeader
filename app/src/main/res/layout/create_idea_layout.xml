@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/create_idea_layout"
+        >
+
+        <EditText
+            android:id="@+id/create_idea_label"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:hint="заголовок (45 симв.)"
+            />
+
+        <TextView
+            android:id="@+id/create_idea_fuck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/create_idea_label"
+            android:layout_margin="15dp"
+            android:text="Если вы хотите оставить идеи для модернизации приложения, то заголовок должен быть #app"
+            />
+
+        <EditText
+            android:id="@+id/create_idea_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/create_idea_fuck"
+            android:layout_margin="15dp"
+            android:hint="тескст вашей идеи (не огр. кол-во)"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/create_idea_text"
+            android:layout_margin="25dp"
+            android:src="@drawable/plus"
+            android:backgroundTint="@color/secondary"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            app:layout_constraintTop_toBottomOf="@id/floatingActionButton"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

@@ -39,7 +39,7 @@ public class ProgramsLayout extends Her {
             if (i % 2 != 0)
                 column = 1;
             int row = i / 2;
-            ImageView v = grid.addImageElement(null, false,row, column);
+            ImageView v = grid.addImageElement(null, false);
             views.add(v);
             Constants.cache.addPhoto(urls.get(i),true,v,this);
 

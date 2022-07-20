@@ -10,18 +10,22 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import kotlin.coroutines.jvm.internal.SuspendFunction;
 
 /**
  * реквесты на сервер
@@ -236,6 +240,83 @@ public class HTTPS {
                         jsonException.printStackTrace();
                     }
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        });
+
+
+    }
+
+    public static void sendVideoFile(Methods method, JSONObject data, File file, ApiListener callback) {
+        callback.inProcess();
+        JSONObject o = new JSONObject();
+        getMobileToken(token -> {
+            if (token == null) {
+                try {
+                    JSONObject o1 = new JSONObject();
+                    o1.put("success", false);
+                    JSONObject b = new JSONObject();
+                    b.put("message", "can't connect to server");
+                    o1.put("error", b);
+                    procesor.queue.get(method).process(o1);
+                    procesor.queue.remove(method);
+                } catch (JSONException ignored) {
+                }
+                return;
+            }
+            data.put("mobile_token", token);
+            try {
+                o.put("success", false);
+                JSONObject b = new JSONObject();
+                b.put("message", "can't connect to server");
+                o.put("error", b);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            new Thread(() -> {
+                try {
+                    String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+
+                    URLConnection connection = new URL(URL + method.label).openConnection();
+                    connection.setDoOutput(true);
+                    connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+                    try (OutputStream output = connection.getOutputStream();
+                         PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8), true);
+                    ) {
+                        writer.append("--" + boundary).append("\r\n");
+                        writer.append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"" + file.getName() + "\"").append("\r\n");
+                        writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(file.getName())).append("\r\n");
+                        writer.append("Content-Transfer-Encoding: binary").append("\r\n");
+                        writer.append("\r\n").flush();
+                        Files.copy(file.toPath(), output);
+                        output.flush(); // Important before continuing with writer!
+                        writer.append("\r\n").flush(); // CRLF is important! It indicates end of boundary.
+
+                        // End of multipart/form-data.
+                        writer.append("--" + boundary + "--").append("\r\n").flush();
+
+                        try (BufferedReader br = new BufferedReader(
+                                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                            StringBuilder response_ = new StringBuilder();
+                            String responseLine;
+                            while ((responseLine = br.readLine()) != null) {
+                                response_.append(responseLine.trim());
+                            }
+                            callback.process(new JSONObject(response_.toString()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            try {
+                                callback.process(o);
+                            } catch (JSONException jsonException) {
+                                jsonException.printStackTrace();
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }).start();

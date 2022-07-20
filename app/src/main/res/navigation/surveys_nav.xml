@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/surveys_nav"
+    app:startDestination="@id/surveys_for_me">
+
+    <fragment
+        android:id="@+id/surveys_for_me"
+        android:name="me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.fragments.SurveysForMe"
+        android:label="surveys_for_me"
+        tools:layout="@layout/surveys_for_me" />
+    <fragment
+        android:id="@+id/surveys_for_all"
+        android:name="me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.fragments.SurveysForAll"
+        android:label="surveys_for_all"
+        tools:layout="@layout/surveys_for_all" />
+    <fragment
+        android:id="@+id/surveys_complete"
+        android:name="me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.fragments.SurveysComplete"
+        android:label="surveys_complete"
+        tools:layout="@layout/surveys_complete" />
+</navigation>

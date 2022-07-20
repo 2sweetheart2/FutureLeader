@@ -37,7 +37,7 @@ public class Layout extends Her {
             int row = i / 2;
             boolean onAllColumn = false;
             if(i==2) onAllColumn = true;
-            ImageView v = grid.addImageElement(null, onAllColumn, row, column);
+            ImageView v = grid.addImageElement(null, onAllColumn);
             views.add(v);
             Constants.cache.addPhoto(urls.get(i), true, v, this);
         }
@@ -45,7 +45,7 @@ public class Layout extends Her {
         views.get(0).setOnClickListener(v -> {
             Intent intent = new Intent(this, OpenNewsFragment.class);
             intent.putExtra("tag","О проекте");
-            intent.putExtra("id",5);
+            intent.putExtra("id",-3);
             startActivity(intent);
         });
     }

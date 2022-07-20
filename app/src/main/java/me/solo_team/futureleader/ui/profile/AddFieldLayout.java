@@ -21,10 +21,14 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
@@ -36,7 +40,20 @@ public class AddFieldLayout extends Her {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_field_layout);
-        String[] values = getIntent().getStringExtra("values").split(",");
+
+        List<Field> fieldsThatNotAdded = new ArrayList<>();
+        for(Field f :Constants.user.fieldsStuff.fieldsCanEdit){
+            if(!Constants.user.fieldsStuff.fields.contains(f))
+                fieldsThatNotAdded.add(f);
+        }
+
+        View root = findViewById(R.id.edit_fields_layout);
+
+        String[] values = new String[fieldsThatNotAdded.size()];
+        for(int i=0;i<fieldsThatNotAdded.size();i++){
+            values[i] = fieldsThatNotAdded.get(i).visualName;
+        }
+
         Spinner spinner = findViewById(R.id.edit_fields_name);
         text = findViewById(R.id.edit_fields_value);
         Button button = findViewById(R.id.edit_fields_btn);
@@ -47,8 +64,7 @@ public class AddFieldLayout extends Her {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 text.setText("");
-                String type = Constants.user.editedFieldsTypes.get(values[position]);
-                System.out.println(values[position]);
+                String type = fieldsThatNotAdded.get(position).type;
                 try {
                     switch (type) {
                         case "text":
@@ -70,33 +86,30 @@ public class AddFieldLayout extends Her {
         });
         setTitle("Добавить поле");
         button.setOnClickListener(v -> {
-            String type = Constants.user.editedFieldsTypes.get(values[spinner.getSelectedItemPosition()]);
+            Field field = fieldsThatNotAdded.get(spinner.getSelectedItemPosition());
+            String type = field.type;
             if (text.getText().length() == 0)
                 Snackbar.make(v, "Данные введены некоректно", Snackbar.LENGTH_LONG).show();
             String data = text.getText().toString();
+            Field newFields = new Field(field.name,field.visualName,data,type,true);
             switch (type) {
                 case "text":
-                    editInfo(values[spinner.getSelectedItemPosition()], data);
+                    editInfo(newFields,root);
                     break;
                 case "phone":
                     if (data.length() != 12 || data.indexOf("+") != 0 || !data.startsWith("+7")) {
                         Utils.ShowSnackBar.show(getApplicationContext(), "Номер телефона введен некоректно\nПример: +79112220000", v);
                         return;
                     }
-                    editInfo(values[spinner.getSelectedItemPosition()], data);
+                    editInfo(newFields,root);
                     break;
             }
+
         });
-        //
 
     }
 
-    private void editInfo(String name, String value) {
-        try {
-            Constants.user.user_fields.put(Constants.user.editedFieldsTypes.get(name.toLowerCase()), value);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private void editInfo(Field field,View rootView) {
         API.updateFields(new ApiListener() {
             Dialog d;
 
@@ -106,17 +119,20 @@ public class AddFieldLayout extends Her {
             }
 
             @Override
-            public void onError(JSONObject json) {
-
+            public void onError(JSONObject json) throws JSONException {
+                this.createNotification(rootView,json.getString("message"));
+                d.dismiss();
             }
 
             @Override
-            public void onSuccess(JSONObject json) {
+            public void onSuccess(JSONObject json) throws JSONException {
+                Constants.user.addFields(json.getString("fields"));
                 d.dismiss();
+                finish();
             }
-        }, new CustomString("fields", Constants.currentUser.getFields()), new CustomString("token", Constants.user.token),new CustomString("current_id",String.valueOf(Constants.currentUser.id)));
+        }, new CustomString("name", field.name), new CustomString("token", Constants.user.token),new CustomString("value",field.value));
 
-        finish();
+
     }
 
     public class MyCustomAdapter extends ArrayAdapter<String> {

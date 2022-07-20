@@ -4,24 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,9 +22,9 @@ import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.MainActivity;
 import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.FieldsStuff;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.ui.WebViewsContent.MyWebViewClient;
 
 public class LoginOrRegisterLayout extends AppCompatActivity {
@@ -54,45 +45,41 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
             public void onClick(View view) {
 
                 API.loginUser(new ApiListener() {
-                    Dialog d = null;
-                    @Override
-                    public void onError(JSONObject json) {
-                        try {
-                            this.createNotification(view, json.getString("message"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                                  Dialog d = null;
 
-                    @Override
-                    public void inProcess() {
-                        d = this.openWaiter(LoginOrRegisterLayout.this);
-                    }
+                                  @Override
+                                  public void onError(JSONObject json) throws JSONException {
+                                      this.createNotification(view, json.getString("message"));
+                                      d.dismiss();
+                                  }
 
-                    @Override
-                    public void onSuccess(JSONObject json) {
-                        try {
-                            d.dismiss();
-                            System.out.println(json);
-                            User user = new User();
-                            user.firstName = json.getString("first_name");
-                            user.lastName = json.getString("last_name");
-                            user.achievementsIds = json.getString("achievement_ids");
-                            user.adminStatus = json.getInt("admin_status");
-                            user.age = json.getInt("age");
-                            user.addFields(json.getString("fields"));
-                            user.id = json.getInt("id");
-                            user.profilePictureLink = json.getString("profile_picture");
-                            user.status = json.getString("status");
-                            user.token = json.getString("token");
-                            Constants.user = user;
-                            startActivity(new Intent(LoginOrRegisterLayout.this, MainActivity.class));
-                            finish();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
+                                  @Override
+                                  public void inProcess() {
+                                      d = this.openWaiter(LoginOrRegisterLayout.this);
+                                  }
+
+                                  @Override
+                                  public void onSuccess(JSONObject json) throws JSONException {
+                                      System.out.println(json);
+                                      User user = new User();
+                                      user.firstName = json.getString("first_name");
+                                      user.lastName = json.getString("last_name");
+                                      user.achievementsIds = json.getString("achievement_ids");
+                                      user.adminStatus = json.getInt("admin_status");
+                                      user.age = json.getInt("age");
+                                      JSONObject field_stuff = json.getJSONObject("fields_stuff");
+                                      user.addFields(field_stuff.getString("fields"));
+                                      user.fieldsStuff = new FieldsStuff(user.fields, user.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
+                                      user.id = json.getInt("id");
+                                      user.profilePictureLink = json.getString("profile_picture");
+                                      user.status = json.getString("status");
+                                      user.token = json.getString("token");
+                                      Constants.user = user;
+                                      d.dismiss();
+                                      startActivity(new Intent(LoginOrRegisterLayout.this, MainActivity.class));
+                                      finish();
+                                  }
+                              },
                         new CustomString("email", "sweet-heart@swht.one"),
                         new CustomString("password", "f1779008")
                 );
@@ -102,7 +89,7 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
     }
 
 
-    private void GFB(){
+    private void GFB() {
         final String CHANNEL_ID = "my_channel_01";
         final String CHANNEL_NAME = "Simplified Coding Notification";
         final String CHANNEL_DESCRIPTION = "future-leaders.ru";

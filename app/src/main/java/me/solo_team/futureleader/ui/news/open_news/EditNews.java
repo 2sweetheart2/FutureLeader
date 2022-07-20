@@ -41,13 +41,14 @@ public class EditNews extends Her {
     JSONObject new_;
     LinearLayout list;
     ImageView logo;
+    View root;
     HashMap<View, Integer> views = new HashMap<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_news_layout);
-
+        root = findViewById(R.id.edit_news_layout);
         setTitle("Создание новости");
 
         TextView addItem = findViewById(R.id.edit_new_add_item_btn);
@@ -93,12 +94,20 @@ public class EditNews extends Her {
             }
             try {
                 Constants.newsCache.curentNew.put("token", Constants.user.token);
+                if(Constants.newsCache.curentNew.getString("type").equals("photo")){
+                    Constants.newsCache.curentNew.put("extras","full_screen");
+                }
                 API.addNew(new ApiListener() {
                     Dialog d;
 
                     @Override
                     public void onError(JSONObject json) {
-
+                        System.out.println(json);
+                        try {
+                            createNotification(EditNews.this.root,json.getString("message"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
