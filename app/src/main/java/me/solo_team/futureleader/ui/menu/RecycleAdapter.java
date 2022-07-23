@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.ui.menu;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -14,11 +15,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.solo_team.futureleader.Objects.IdeasStuff;
+import me.solo_team.futureleader.API.API;
+import me.solo_team.futureleader.API.ApiListener;
+import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.calendar.Calendar;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.idea.Idea;
@@ -34,8 +43,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     public RecycleAdapter(Fragment fragment) {
         this.inflater = fragment.getLayoutInflater();
         this.fragment = fragment;
-        values = Arrays.asList( "календарь",  "идеи", "опросы", "связь","кс");
-        names = Arrays.asList( "\uD83D\uDCC5", "\uD83D\uDCA1", "\uD83D\uDCE2", "\uD83D\uDCDE","хз чё");
+        values = Arrays.asList("календарь", "идеи", "опросы", "связь", "кс");
+        names = Arrays.asList("\uD83D\uDCC5", "\uD83D\uDCA1", "\uD83D\uDCE2", "\uD83D\uDCDE", "хз чё");
     }
 
 
@@ -55,17 +64,60 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
         View.OnClickListener click = null;
         switch (position) {
             case 0:
-                click = v -> fragment.startActivity(new Intent(fragment.requireContext(),Calendar.class));
+                click = v -> fragment.startActivity(new Intent(fragment.requireContext(), Calendar.class));
                 break;
             case 1:
                 click = v -> fragment.startActivity(new Intent(fragment.requireContext(), Idea.class));
                 break;
             case 2:
-                click = v -> fragment.startActivity(new Intent(fragment.requireContext(), SurveysView.class));
+                click = v -> {
+                    API.getSurveys(new ApiListener() {
+                                       Dialog d;
+
+                                       @Override
+                                       public void onError(JSONObject json) throws JSONException {
+                                           d.dismiss();
+                                           createNotification(fragment.getView(), json.getString("message"));
+                                       }
+
+                                       @Override
+                                       public void inProcess() {
+                                           d = openWaiter(fragment.requireContext());
+                                       }
+
+                                       @Override
+                                       public void onSuccess(JSONObject json) throws JSONException {
+                                           System.out.println(json);
+                                           JSONArray surveysAll = json.getJSONArray("surveys");
+                                           JSONArray surveysForMe = json.getJSONArray("your_surveys");
+                                           JSONArray surveysComplete = json.getJSONArray("complete_surveys");
+                                           List<Surveys> all = new ArrayList<>();
+                                           List<Surveys> me = new ArrayList<>();
+                                           List<Surveys> done = new ArrayList<>();
+                                           for (int i = 0; i < surveysAll.length(); i++) {
+                                               all.add(new Surveys(surveysAll.getJSONObject(i)));
+                                           }
+                                           for (int i = 0; i < surveysForMe.length(); i++) {
+                                               me.add(new Surveys(surveysForMe.getJSONObject(i)));
+                                           }
+                                           for (int i = 0; i < surveysComplete.length(); i++) {
+                                               done.add(new Surveys(surveysComplete.getJSONObject(i)));
+                                           }
+                                           Constants.surveysCache.surveysForAll = all;
+                                           Constants.surveysCache.surveysForUser = me;
+                                           Constants.surveysCache.completeSurveys = done;
+                                           System.out.println(json);
+                                           d.dismiss();
+                                           fragment.requireActivity().runOnUiThread(() -> fragment.startActivity(new Intent(fragment.requireContext(), SurveysView.class)));
+                                       }
+                                   },
+                            new CustomString("token", Constants.user.token)
+                    );
+                };
                 break;
         }
         holder.nameView.setText(values.get(position));
-        if(click!=null)
+        if (click != null)
             holder.rootView.setOnClickListener(click);
     }
 

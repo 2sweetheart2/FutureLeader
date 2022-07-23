@@ -124,4 +124,10 @@ public class API {
     public static void createTicket(ApiListener listener, CustomString...params){
         HTTPS.sendPost(Methods.ADD_TICKET,createJsonObj(params),listener);
     }
+    public static void getSurveys(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_SURVEYS,createJsonObj(params),listener);
+    }
+    public static void addAnser(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.ADD_ANSWERS,createJsonObj(params),listener);
+    }
 }

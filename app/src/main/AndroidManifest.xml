@@ -65,6 +65,13 @@
         <activity android:name=".ui.menu.horizontal_menu.calendar.EventCheck"/>
         <activity android:name=".ui.menu.horizontal_menu.calendar.ViewEvent"/>
         <activity android:name=".ui.menu.horizontal_menu.surveys.SurveysView"/>
+        <activity android:name=".ui.menu.horizontal_menu.surveys.DoSurvey"
+            android:parentActivityName=".MainActivity" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

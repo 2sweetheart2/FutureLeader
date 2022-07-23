@@ -13,7 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
+import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.Objects.User;
 
 
@@ -25,6 +27,65 @@ public class Constants {
     public static MainActivity mainActivity;
     public static Resources res;
     public static CachePhoto cache = new CachePhoto();
+
+    public static SurveysCache surveysCache = new SurveysCache();
+
+
+    public static class SurveysCache{
+        public List<Surveys> surveysForUser;
+        public List<Surveys>  surveysForAll;
+        public List<Surveys> completeSurveys;
+
+        public Surveys getMeById(int id){
+            for(Surveys sur : surveysForUser){
+                if(sur.id==id)
+                    return sur;
+            }
+            return null;
+        }
+
+        public Surveys getAllById(int id){
+            for(Surveys sur : surveysForAll){
+                if(sur.id==id)
+                    return sur;
+            }
+            return null;
+        }
+
+        public boolean checkComplete(Surveys surveys){
+            for(Surveys s : completeSurveys){
+                if(s.id==surveys.id)
+                    return true;
+            }
+            return false;
+        }
+
+        public Surveys getCompleteById(int id){
+            for(Surveys s : completeSurveys){
+                if(s.id == id)
+                    return s;
+            }
+            return null;
+        }
+
+        public void addCompleteFromMe(int id){
+            for(Surveys sur : surveysForUser){
+                if(sur.id==id){
+                    completeSurveys.add(sur);
+                    surveysForUser.remove(sur);
+                }
+            }
+        }
+
+        public void addCompleteFromAll(int id){
+            for(Surveys sur : surveysForAll){
+                if(sur.id==id){
+                    completeSurveys.add(sur);
+                    surveysForAll.remove(sur);
+                }
+            }
+        }
+    }
 
 
     public static class NewsCache {

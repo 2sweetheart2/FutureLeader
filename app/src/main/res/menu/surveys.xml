@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/surveys_for_me"
-
         android:title="для меня" />
 
     <item

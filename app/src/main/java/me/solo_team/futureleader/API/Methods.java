@@ -31,6 +31,10 @@ public enum Methods {
     GET_EVENTS("get_events"),
     ADD_TICKET("create_ticket_to_event"),
 
+    GET_SURVEYS("get_surveys"),
+    ADD_ANSWERS("add_survey_answers"),
+
+
     GET_USER("get_user");
 
 

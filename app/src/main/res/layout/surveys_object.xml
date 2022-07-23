@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    android:background="@drawable/gray_gradient_with_corners"
+    android:padding="10dp"
+    android:layout_margin="15dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/surveys_object_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    android:textColor="@color/black"
+        android:textSize="16dp"
+        android:text="123123123"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/surveys_object_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/surveys_object_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textColor="@color/black"
+        android:layout_marginTop="5dp"
+        android:textStyle="italic"
+        android:text="21.07.2022"
+        />
+
+    <TextView
+        android:id="@+id/surveys_object_complete_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/surveys_object_date"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="не пройдено"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
