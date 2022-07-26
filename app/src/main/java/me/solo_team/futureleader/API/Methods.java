@@ -34,6 +34,8 @@ public enum Methods {
     GET_SURVEYS("get_surveys"),
     ADD_ANSWERS("add_survey_answers"),
 
+    GET_NEAREST_DR("get_nearest_birthday_people"),
+
 
     GET_USER("get_user");
 

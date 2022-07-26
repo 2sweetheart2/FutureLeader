@@ -1,4 +1,4 @@
-package me.solo_team.futureleader;
+package me.solo_team.futureleader.stuff;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -40,19 +40,22 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.net.URL;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
+import java.util.Random;
+
+import me.solo_team.futureleader.R;
 
 public class Utils {
 
-    public static class getVideo{
+    public static class getVideo {
 
 
         public static File getVideoFromUri(Uri uri, Context context) {
@@ -60,7 +63,7 @@ public class Utils {
         }
 
         private static String getPath(Uri uri, Context context) {
-            String[] projection = { MediaStore.Video.Media.DATA };
+            String[] projection = {MediaStore.Video.Media.DATA};
             Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
             if (cursor != null) {
                 // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
@@ -94,44 +97,27 @@ public class Utils {
         return values;
     }
 
-    public static void saveImage(Bitmap bitmap, String folderName, Context context, String fileName) {
-
-        if (Build.VERSION.SDK_INT >= 29) {
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + folderName);
-            values.put(MediaStore.Images.Media.IS_PENDING, true);
-
-            Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            if (uri != null) {
-                try {
-                    saveImageToStream(bitmap, context.getContentResolver().openOutputStream(uri));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                values.put(MediaStore.Images.Media.IS_PENDING, false);
-                context.getContentResolver().update(uri, values, null, null);
-            }
-
-        } else {
-            File directory = new File(Environment.getExternalStorageDirectory().toString() + "/" + folderName);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            String fileName_ = fileName + ".png";
-            File file = new File(directory, fileName_);
-            try {
-                saveImageToStream(bitmap, new FileOutputStream(file));
-
-                if (file.getAbsolutePath() != null) {
-                    ContentValues values = contentValues();
-                    values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
-                    // .DATA is deprecated in API 29
-                    context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+    public static File saveImage(Bitmap bitmap, String fileName) {
+        String root = Environment.getExternalStorageDirectory().getPath();
+        File myDir = new File(root + "/future_leaders_contents/photos");
+        myDir.mkdirs();
+        File file = new File(myDir, fileName);
+        System.out.println("SAVE: "+file);
+        if (file.exists())
+            file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+            System.out.println("ROOT: "+root);
+            System.out.println(myDir.getPath());
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
+    }
 //
 //
 //        File myDir = new File("/sdcard/saved_images");
@@ -147,7 +133,8 @@ public class Utils {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-    }
+
+
 
     public static void OpenBlockerLayout(AppCompatActivity app, View v) {
         RelativeLayout rl = new RelativeLayout(app.getApplicationContext());
@@ -174,10 +161,21 @@ public class Utils {
             try {
                 InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }catch (Exception ignored){}
+            } catch (Exception ignored) {
+            }
             Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
         }
     }
+
+
+    public static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
+        if ((birthDate != null) && (currentDate != null)) {
+            return Period.between(birthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
+    }
+
 
     public static String parseDateBirthday(String date) {
         System.out.println(date);

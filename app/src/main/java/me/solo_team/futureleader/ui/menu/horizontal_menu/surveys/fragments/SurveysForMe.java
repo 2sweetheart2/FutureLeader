@@ -54,7 +54,7 @@ public class SurveysForMe extends Fragment implements DialogInterface.OnClickLis
     @Override
     public void onClick(DialogInterface dialog, int which) {
         Intent intent = new Intent(SurveysForMe.this.requireContext(), DoSurvey.class);
-        intent.putExtra("type","all");
+        intent.putExtra("type","me");
         intent.putExtra("id",currentSurvey.id);
         startActivity(intent);
     }

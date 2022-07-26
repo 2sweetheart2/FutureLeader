@@ -116,6 +116,7 @@ public class CreateChieldNew extends Her {
                     if (url == null) return;
                     o.put("type", "photo");
                     o.put("value", url);
+                    o.put("extras","full_screen");
                     Constants.newsCache.curentNew.getJSONArray("objects").put(o);
                     Constants.newsCache.updObjects();
                 } catch (JSONException e) {

@@ -130,4 +130,7 @@ public class API {
     public static void addAnser(ApiListener listener, CustomString...params){
         HTTPS.sendPost(Methods.ADD_ANSWERS,createJsonObj(params),listener);
     }
+    public static void getNearestDr(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_NEAREST_DR,createJsonObj(params),listener);
+    }
 }

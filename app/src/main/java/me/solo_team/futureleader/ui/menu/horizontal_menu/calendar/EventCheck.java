@@ -1,17 +1,14 @@
 package me.solo_team.futureleader.ui.menu.horizontal_menu.calendar;
 
 import android.content.Intent;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.shape.CornerSize;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +24,7 @@ import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Date;
 import me.solo_team.futureleader.Objects.Event;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.Utils;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class EventCheck extends Her {

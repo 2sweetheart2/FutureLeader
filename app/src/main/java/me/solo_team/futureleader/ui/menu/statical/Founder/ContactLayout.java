@@ -7,17 +7,13 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.Utils;
 import me.solo_team.futureleader.ui.WebViewsContent.WebView;
-import me.solo_team.futureleader.ui.menu.MenuGrid;
-import me.solo_team.futureleader.ui.news.open_news.OpenNewsFragment;
 
 public class ContactLayout extends AppCompatActivity {
 

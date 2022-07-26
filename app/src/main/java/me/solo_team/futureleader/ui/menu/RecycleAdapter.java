@@ -43,8 +43,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     public RecycleAdapter(Fragment fragment) {
         this.inflater = fragment.getLayoutInflater();
         this.fragment = fragment;
-        values = Arrays.asList("календарь", "идеи", "опросы", "связь", "кс");
-        names = Arrays.asList("\uD83D\uDCC5", "\uD83D\uDCA1", "\uD83D\uDCE2", "\uD83D\uDCDE", "хз чё");
+        values = Arrays.asList("календарь", "идеи", "опросы", "сообщения", "кс");
+        names = Arrays.asList("\uD83D\uDCC5", "\uD83D\uDCA1", "\uD83D\uDCE2", "\uD83D\uDCDD", "хз чё");
     }
 
 

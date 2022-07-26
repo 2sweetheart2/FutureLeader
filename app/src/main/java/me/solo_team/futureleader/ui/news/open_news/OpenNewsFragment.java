@@ -31,7 +31,8 @@ import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.Utils;
+import me.solo_team.futureleader.stuff.FullScreenPhoto;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.dialogs.SaveOrSeePhoto;
 import me.solo_team.futureleader.ui.WebViewsContent.WebView;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
@@ -135,28 +136,26 @@ public class OpenNewsFragment extends Her {
                         System.out.println("FULL SCREEN");
                         int finalI = i;
                         imageView.setOnClickListener(v -> {
-                            SaveOrSeePhoto saveOrSeePhoto = new SaveOrSeePhoto(new SaveOrSeePhoto.PressSee() {
-                                @Override
-                                public void pressSee(boolean result) {
-                                    if(result){
-                                        Intent intent = new Intent(OpenNewsFragment.this, WebView.class);
-                                        try {
-                                            intent.putExtra("photo", o.getString("value"));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        startActivity(intent);
+                            SaveOrSeePhoto saveOrSeePhoto = new SaveOrSeePhoto(result -> {
+                                if(result){
+                                    Intent intent = new Intent(OpenNewsFragment.this, FullScreenPhoto.class);
+                                    try {
+                                        intent.putExtra("url", o.getString("value"));
+                                        intent.putExtra("name",getIntent().getStringExtra("tag")+"-"+ finalI+".jpg");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                    else{
-                                        try {
-                                            Utils.getBitmapFromURL(o.getString("value"),bitmap -> {
-                                                if(bitmap==null)
-                                                    return;
-                                                Utils.saveImage(bitmap,"Future-leaders",getApplicationContext(),getIntent().getStringExtra("tag")+"-"+ finalI);
-                                            });
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                    startActivity(intent);
+                                }
+                                else{
+                                    try {
+                                        Utils.getBitmapFromURL(o.getString("value"),bitmap -> {
+                                            if(bitmap==null)
+                                                return;
+                                            Utils.saveImage(bitmap,getIntent().getStringExtra("tag")+"-"+ finalI+".jpg");
+                                        });
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
                                 }
                             });

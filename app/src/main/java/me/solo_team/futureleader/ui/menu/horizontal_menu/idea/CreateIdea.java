@@ -3,14 +3,13 @@ package me.solo_team.futureleader.ui.menu.horizontal_menu.idea;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.Utils;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class CreateIdea extends Her implements View.OnClickListener{

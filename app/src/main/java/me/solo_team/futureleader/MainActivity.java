@@ -6,21 +6,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -30,15 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Calendar;
 import java.util.LinkedHashMap;
 
-import me.solo_team.futureleader.MediaAudioAdapters.VideoAdapter.VideoView;
-import me.solo_team.futureleader.ui.WebViewsContent.WebView;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.MenuFragment;
 import me.solo_team.futureleader.ui.news.NewsFragment;
 import me.solo_team.futureleader.ui.news.open_news.EditNews;

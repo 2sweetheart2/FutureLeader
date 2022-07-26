@@ -1,7 +1,6 @@
 package me.solo_team.futureleader.ui.profile;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import java.util.List;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.Utils;
 
 public class RecycleAchivementsAdapter extends RecyclerView.Adapter<RecycleAchivementsAdapter.ViewHolder> {
 

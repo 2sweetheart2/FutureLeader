@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.Utils;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class OnlyImage extends Her {

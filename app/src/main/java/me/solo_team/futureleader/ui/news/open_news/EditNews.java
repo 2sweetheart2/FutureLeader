@@ -94,9 +94,6 @@ public class EditNews extends Her {
             }
             try {
                 Constants.newsCache.curentNew.put("token", Constants.user.token);
-                if(Constants.newsCache.curentNew.getString("type").equals("photo")){
-                    Constants.newsCache.curentNew.put("extras","full_screen");
-                }
                 API.addNew(new ApiListener() {
                     Dialog d;
 
