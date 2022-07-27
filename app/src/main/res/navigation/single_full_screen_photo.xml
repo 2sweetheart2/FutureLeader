@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/single_full_screen_photo"
+    app:startDestination="@id/full_screnn_photo_fragment"
+    >
+
+    <fragment
+        android:id="@+id/full_screnn_photo_fragment"
+        android:name="me.solo_team.futureleader.stuff.FullScrennPhotoFragment"
+        android:label="full_screen_photo"
+        tools:layout="@layout/full_screen_photo_fragment" />
+
+</navigation>

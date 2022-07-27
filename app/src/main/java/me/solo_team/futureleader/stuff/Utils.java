@@ -342,51 +342,59 @@ public class Utils {
             sharedConstructing(context);
         }
 
+        OnClickListener scaleListener1 = null;
+        public ScalingImage(Context context, AttributeSet attrs, OnClickListener scaleListener) {
+            super(context, attrs);
+            this.scaleListener1 = scaleListener;
+            sharedConstructing(context);
+        }
+
+        ScaleListener scaleListener;
+
         private void sharedConstructing(Context context) {
             super.setClickable(true);
             this.context = context;
-            mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+            scaleListener = new ScaleListener();
+            mScaleDetector = new ScaleGestureDetector(context, scaleListener);
             matrix = new Matrix();
             m = new float[9];
             setImageMatrix(matrix);
             setScaleType(ScaleType.MATRIX);
-            setOnTouchListener(new OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    mScaleDetector.onTouchEvent(event);
-                    PointF curr = new PointF(event.getX(), event.getY());
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            last.set(curr);
-                            start.set(last);
-                            mode = DRAG;
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            if (mode == DRAG) {
-                                float deltaX = curr.x - last.x;
-                                float deltaY = curr.y - last.y;
-                                float fixTransX = getFixDragTrans(deltaX, viewWidth, origWidth * saveScale);
-                                float fixTransY = getFixDragTrans(deltaY, viewHeight, origHeight * saveScale);
-                                matrix.postTranslate(fixTransX, fixTransY);
-                                fixTrans();
-                                last.set(curr.x, curr.y);
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            mode = NONE;
-                            int xDiff = (int) Math.abs(curr.x - start.x);
-                            int yDiff = (int) Math.abs(curr.y - start.y);
-                            if (xDiff < CLICK && yDiff < CLICK)
-                                performClick();
-                            break;
-                        case MotionEvent.ACTION_POINTER_UP:
-                            mode = NONE;
-                            break;
-                    }
-                    setImageMatrix(matrix);
-                    invalidate();
-                    return true; // indicate event was handled
+            if(scaleListener1!=null)setOnClickListener(scaleListener1);
+            setOnTouchListener((v, event) -> {
+                mScaleDetector.onTouchEvent(event);
+                PointF curr = new PointF(event.getX(), event.getY());
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        last.set(curr);
+                        start.set(last);
+                        mode = DRAG;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (mode == DRAG) {
+                            float deltaX = curr.x - last.x;
+                            float deltaY = curr.y - last.y;
+                            float fixTransX = getFixDragTrans(deltaX, viewWidth, origWidth * saveScale);
+                            float fixTransY = getFixDragTrans(deltaY, viewHeight, origHeight * saveScale);
+                            matrix.postTranslate(fixTransX, fixTransY);
+                            fixTrans();
+                            last.set(curr.x, curr.y);
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mode = NONE;
+                        int xDiff = (int) Math.abs(curr.x - start.x);
+                        int yDiff = (int) Math.abs(curr.y - start.y);
+                        if (xDiff < CLICK && yDiff < CLICK)
+                            performClick();
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                        mode = NONE;
+                        break;
                 }
+                setImageMatrix(matrix);
+                invalidate();
+                return true; // indicate event was handled
             });
         }
 
@@ -394,13 +402,14 @@ public class Utils {
             maxScale = x;
         }
 
-        private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        public class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
                 mode = ZOOM;
                 return true;
             }
+
 
             @Override
             public boolean onScale(ScaleGestureDetector detector) {

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/obj_music_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/guideline24"
+        app:layout_constraintBottom_toBottomOf="@id/hina"
+        app:layout_constraintDimensionRatio="1:1"
+        android:src="@drawable/hyui"
+        app:layout_constraintTop_toTopOf="@id/hina" />
+
+    <LinearLayout
+        android:id="@+id/hina"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/obj_music_duratation"
+        app:layout_constraintLeft_toRightOf="@id/obj_music_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/obj_music_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/guideline24"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/obj_music_image"
+            app:layout_constraintBottom_toTopOf="@id/obj_music_author"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/black"
+            android:text="123123123"
+            />
+
+        <TextView
+            android:id="@+id/obj_music_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/guideline24"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/obj_music_name"
+            app:layout_constraintBottom_toTopOf="@id/obj_music_duratation"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/black"
+            android:text="123123123"
+            />
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/obj_music_duratation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/hina"
+        app:layout_constraintBottom_toBottomOf="@id/hina"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="0:30"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+</androidx.constraintlayout.widget.ConstraintLayout>
