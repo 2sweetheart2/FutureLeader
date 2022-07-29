@@ -2,6 +2,7 @@ package me.solo_team.futureleader.ui.menu.statical.Media;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,10 +22,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
+import me.solo_team.futureleader.API.API;
+import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.Audio;
+import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
-import me.solo_team.futureleader.ui.news.open_news.EditNews;
 
 public class PopularMusic extends Her {
 
@@ -48,10 +55,43 @@ public class PopularMusic extends Her {
         yourMusicList = findViewById(R.id.pop_music_your_music_list);
 
         searchPopMusic.addTextChangedListener(textChenger);
-        update();
+
+        API.getMusics(new ApiListener() {
+                          Dialog d;
+
+                          @Override
+                          public void onError(JSONObject json) throws JSONException {
+                              d.dismiss();
+                              finish();
+                          }
+
+                          @Override
+                          public void inProcess() {
+                              d = openWaiter(PopularMusic.this);
+                          }
+
+                          @Override
+                          public void onSuccess(JSONObject json) throws JSONException {
+                              System.out.println(json);
+                              JSONArray your_music = json.getJSONArray("your_musics");
+                              JSONArray pop_music = json.getJSONArray("pop_musics");
+                              Constants.audioCache.yourMusics.clear();
+                              Constants.audioCache.popMusics.clear();
+                              for (int i = 0; i < your_music.length(); i++)
+                                  Constants.audioCache.yourMusics.add(new Audio(your_music.getJSONObject(i), PopularMusic.this));
+                              for (int i = 0; i < pop_music.length(); i++)
+                                  Constants.audioCache.popMusics.add(new Audio(pop_music.getJSONObject(i), PopularMusic.this));
+                              d.dismiss();
+                              runOnUiThread(() -> update());
+                          }
+                      },
+                new CustomString("token", Constants.user.token)
+        );
+
+
     }
 
-    private TextWatcher textChenger = new TextWatcher() {
+    private final TextWatcher textChenger = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -73,12 +113,12 @@ public class PopularMusic extends Her {
 
     private void update() {
         musicList.removeAllViews();
+        yourMusicList.removeAllViews();
         if (currentSearch.length() != 0) {
             popMusicText.setVisibility(View.GONE);
             yourMusicList.setVisibility(View.GONE);
             yourMusic.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             yourMusicList.setVisibility(View.VISIBLE);
             yourMusic.setVisibility(View.VISIBLE);
             addYourMusic();
@@ -88,22 +128,28 @@ public class PopularMusic extends Her {
 
     }
 
-    private void addYourMusic(){
-        View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
-        ((TextView) view.findViewById(R.id.obj_music_duratation)).setText("0/5");
-        View view2 = getLayoutInflater().inflate(R.layout.obj_music, null, false);
-
-        yourMusicList.addView(view);
-        yourMusicList.addView(view2);
+    private void addYourMusic() {
+            for(Audio audio : Constants.audioCache.yourMusics){
+                View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
+                ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
+                ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
+                ((TextView) view.findViewById(R.id.obj_music_duratation)).setText(String.valueOf(audio.duratation));
+                Constants.cache.addPhoto(audio.urlPhoto,false,((ImageView)view.findViewById(R.id.obj_music_image)),this);
+                Constants.audioCache.yourMusicsViews.add(view);
+                yourMusicList.addView(view);
+            }
     }
 
     private void addPopMusicViews() {
-        View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
-        ((TextView) view.findViewById(R.id.obj_music_duratation)).setText("0/5");
-        View view2 = getLayoutInflater().inflate(R.layout.obj_music, null, false);
-
-        musicList.addView(view);
-        musicList.addView(view2);
+            for(Audio audio : Constants.audioCache.popMusics){
+                View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
+                ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
+                ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
+                ((TextView) view.findViewById(R.id.obj_music_duratation)).setText(String.valueOf(audio.duratation));
+                Constants.cache.addPhoto(audio.urlPhoto,false,((ImageView)view.findViewById(R.id.obj_music_image)),this);
+                Constants.audioCache.popMusicsViews.add(view);
+                musicList.addView(view);
+            }
     }
 
     @SuppressLint("ResourceType")
@@ -111,31 +157,13 @@ public class PopularMusic extends Her {
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.add(0, 1, 0, "")
                 .setIcon(R.drawable.plus)
-                .setOnMenuItemClickListener(item -> {selectMP3(); return true;})
+                .setOnMenuItemClickListener(item -> {
+                    startActivity(new Intent(PopularMusic.this,AddMusic.class));
+                    return true;
+                })
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private final int REQ_CODE_PICK_SOUNDFILE = 1001;
 
-    private void selectMP3(){
-        Intent intent;
-        intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("audio/mpeg");
-        startActivityForResult(Intent.createChooser(intent, "Выбрать аудио (MP3)"), REQ_CODE_PICK_SOUNDFILE);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_PICK_SOUNDFILE && resultCode == Activity.RESULT_OK){
-            if ((data != null) && (data.getData() != null)){
-                Uri audioFileUri = data.getData();
-                System.out.println(audioFileUri.toString());
-                // Now you can use that Uri to get the file path, or upload it, ...
-            }
-        }
-    }
 }

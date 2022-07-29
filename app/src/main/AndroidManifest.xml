@@ -79,6 +79,7 @@
             android:theme="@style/Theme.FutureLeader.ViewPhoto"
             />
         <activity android:name=".ui.menu.statical.Media.PopularMusic"/>
+        <activity android:name=".ui.menu.statical.Media.AddMusic"/>
     </application>
 
 </manifest>

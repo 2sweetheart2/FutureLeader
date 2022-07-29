@@ -3,6 +3,7 @@ package me.solo_team.futureleader;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,9 +13,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.stuff.Utils;
@@ -31,6 +34,60 @@ public class Constants {
 
     public static SurveysCache surveysCache = new SurveysCache();
 
+    public static AudioCache audioCache = new AudioCache();
+
+    public static class AudioCache{
+        public List<View> yourMusicsViews = new ArrayList<>();
+        public List<View> popMusicsViews = new ArrayList<>();
+        public List<Audio> yourMusics = new ArrayList<>();
+        public List<Audio> popMusics = new ArrayList<>();
+
+        List<Audio> currentPlayList;
+
+        private int pos = -1;
+        public int curList = 0;
+        private int oldCurList = -1;
+
+        public Audio next(){
+            checkPlayList();
+            if(playListCanged())
+                pos = 0;
+            else
+                pos++;
+            if(currentPlayList.size()-1==pos)
+                pos=0;
+            return currentPlayList.get(pos);
+        }
+
+        public Audio previous(){
+            checkPlayList();
+            if(playListCanged())
+                pos = 0;
+            else
+                pos--;
+            if(pos<0)
+                pos = currentPlayList.size()-1;
+            return currentPlayList.get(pos);
+        }
+
+        private void checkPlayList(){
+            switch (curList){
+                case 1:
+                    currentPlayList =  popMusics;
+                case 0:
+                    currentPlayList =  yourMusics;
+            }
+        }
+
+        private boolean playListCanged(){
+            if(oldCurList==-1){
+                oldCurList = curList;
+                return false;
+            }
+            else return oldCurList != curList;
+        }
+
+    }
 
     public static class SurveysCache{
         public List<Surveys> surveysForUser;

@@ -93,7 +93,10 @@ public class API {
 
     public static void uploadImage(ApiListener listener, Bitmap bitmap, CustomString... params) {
         HTTPS.u(Methods.UPL_IMAGE, Objects.requireNonNull(createJsonObj(params)), bitmap, listener);
+    }
 
+    public static void addMusicPhoto(ApiListener listener, Bitmap bitmap, CustomString... params) {
+        HTTPS.u(Methods.ADD_MUSIC_PHOTO, Objects.requireNonNull(createJsonObj(params)), bitmap, listener);
     }
 
 
@@ -132,5 +135,11 @@ public class API {
     }
     public static void getNearestDr(ApiListener listener, CustomString...params){
         HTTPS.sendPost(Methods.GET_NEAREST_DR,createJsonObj(params),listener);
+    }
+    public static void getMusics(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_MUSICS,createJsonObj(params),listener);
+    }
+    public static void addMusic(ApiListener listener, byte[] bytes, String name, CustomString...params){
+        HTTPS.sendAudio(Methods.ADD_MUSIC,createJsonObj(params),bytes,name,listener);
     }
 }
