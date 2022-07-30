@@ -2,10 +2,15 @@ package me.solo_team.futureleader;
 
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +34,7 @@ import java.io.File;
 import java.util.LinkedHashMap;
 
 import me.solo_team.futureleader.stuff.Utils;
+import me.solo_team.futureleader.stuff.media_player_stuff.service.PlayerService;
 import me.solo_team.futureleader.ui.menu.MenuFragment;
 import me.solo_team.futureleader.ui.news.NewsFragment;
 import me.solo_team.futureleader.ui.news.open_news.EditNews;
@@ -58,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
 
-
-
         id = navView.getSelectedItemId();
         findViewById(R.id.floatingActionButton).setOnClickListener(v -> {
             Intent galleryIntent = new Intent(Intent.ACTION_PICK,
@@ -80,8 +84,9 @@ public class MainActivity extends AppCompatActivity {
         map.put("whatsapp", "whatsapp");
         Constants.user.enums = map;
         System.out.println(map.keySet());
-
+        reCreate();
     }
+
     private static final String VIDEO_DIRECTORY = "/demonuts";
 
 
@@ -90,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
-                Log.d("what","gale");
+                Log.d("what", "gale");
                 if (data != null) {
                     Uri contentURI = data.getData();
-                    File file = Utils.getVideo.getVideoFromUri(contentURI,MainActivity.this);
+                    File file = Utils.getVideo.getVideoFromUri(contentURI, MainActivity.this);
                 }
             }
         }
@@ -108,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             item -> {
                 Fragment selected = null;
 
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.navigation_news:
                         selected = newsFragment;
                         setTitle("Новости");
@@ -118,14 +123,15 @@ public class MainActivity extends AppCompatActivity {
                         MainActivity.this.setTitle("Меню");
                         break;
                     case R.id.navigation_profile:
-                        selected =  profileFragment;
+                        selected = profileFragment;
                         setTitle("Профиль");
                         break;
                 }
 
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,selected).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, selected).commit();
                 return true;
             };
+
     /**
      * это крч метод для обновления {@link ActionBar} - верхней полоски над окном
      * с помощью него, я добавляю знак + в правый угол для людей с уровнем != 0
@@ -190,5 +196,38 @@ public class MainActivity extends AppCompatActivity {
         wightwindowSizeClass = widthWindowSizeClass;
     }
 
+    private PlayerService.PlayerServiceBinder playerServiceBinder;
+    public static MediaControllerCompat mediaController;
+    private MediaControllerCompat.Callback callback;
+    private ServiceConnection serviceConnection;
+
+    public void reCreate() {
+        callback = new MediaControllerCompat.Callback() {
+            @Override
+            public void onPlaybackStateChanged(PlaybackStateCompat state) {
+            }
+        };
+
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                playerServiceBinder = (PlayerService.PlayerServiceBinder) service;
+                mediaController = new MediaControllerCompat(MainActivity.this, playerServiceBinder.getMediaSessionToken());
+                mediaController.registerCallback(callback);
+                callback.onPlaybackStateChanged(mediaController.getPlaybackState());
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                playerServiceBinder = null;
+                if (mediaController != null) {
+                    mediaController.unregisterCallback(callback);
+                    mediaController = null;
+                }
+            }
+        };
+
+        bindService(new Intent(this, PlayerService.class), serviceConnection, BIND_AUTO_CREATE);
+    }
 
 }

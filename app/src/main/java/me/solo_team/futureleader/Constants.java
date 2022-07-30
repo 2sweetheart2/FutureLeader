@@ -3,11 +3,14 @@ package me.solo_team.futureleader;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.exoplayer2.ExoPlayer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +35,8 @@ public class Constants {
     public static Resources res;
     public static CachePhoto cache = new CachePhoto();
 
+    public static ExoPlayer exoPlayer;
+
     public static SurveysCache surveysCache = new SurveysCache();
 
     public static AudioCache audioCache = new AudioCache();
@@ -48,13 +53,20 @@ public class Constants {
         public int curList = 0;
         private int oldCurList = -1;
 
+        public void setCurrentAudio(int playList, Audio audio){
+            curList = playList;
+            oldCurList = playList;
+            checkPlayList();
+            pos = currentPlayList.indexOf(audio);
+        }
+
         public Audio next(){
             checkPlayList();
             if(playListCanged())
                 pos = 0;
             else
                 pos++;
-            if(currentPlayList.size()-1==pos)
+            if(currentPlayList.size()==pos)
                 pos=0;
             return currentPlayList.get(pos);
         }
@@ -67,6 +79,11 @@ public class Constants {
                 pos--;
             if(pos<0)
                 pos = currentPlayList.size()-1;
+            return currentPlayList.get(pos);
+        }
+
+        public Audio getCurrentAudio(){
+            checkPlayList();
             return currentPlayList.get(pos);
         }
 

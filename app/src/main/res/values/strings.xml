@@ -6,6 +6,16 @@
     <string name="previous">\uD83E\uDC60 предыдущие</string>
     <string name="next">следующие \uD83E\uDC62</string>
 
+    <string name="title_activity_main">MainActivity</string>
+    <string name="notification_channel_name">Player controls</string>
+
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
+
+    <string name="previous_">Previous</string>
+    <string name="next_">Next</string>
+
     <string name="back"><![CDATA[<-]]></string>
     <string name="forward"><![CDATA[->]]></string>
 

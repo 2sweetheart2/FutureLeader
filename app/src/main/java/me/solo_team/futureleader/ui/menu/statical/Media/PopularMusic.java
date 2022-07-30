@@ -136,6 +136,11 @@ public class PopularMusic extends Her {
                 ((TextView) view.findViewById(R.id.obj_music_duratation)).setText(String.valueOf(audio.duratation));
                 Constants.cache.addPhoto(audio.urlPhoto,false,((ImageView)view.findViewById(R.id.obj_music_image)),this);
                 Constants.audioCache.yourMusicsViews.add(view);
+                view.setOnClickListener(v -> {
+                    Constants.audioCache.setCurrentAudio(0,audio);
+                    Intent intent = new Intent(PopularMusic.this,MusicPlayer.class);
+                    startActivity(intent);
+                });
                 yourMusicList.addView(view);
             }
     }
@@ -148,6 +153,11 @@ public class PopularMusic extends Her {
                 ((TextView) view.findViewById(R.id.obj_music_duratation)).setText(String.valueOf(audio.duratation));
                 Constants.cache.addPhoto(audio.urlPhoto,false,((ImageView)view.findViewById(R.id.obj_music_image)),this);
                 Constants.audioCache.popMusicsViews.add(view);
+                view.setOnClickListener(v -> {
+                    Constants.audioCache.setCurrentAudio(1,audio);
+                    Intent intent = new Intent(PopularMusic.this,MusicPlayer.class);
+                    startActivity(intent);
+                });
                 musicList.addView(view);
             }
     }

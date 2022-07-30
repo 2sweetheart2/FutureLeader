@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.Objects;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
@@ -15,7 +16,9 @@ public class Audio {
     public String url;
     public String urlPhoto;
 
-    public int duratation;
+    public Bitmap imageBitmap;
+
+    public long duratation=0;
 
     private final Context context;
 
@@ -33,4 +36,5 @@ public class Audio {
             e.printStackTrace();
         }
     }
+
 }
