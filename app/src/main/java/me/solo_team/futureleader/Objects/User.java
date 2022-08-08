@@ -16,6 +16,7 @@ public class User {
     public String status;
     public int age;
     public int id;
+    public int currency;
     public String profilePictureLink;
     public String token;
     public JSONObject user_fields = new JSONObject();
@@ -24,12 +25,7 @@ public class User {
     public int adminStatus = 0;
     public JSONArray achievements;
     public FieldsStuff fieldsStuff;
-    public HashMap<String, String> editedFieldsTypes = new HashMap<String, String>() {{
-        put("город", "text");
-        put("телефон", "phone");
-        put("telegram", "text");
-        put("whatsapp", "phone");
-    }};
+    public String mobileToken;
 
 
     public List<Field> convertToFields(String fields_) throws JSONException {
@@ -77,5 +73,8 @@ public class User {
         return text.toString().substring(0, text.toString().length() - 1);
     }
 
+    public String toChatMemder(){
+        return "{\"first_name\":\""+firstName+"\",\"last_name\":\""+lastName+"\",\"profile_picture\":\""+profilePictureLink+"\",\"id\":\""+id+"\"}";
+    }
 
 }

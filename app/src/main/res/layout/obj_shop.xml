@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    >
+
+    <ImageView
+        android:id="@+id/obj_shop_added"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/obj_shop_name"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/done"
+        android:tint="@color/secondary"
+        android:padding="3dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/gray_gradient_with_corners"
+        />
+
+    <ImageView
+        android:id="@+id/obj_shop_photo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/guideline30"
+        app:layout_constraintDimensionRatio="1:1"
+
+        />
+
+    <TextView
+        android:id="@+id/obj_shop_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_blue_dark"
+        app:layout_constraintLeft_toLeftOf="@id/guideline30"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="123123"
+        android:textSize="18sp"
+        />
+
+    <LinearLayout
+        android:id="@+id/huina"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/obj_shop_name"
+        app:layout_constraintLeft_toLeftOf="@id/guideline30"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+
+        >
+        <TextView
+            android:id="@+id/obj_shop_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Стоимость:"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/obj_shop_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Осталось:"
+            android:textColor="@color/black"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/huina"
+        app:layout_constraintLeft_toLeftOf="@id/guideline30"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/obj_shop_description"
+        android:textColor="@color/black"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.35" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

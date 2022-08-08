@@ -17,12 +17,13 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -43,15 +44,16 @@ public class HTTPS {
     private static final Procesor procesor = new Procesor();
 
     public static class Procesor {
+        private List<ApiListener> shop = new ArrayList<>();
         public HashMap<Methods, ApiListener> queue = new HashMap<>();
     }
 
-    private interface GetToken {
+    public interface GetToken {
         void process(String token) throws JSONException;
     }
 
 
-    private static void getMobileToken(GetToken callback) {
+    public static void getMobileToken(GetToken callback) {
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
                     try {
@@ -66,10 +68,15 @@ public class HTTPS {
                 });
     }
 
-    public static void sendPost(Methods method, JSONObject params, ApiListener apiListener) {
 
-        if (procesor.queue.containsKey(method)) return;
-        else procesor.queue.put(method, apiListener);
+    public static void sendPost(Methods method, JSONObject params, ApiListener apiListener) {
+        if (procesor.queue.containsKey(method) && method != Methods.ADD_SHOP_REQUEST) return;
+        else {
+            if (method == Methods.ADD_SHOP_REQUEST) {
+                procesor.shop.add(apiListener);
+            } else
+                procesor.queue.put(method, apiListener);
+        }
         apiListener.inProcess();
         getMobileToken(token -> {
             if (token == null) {
@@ -105,8 +112,15 @@ public class HTTPS {
                         while ((responseLine = br.readLine()) != null) {
                             response_.append(responseLine.trim());
                         }
-                        procesor.queue.get(method).process(new JSONObject(response_.toString()));
-                        procesor.queue.remove(method);
+                        ApiListener met;
+                        if (method == Methods.ADD_SHOP_REQUEST) {
+                            met = procesor.shop.get(0);
+                            procesor.shop.remove(0);
+                        } else {
+                            met = procesor.queue.get(method);
+                            procesor.queue.remove(method);
+                        }
+                        met.process(new JSONObject(response_.toString()));
 
                     }
                 } catch (IOException | JSONException e) {
@@ -362,7 +376,7 @@ public class HTTPS {
                     connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
                     DataOutputStream request = new DataOutputStream(connection.getOutputStream());
                     request.writeBytes("--" + boundary + "\r\n");
-                    request.writeBytes("Content-Disposition: form-data; name=\"audio\"; filename=\""+name+"\"\r\n\r\n");
+                    request.writeBytes("Content-Disposition: form-data; name=\"audio\"; filename=\"" + name + "\"\r\n\r\n");
                     request.write(bytes);
                     request.writeBytes("\r\n");
                     for (int i = 0; i < data.names().length(); i++) {

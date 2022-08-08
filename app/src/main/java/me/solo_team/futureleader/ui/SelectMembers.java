@@ -1,16 +1,22 @@
-package me.solo_team.futureleader.ui.menu.statical.admining.layouts.users;
+package me.solo_team.futureleader.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -18,6 +24,9 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
@@ -27,9 +36,10 @@ import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.Objects.FieldsStuff;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.ui.menu.statical.admining.Her;
+import me.solo_team.futureleader.ui.menu.horizontal_menu.messanger.CreateChat;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.ViewUserProfile;
 
-public class UsersLayout extends Her {
+public class SelectMembers extends AppCompatActivity {
 
     LinearLayout usersList;
     EditText searchUser;
@@ -42,11 +52,14 @@ public class UsersLayout extends Her {
     JSONArray arr;
     JSONArray filteredList;
 
+    boolean needStuff = true;
+    boolean checker = false;
+    boolean removeSelf = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.admining_users_layout);
-        setTitle("Пользователи");
+        setContentView(R.layout.select_members);
         usersList = findViewById(R.id.layout_with_users);
         searchUser = findViewById(R.id.adminig_users_serach);
         noResult = findViewById(R.id.layout_with_users_no_result);
@@ -54,6 +67,11 @@ public class UsersLayout extends Her {
         count = findViewById(R.id.layout_with_users_offset);
         TextView back = findViewById(R.id.layout_with_users_btn_back);
         TextView next = findViewById(R.id.layout_with_users_btn_next);
+
+        needStuff = getIntent().getBooleanExtra("needStuff", true);
+        checker = getIntent().getBooleanExtra("checker", false);
+        removeSelf = getIntent().getBooleanExtra("removeSelf",false);
+
         API.getUsers(new ApiListener() {
             Dialog d;
 
@@ -68,7 +86,7 @@ public class UsersLayout extends Her {
 
             @Override
             public void inProcess() {
-                d = openWaiter(UsersLayout.this);
+                d = openWaiter(SelectMembers.this);
             }
 
             @Override
@@ -140,6 +158,7 @@ public class UsersLayout extends Her {
         });
     }
 
+
     private void copy() {
         filteredList = arr;
         curentSize = filteredList.length();
@@ -159,9 +178,38 @@ public class UsersLayout extends Her {
             JSONObject o = arr.getJSONObject(i);
             if (!(o.getString("first_name") + " " + o.getString("last_name")).toLowerCase().contains(filterName.toLowerCase()))
                 continue;
+            if(removeSelf && o.getInt("id")==Constants.user.id)
+                continue;
             filteredList.put(o);
         }
         curentSize = filteredList.length();
+    }
+
+    List<User> checkedUsers = new ArrayList<>();
+
+    private void addCkeduser(User user){
+        for(User u : checkedUsers){
+            if(u.id==user.id)
+                break;
+        }
+        checkedUsers.add(user);
+    }
+    private void removeUser(User user){
+        for(User u : checkedUsers){
+            if(u.id==user.id) {
+                checkedUsers.remove(u);
+                break;
+            }
+        }
+    }
+    private boolean containsUser(User user){
+        boolean con = false;
+        for(User u : checkedUsers)
+            if(u.id==user.id){
+                con=true;
+                break;
+            }
+        return con;
     }
 
     private void addUsers(String filterName) throws JSONException {
@@ -172,12 +220,16 @@ public class UsersLayout extends Her {
         for (int i = (10 * offset); i < (10 * offset) + 10; i++) {
             if (i >= curentSize) continue;
             JSONObject o = filteredList.getJSONObject(i);
+            if(o.getInt("id")==Constants.user.id)
+                continue;
             lastIndex = i + 1;
             User user = new User();
+
             user.lastName = o.getString("last_name");
             user.firstName = o.getString("first_name");
             JSONObject field_stuff = o.getJSONObject("fields_stuff");
             user.addFields(field_stuff.getString("fields"));
+            user.profilePictureLink = o.getString("profile_picture");
             user.fieldsStuff = new FieldsStuff(user.fields, user.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
             user.id = o.getInt("id");
             String division = "Отсутствует";
@@ -189,18 +241,40 @@ public class UsersLayout extends Her {
                 if (field.name.equals("post"))
                     post = field.value;
             }
+
             ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout, null);
             ((TextView) constraintLayout.findViewById(R.id.admining_user_content_name)).setText(user.firstName + " " + user.lastName);
             ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: " + o.getString("email"));
-            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_division)).setText(division);
-            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_post)).setText(post);
+
+            TextView div = constraintLayout.findViewById(R.id.admining_user_content_division);
+            TextView pot = constraintLayout.findViewById(R.id.admining_user_content_post);
+            CheckBox check = constraintLayout.findViewById(R.id.admining_user_content_check);
+            div.setText(division);
+            pot.setText(post);
+            if (checker) {
+                constraintLayout.findViewById(R.id.admining_user_content_huina).setVisibility(View.GONE);
+                check.setVisibility(View.VISIBLE);
+                check.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked) {
+                        addCkeduser(user);
+                    }
+                    else
+                        removeUser(user);
+                });
+                if(containsUser(user) && !check.isChecked())
+                    check.setChecked(true);
+            }
+            if (!needStuff) {
+                constraintLayout.findViewById(R.id.admining_user_content_huina).setVisibility(View.GONE);
+            }
             Constants.cache.addPhoto(o.getString("profile_picture"), true, constraintLayout.findViewById(R.id.admining_user_content_logo), this);
             runOnUiThread(() -> usersList.addView(constraintLayout));
-            constraintLayout.setOnClickListener(v -> {
-                Intent intent = new Intent(this, ViewUserProfile.class);
-                intent.putExtra("id", String.valueOf(user.id));
-                startActivity(intent);
-            });
+            if (!checker)
+                constraintLayout.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, ViewUserProfile.class);
+                    intent.putExtra("id", String.valueOf(user.id));
+                    startActivity(intent);
+                });
             count++;
         }
         int finalCount = count;
@@ -219,5 +293,29 @@ public class UsersLayout extends Her {
                 this.count.setText("Показаны пользователи с " + text_ + " по " + finalLastIndex + " (из " + (curentSize) + " )");
             }
         });
+    }
+
+
+    @SuppressLint("ResourceType")
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(checker)
+            menu.add(0, 1, 0, "")
+                .setIcon(R.drawable.done)
+                .setOnMenuItemClickListener(item -> {
+                    Intent data = new Intent();
+                    List<String> usersInfo = new ArrayList<>();
+                    for (User user : checkedUsers) {
+                        usersInfo.add(user.toChatMemder());
+                    }
+                    String[] stockArr = new String[usersInfo.size()];
+                    usersInfo.toArray(stockArr);
+                    data.putExtra("users",stockArr);
+                    setResult(100,data);
+                    finish();
+                    return true;
+                })
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        return super.onPrepareOptionsMenu(menu);
     }
 }

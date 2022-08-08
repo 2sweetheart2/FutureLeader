@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
+import me.solo_team.futureleader.API.HTTPS;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.MainActivity;
 import me.solo_team.futureleader.Objects.CustomString;
@@ -37,10 +38,11 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
         WebView webView = findViewById(R.id.webvuiew_login_or_register_layout);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
-        //webView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("file:///android_asset/index.html");
         Button button_register = findViewById(R.id.register_button);
         GFB();
-        button_login.setOnClickListener(new View.OnClickListener() {
+        Constants.MainContext = getApplicationContext();
+        HTTPS.getMobileToken(token -> button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -74,6 +76,9 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
                                       user.profilePictureLink = json.getString("profile_picture");
                                       user.status = json.getString("status");
                                       user.token = json.getString("token");
+                                      user.currency = json.getInt("currency");
+                                      user.mobileToken = token;
+                                      System.out.println(json);
                                       Constants.user = user;
                                       d.dismiss();
                                       startActivity(new Intent(LoginOrRegisterLayout.this, MainActivity.class));
@@ -85,7 +90,8 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
                 );
 
             }
-        });
+        }));
+
     }
 
 

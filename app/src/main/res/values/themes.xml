@@ -21,8 +21,17 @@
     </style>
 
 
-    <style name = "NoActionBar" parent = "Theme.MaterialComponents.Light.DarkActionBar">
-        <item name = "android:windowActionBar">false</item>
-        <item name = "android:windowNoTitle">true</item>
+    <style name="NoActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.FutureLeader.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.FutureLeader.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.FutureLeader.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

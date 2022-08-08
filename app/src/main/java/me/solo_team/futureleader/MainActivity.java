@@ -33,6 +33,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.LinkedHashMap;
 
+import io.socket.emitter.Emitter;
+import me.solo_team.futureleader.API.websocket.WebScoketClient;
+import me.solo_team.futureleader.Objects.Chat;
+import me.solo_team.futureleader.Objects.Message;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.stuff.media_player_stuff.service.PlayerService;
 import me.solo_team.futureleader.ui.menu.MenuFragment;
@@ -44,10 +48,18 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navView;
     int id;
 
-    @RequiresApi(api = Build.VERSION_CODES.R)
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Constants.res = getResources();
+
+        WebScoketClient.createConnection();
+        System.out.println(WebScoketClient.mSocket.connected());
+
+        WebScoketClient.mSocket.on("chat_invite", onChatInvite);
+        //WebScoketClient.mSocket.on("chat_remove", OnChatRemoved);
+        WebScoketClient.mSocket.on("new_message", onMessageNew);
         // КРЧ ТУТ НИЧЕГО НЕ ТРОГАЕМ, ЭТО ОСНОВНОЕ ОКНО В КОТОРОМ У НАС ВСЁ: НАЖНЯЯ ПАНЕЛЬ И ОСТАЛЬНЫЕ ФРАГМЕНТЫ
         super.onCreate(savedInstanceState);
         // метод для опрeделения ширины экрана
@@ -178,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static WindowSizeClass wightwindowSizeClass;
 
-    @RequiresApi(api = Build.VERSION_CODES.R)
     private void computeWindowSizeClasses() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -228,6 +239,32 @@ public class MainActivity extends AppCompatActivity {
         };
 
         bindService(new Intent(this, PlayerService.class), serviceConnection, BIND_AUTO_CREATE);
+    }
+
+
+    // SOCKETS STUFF
+
+    public Emitter.Listener onChatInvite = args -> MainActivity.this.runOnUiThread(() -> {
+        System.out.println(args[0]);
+        Chat chat = new Chat((JSONObject) args[0]);
+        Constants.chatsCache.chats.add(chat);
+        if(Constants.chatListeners.chatInviteCallback!=null)
+            Constants.chatListeners.chatInviteCallback.chatInvite();
+    });
+
+    public Emitter.Listener onMessageNew = args -> MainActivity.this.runOnUiThread(()->{
+        Message message = new Message((JSONObject) args[0]);
+        if(Constants.chatListeners.messageCallbacks.containsKey(message.peerId))
+            Constants.chatListeners.messageCallbacks.get(message.peerId).onMessage(message);
+
+    });
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        WebScoketClient.mSocket.off("new_message", onMessageNew);
+        WebScoketClient.mSocket.off("chat_invite", onChatInvite);
+        //WebScoketClient.mSocket.off("chat_removed", OnChatRemoved);
     }
 
 }

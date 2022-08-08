@@ -89,8 +89,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.65" />
+        <CheckBox
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/admining_user_content_check"
+            android:visibility="gone"
+            />
 
     <LinearLayout
+        android:id="@+id/admining_user_content_huina"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/gray_gradient_with_corners"
@@ -128,6 +137,8 @@
                 android:text="Участник ШБЛ"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
+
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

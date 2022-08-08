@@ -31,6 +31,7 @@ import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.calendar.Calendar;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.idea.Idea;
+import me.solo_team.futureleader.ui.menu.horizontal_menu.messanger.ChatsView;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.SurveysView;
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
@@ -115,6 +116,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                     );
                 };
                 break;
+            case 3:
+                click = v -> fragment.startActivity(new Intent(fragment.requireContext(), ChatsView.class));
         }
         holder.nameView.setText(values.get(position));
         if (click != null)

@@ -3,10 +3,17 @@ package me.solo_team.futureleader.Objects;
 public class Time {
     public int hour;
     public int minute;
+    public int sec;
 
     public Time(int hour, int minute){
         this.hour = hour;
         this.minute = minute;
+    }
+
+    public Time(int hour, int minute, int sec){
+        this.hour = hour;
+        this.minute = minute;
+        this.sec = sec;
     }
 
     public Time(String time){

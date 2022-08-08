@@ -24,7 +24,7 @@ public class SurveysComplete extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.surveys_complete, container, false);
         list = root.findViewById(R.id.surveys_complete_list);
-
+        list.removeAllViews();
         for (Surveys surveys : Constants.surveysCache.completeSurveys) {
             View view = getLayoutInflater().inflate(R.layout.surveys_object, null);
             ((TextView) view.findViewById(R.id.surveys_object_label)).setText(surveys.name);

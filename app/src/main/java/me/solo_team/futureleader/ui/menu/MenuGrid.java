@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridLayout;
@@ -25,6 +26,7 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import me.solo_team.futureleader.Objects.ShopItem;
 import me.solo_team.futureleader.R;
 
 public class MenuGrid {
@@ -121,5 +123,7 @@ public class MenuGrid {
         gridLayout.addView(image, lp);
         return image;
     }
+
+
 
 }

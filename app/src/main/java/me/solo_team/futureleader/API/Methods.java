@@ -38,8 +38,17 @@ public enum Methods {
     GET_SURVEYS("get_surveys"),
     ADD_ANSWERS("add_survey_answers"),
 
+    GET_SHOP("get_shop"),
+    ADD_SHOP_REQUEST("add_shop_request"),
+
     GET_NEAREST_DR("get_nearest_birthday_people"),
 
+    GET_CHATS("get_chats"),
+    GET_CHAT("get_chat"),
+    CREATE_DIALOG("create_dialog"),
+    SEND_MESSAGE("send_message"),
+    CHANGE_CHAT_IMAGE("change_chat_image"),
+    CREATE_CHAT("create_chat"),
 
     GET_USER("get_user");
 

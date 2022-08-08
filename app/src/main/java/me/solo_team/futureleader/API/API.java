@@ -142,4 +142,27 @@ public class API {
     public static void addMusic(ApiListener listener, byte[] bytes, String name, CustomString...params){
         HTTPS.sendAudio(Methods.ADD_MUSIC,createJsonObj(params),bytes,name,listener);
     }
+    public static void getShop(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_SHOP,createJsonObj(params),listener);
+    }
+    public static void addShopOrder(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.ADD_SHOP_REQUEST, createJsonObj(params),listener);
+    }
+
+
+    public static void getChats(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_CHATS,createJsonObj(params),listener);
+    }
+    public static void getChat(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_CHAT,createJsonObj(params),listener);
+    }
+    public static void sendMessage(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.SEND_MESSAGE,createJsonObj(params),listener);
+    }
+    public static void updateChatImage(ApiListener listener, Bitmap bitmap, CustomString...params){
+        HTTPS.u(Methods.CHANGE_CHAT_IMAGE,createJsonObj(params),bitmap,listener);
+    }
+    public static void createChat(ApiListener listener, JSONObject object){
+        HTTPS.sendPost(Methods.CREATE_CHAT,object,listener);
+    }
 }

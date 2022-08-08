@@ -19,6 +19,7 @@ import me.solo_team.futureleader.ui.menu.statical.Media.PopularMusic;
 import me.solo_team.futureleader.ui.menu.statical.admining.AdminingLayout;
 import me.solo_team.futureleader.ui.menu.statical.dr.DrView;
 import me.solo_team.futureleader.ui.menu.statical.programs.ProgramsLayout;
+import me.solo_team.futureleader.ui.menu.statical.shop.ShopView;
 
 public class MenuFragment extends Fragment {
     View root;
@@ -40,7 +41,7 @@ public class MenuFragment extends Fragment {
         //динамическое добавление элементов в сетку
 
         grid.addElement(null, "заявки", "16", false);
-        grid.addElement(null, "магазин", "16", false);
+        grid.addElement(null, "магазин", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), ShopView.class)));
         grid.addElement(null, "именниники", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), DrView.class)));
         grid.addElement(null, "медиа", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), PopularMusic.class)));
         if(Constants.user.adminStatus!=0) grid.addElement(null,"администрирование","16",true)

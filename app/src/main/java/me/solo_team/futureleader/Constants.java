@@ -1,5 +1,7 @@
 package me.solo_team.futureleader;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import me.solo_team.futureleader.Objects.Audio;
+import me.solo_team.futureleader.Objects.Chat;
+import me.solo_team.futureleader.Objects.Message;
+import me.solo_team.futureleader.Objects.ShopItem;
 import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.stuff.Utils;
@@ -35,11 +40,81 @@ public class Constants {
     public static Resources res;
     public static CachePhoto cache = new CachePhoto();
 
+    public static ShopChache shopChache = new ShopChache();
+
     public static ExoPlayer exoPlayer;
 
     public static SurveysCache surveysCache = new SurveysCache();
 
     public static AudioCache audioCache = new AudioCache();
+    public static Context MainContext;
+
+    public static class ShopChache{
+        public List<ShopItem> corzina = new ArrayList<>();
+    }
+
+    public static ChatsCache chatsCache = new ChatsCache();
+
+    public static ChatListeners chatListeners = new ChatListeners();
+
+    public static class ChatListeners{
+        public interface messageCallbakcEmiter{
+            public void onMessage(Message message);
+        }
+
+        public interface ChatInvateCallbakc{
+            void chatInvite();
+        }
+
+        public HashMap<Integer,messageCallbakcEmiter> messageCallbacks = new HashMap<>();
+
+        public ChatInvateCallbakc chatInviteCallback = null;
+    }
+
+    public static class ChatsCache{
+        public List<Chat> chats = new ArrayList<>();
+        public HashMap<Integer, List<Message>> messages = new HashMap<>();
+
+        public void addMessage(int peerId, Message message){
+            if(messages.containsKey(peerId)) {
+                List<Message> messageList = messages.get(peerId);
+                messageList.add(0,message);
+                messages.put(peerId,messageList);
+            }
+            else{
+                List<Message> messages1 = new ArrayList<>();
+                messages1.add(message);
+                this.messages.put(message.peerId,messages1);
+            }
+        }
+
+        public void addChat(Chat chat){
+            boolean has = false;
+            for(Chat chat1 : chats){
+                if(chat1.peerId == chat.peerId) {
+                    has = true;
+                    break;
+                }
+            }
+            if(!has)
+                chats.add(chat);
+        }
+
+        public Chat getChatByPeerId(int peerId){
+            for(Chat chat : chats){
+                if(chat.peerId == peerId)
+                    return chat;
+            }
+            return null;
+        }
+    }
+
+    public static SocketCache socketCache = new SocketCache();
+
+    public static class SocketCache{
+        public List<Chat> invitedChat = new ArrayList<>();
+        public List<Message> newMessages = new ArrayList<>();
+    }
 
     public static class AudioCache{
         public List<View> yourMusicsViews = new ArrayList<>();
@@ -148,6 +223,7 @@ public class Constants {
                 if(sur.id==id){
                     completeSurveys.add(sur);
                     surveysForUser.remove(sur);
+                    break;
                 }
             }
         }
@@ -157,6 +233,7 @@ public class Constants {
                 if(sur.id==id){
                     completeSurveys.add(sur);
                     surveysForAll.remove(sur);
+                    break;
                 }
             }
         }
@@ -192,7 +269,7 @@ public class Constants {
          * @param v                {@link ImageView}
          * @param c                {@link AppCompatActivity} для {@link AppCompatActivity#runOnUiThread}
          */
-        public void addPhoto(String url, boolean needRoundCorners, ImageView v, AppCompatActivity c) {
+        public void addPhoto(String url, boolean needRoundCorners, ImageView v, Activity c) {
             if (cache.containsKey(v)) {
                 c.runOnUiThread(() -> v.setImageBitmap(cache.get(v)));
                 return;
