@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
@@ -57,6 +58,15 @@ import me.solo_team.futureleader.R;
 
 public class Utils {
 
+    public static byte[] read(InputStream is) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[0xFFFF];
+        for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
+            os.write(buffer, 0, len);
+        }
+
+        return os.toByteArray();
+    }
 
     @SuppressLint("Range")
     public static String getFileName(Uri uri, Context context) {
@@ -79,6 +89,13 @@ public class Utils {
             }
         }
         return result;
+    }
+
+    public static String getFileFormat(Uri uri, Context context){
+        String fileName = getFileName(uri,context);
+        if(fileName.split("\\.").length==0)
+            return null;
+        return fileName.split("\\.")[1];
     }
 
     public static class getVideo {
@@ -196,10 +213,13 @@ public class Utils {
 
     public static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
         if ((birthDate != null) && (currentDate != null)) {
-            return Period.between(birthDate, currentDate).getYears();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return Period.between(birthDate, currentDate).getYears();
+            }
         } else {
             return 0;
         }
+        return 0;
     }
 
 

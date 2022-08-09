@@ -16,9 +16,14 @@ public class Time {
         this.sec = sec;
     }
 
+
     public Time(String time){
         this.hour = Integer.parseInt(time.split(":")[0]);
         this.minute = Integer.parseInt(time.split(":")[1]);
+    }
+
+    public Time(long time) {
+
     }
 
     public String toStr(){

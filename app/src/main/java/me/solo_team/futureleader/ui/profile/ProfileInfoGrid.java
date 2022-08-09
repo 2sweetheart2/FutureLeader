@@ -19,15 +19,25 @@ public class ProfileInfoGrid {
 
     private final TableLayout table;
     private final LayoutInflater inflater;
-    private final ViewGroup container;
+    private ViewGroup container = null;
     public ProfileInfoGrid(TableLayout table, Context context, LayoutInflater inflater,ViewGroup container){
         this.table = table;
         this.inflater = inflater;
         this.container = container;
     }
 
+    public ProfileInfoGrid(TableLayout table, Context context, LayoutInflater inflater){
+        this.table = table;
+        this.inflater = inflater;
+    }
+
+
     public TableRow addElement(String name,String value){
-        TableRow row = (TableRow)inflater.inflate(R.layout.row_in_profile_info, container,false);
+        TableRow row;
+        if(container!=null)
+            row = (TableRow)inflater.inflate(R.layout.row_in_profile_info, container,false);
+        else
+            row = (TableRow)inflater.inflate(R.layout.row_in_profile_info,null);
         ((TextView)row.getChildAt(0)).setText(name);
         ((TextView)row.getChildAt(1)).setText(value);
         switch (MainActivity.wightwindowSizeClass){
@@ -47,7 +57,11 @@ public class ProfileInfoGrid {
     }
 
     public View addRow(String name){
-        View view = inflater.inflate(R.layout.single_gray_line_withtext_contact,container,false);
+        View view;
+        if(container!=null)
+            view= inflater.inflate(R.layout.single_gray_line_withtext_contact,container,false);
+        else
+            view= inflater.inflate(R.layout.single_gray_line_withtext_contact,null);
         ((TextView)view.findViewById(R.id.text_with_line)).setText(name);
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT);
         params.weight = 2;
@@ -58,7 +72,10 @@ public class ProfileInfoGrid {
     }
 
     public View addRow(){
-        View view = inflater.inflate(R.layout.single_gray_line,container,false);
+        View view;
+        if(container!=null)
+            view = inflater.inflate(R.layout.single_gray_line,container,false);
+        else view = inflater.inflate(R.layout.single_gray_line,null);
         table.addView(view);
         return view;
     }

@@ -59,6 +59,10 @@ public class CurrentChatView2 extends AppCompatActivity {
         Constants.chatListeners.messageCallbacks.put(chat.peerId, message -> {
             runOnUiThread(()->addMessage(message));
         });
+        Constants.chatListeners.chatTitleChange = title -> {
+            chat.name = title;
+            runOnUiThread(()->chatName.setText(title));
+        };
         if(chat==null) finish();
         assert chat != null;
 
@@ -178,6 +182,7 @@ public class CurrentChatView2 extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Constants.chatListeners.messageCallbacks.remove(chat.peerId);
+        Constants.chatListeners.chatTitleChange = null;
         disable = true;
     }
 
@@ -185,6 +190,7 @@ public class CurrentChatView2 extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Constants.chatListeners.messageCallbacks.remove(chat.peerId);
+        Constants.chatListeners.chatTitleChange = null;
         disable = true;
     }
 
@@ -192,5 +198,10 @@ public class CurrentChatView2 extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Constants.chatListeners.messageCallbacks.put(chat.peerId, this::addMessage);
+        Constants.chatListeners.chatTitleChange = title -> {
+            chat.name = title;
+            runOnUiThread(()->chatName.setText(title));
+        };
+        chatName.setText(chat.name);
     }
 }

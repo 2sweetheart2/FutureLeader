@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -36,8 +35,7 @@ import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.Objects.FieldsStuff;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.ui.menu.horizontal_menu.messanger.CreateChat;
-import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.ViewUserProfile;
+import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
 public class SelectMembers extends AppCompatActivity {
 
@@ -223,15 +221,8 @@ public class SelectMembers extends AppCompatActivity {
             if(o.getInt("id")==Constants.user.id)
                 continue;
             lastIndex = i + 1;
-            User user = new User();
-
-            user.lastName = o.getString("last_name");
-            user.firstName = o.getString("first_name");
-            JSONObject field_stuff = o.getJSONObject("fields_stuff");
-            user.addFields(field_stuff.getString("fields"));
-            user.profilePictureLink = o.getString("profile_picture");
-            user.fieldsStuff = new FieldsStuff(user.fields, user.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
-            user.id = o.getInt("id");
+            User user = new User(o);
+            user.enums = Constants.user.enums;
             String division = "Отсутствует";
             String post = "Отсутствует";
 
@@ -271,8 +262,8 @@ public class SelectMembers extends AppCompatActivity {
             runOnUiThread(() -> usersList.addView(constraintLayout));
             if (!checker)
                 constraintLayout.setOnClickListener(v -> {
-                    Intent intent = new Intent(this, ViewUserProfile.class);
-                    intent.putExtra("id", String.valueOf(user.id));
+                    Intent intent = new Intent(this, ViewProfile.class);
+                    Constants.currentUser = user;
                     startActivity(intent);
                 });
             count++;

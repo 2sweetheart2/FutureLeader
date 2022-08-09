@@ -1,5 +1,6 @@
 package me.solo_team.futureleader.ui.menu.horizontal_menu.calendar;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -43,23 +44,28 @@ public class EventCheck extends Her {
 
     private void getEvents() {
         API.getEvents(new ApiListener() {
+            Dialog d;
                           @Override
                           public void onError(JSONObject json) throws JSONException {
-
+                            System.out.println(json);
+                            d.dismiss();
+                            finish();
                           }
 
                           @Override
                           public void inProcess() {
-
+                                d = openWaiter(EventCheck.this);
                           }
 
                           @Override
                           public void onSuccess(JSONObject json) throws JSONException {
                               JSONArray events = json.getJSONArray("events");
+                              System.out.println(events.toString(1));
                               List<Event> eventList = new ArrayList<>();
                               for(int i=0;i<events.length();i++) {
                                   eventList.add(new Event(events.getJSONObject(i)));
                               }
+                              d.dismiss();
                               runOnUiThread(()->addEventsInList(eventList));
 
 

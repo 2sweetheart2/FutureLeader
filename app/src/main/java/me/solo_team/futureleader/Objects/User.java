@@ -28,6 +28,32 @@ public class User {
     public String mobileToken;
 
 
+
+    public User(JSONObject payload) {
+        try{
+            this.firstName = payload.getString("first_name");
+            this.lastName = payload.getString("last_name");
+            this.achievementsIds = payload.getString("achievement_ids");
+            this.adminStatus = payload.getInt("admin_status");
+            try {
+                this.age = payload.getInt("age");
+            }catch (Exception ignored){}
+            JSONObject field_stuff = payload.getJSONObject("fields_stuff");
+            this.addFields(field_stuff.getString("fields"));
+            System.out.println(field_stuff.toString(1));
+            this.fieldsStuff = new FieldsStuff(this.fields, this.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
+            this.id = payload.getInt("id");
+            this.profilePictureLink = payload.getString("profile_picture");
+            this.status = payload.getString("status");
+            if(!payload.isNull("token"))
+                this.token = payload.getString("token");
+            this.currency = payload.getInt("currency");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public List<Field> convertToFields(String fields_) throws JSONException {
         List<Field> fieldsList = new ArrayList<>();
         JSONArray fields = new JSONArray(fields_);

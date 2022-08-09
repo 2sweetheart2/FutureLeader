@@ -16,6 +16,17 @@
         android:id="@+id/member_photo"
         />
 
+    <ImageView
+        android:id="@+id/member_owner"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/star"
+        app:layout_constraintTop_toTopOf="@id/member_photo"
+        app:layout_constraintLeft_toLeftOf="@id/member_photo"
+        app:layout_constraintRight_toRightOf="@id/member_photo"
+        />
+
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"

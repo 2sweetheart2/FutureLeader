@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +67,13 @@ public class Constants {
             void chatInvite();
         }
 
+        public interface ChatTitleChange{
+            void titleChange(String title);
+        }
+
         public HashMap<Integer,messageCallbakcEmiter> messageCallbacks = new HashMap<>();
+
+        public ChatTitleChange chatTitleChange = null;
 
         public ChatInvateCallbakc chatInviteCallback = null;
     }
@@ -185,6 +192,7 @@ public class Constants {
         public List<Surveys> surveysForUser;
         public List<Surveys>  surveysForAll;
         public List<Surveys> completeSurveys;
+        public List<Surveys> allSurveys = new ArrayList<>();
 
         public Surveys getMeById(int id){
             for(Surveys sur : surveysForUser){
@@ -198,6 +206,15 @@ public class Constants {
             for(Surveys sur : surveysForAll){
                 if(sur.id==id)
                     return sur;
+            }
+            return null;
+        }
+
+        public Surveys getAllByIdAdmin(int id){
+            for(Surveys sur : allSurveys){
+                if(sur.id==id){
+                    return sur;
+                }
             }
             return null;
         }
@@ -237,6 +254,10 @@ public class Constants {
                 }
             }
         }
+
+        public void deleteSurvey(int id) {
+            allSurveys.remove(getAllByIdAdmin(id));
+        }
     }
 
 
@@ -260,7 +281,6 @@ public class Constants {
 
     public static class CachePhoto {
         private HashMap<ImageView, Bitmap> cache = new HashMap<>();
-
         /**
          * Динамическое получени фото по URL  и кешерировани его в HashMap по URL и подстваление в {@link ImageView}
          *
@@ -322,6 +342,16 @@ public class Constants {
             if (needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
             cache.put(v, bitmap);
             v.setImageBitmap(bitmap);
+        }
+
+        public void addPhoto(String profilePicture, ShapeableImageView viewById,Activity c) {
+            Utils.getBitmapFromURL(profilePicture, bitmap -> {
+                if (bitmap == null) {
+                    c.runOnUiThread(() -> viewById.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
+                    return;
+                }
+                c.runOnUiThread(() -> viewById.setImageBitmap(bitmap));
+            });
         }
 
         public interface ImageBitmaps {

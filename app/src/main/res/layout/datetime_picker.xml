@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="match_parent">
+
+        <DatePicker
+            android:id="@+id/date_picker"
+            android:layout_width="match_parent"
+            style="@style/Theme.FutureLeader"
+            android:calendarViewShown="true"
+            android:spinnersShown="false"
+            android:layout_weight="4"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:id="@+id/date_time_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:textAlignment="center"
+            android:layout_margin="10dp"
+            android:padding="6dp"
+            android:text="время: "
+            />
+        <Button
+            android:id="@+id/date_time_set"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:text="установить"
+            android:layout_margin="15dp"
+            android:layout_height="0dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

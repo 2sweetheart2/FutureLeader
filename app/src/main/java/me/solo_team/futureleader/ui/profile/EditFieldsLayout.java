@@ -15,14 +15,17 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class EditFieldsLayout extends Her {
@@ -33,10 +36,12 @@ public class EditFieldsLayout extends Her {
         super.onCreate(savedInstanceState);
         String name = getIntent().getStringExtra("name");
         Field editField = null;
-        for(Field fields : Constants.user.fieldsStuff.fieldsCanEdit){
-            if (fields.visualName.equals(name)) {
-                editField = fields;
-                break;
+        {
+            for (Field fields : Constants.currentUser.fieldsStuff.fieldsCanEdit) {
+                if (fields.visualName.equals(name)) {
+                    editField = fields;
+                    break;
+                }
             }
         }
         if (editField == null) {
@@ -68,14 +73,14 @@ public class EditFieldsLayout extends Her {
             finalEditField.value = editText.getText().toString();
             switch (type) {
                 case "text":
-                    editInfo(finalEditField,getCurrentFocus());
+                    editInfo(finalEditField, getCurrentFocus());
                     break;
                 case "phone":
                     if (finalEditField.value.length() != 12 || finalEditField.value.indexOf("+") != 0 || !finalEditField.value.startsWith("+7")) {
                         Utils.ShowSnackBar.show(getApplicationContext(), "Номер телефона введен некоректно\nПример: +79112220000", v);
                         return;
                     }
-                    editInfo(finalEditField,getCurrentFocus());
+                    editInfo(finalEditField, getCurrentFocus());
                     break;
             }
         });
@@ -86,6 +91,12 @@ public class EditFieldsLayout extends Her {
     private void cr(Field field, View v) {
         EditFieldsDialog cl = new EditFieldsDialog(result -> {
             if (!result) return;
+            List<CustomString> strings = new ArrayList<>();
+            if (Constants.user.adminStatus > 0 && Constants.currentUser.id!=Constants.user.id)
+                strings.add(new CustomString("for_user", String.valueOf( Constants.currentUser.id)));
+            strings.add(new CustomString("name", field.name));
+            strings.add(new CustomString("token", Constants.user.token));
+            strings.add(new CustomString("value", ""));
             API.updateFields(new ApiListener() {
                 Dialog d;
 
@@ -96,7 +107,7 @@ public class EditFieldsLayout extends Her {
 
                 @Override
                 public void onError(JSONObject json) throws JSONException {
-                    this.createNotification(v,json.getString("message"));
+                    this.createNotification(v, json.getString("message"));
                     d.dismiss();
                 }
 
@@ -106,7 +117,7 @@ public class EditFieldsLayout extends Her {
                     d.dismiss();
                     finish();
                 }
-            }, new CustomString("name", field.name), new CustomString("token", Constants.user.token), new CustomString("value", ""));
+            }, strings);
 
 
         }, field.visualName, "Вы действиетльно хотите удалить параметр \"" + field.visualName + "\"?");
@@ -114,6 +125,12 @@ public class EditFieldsLayout extends Her {
     }
 
     private void editInfo(Field field, View rootView) {
+        List<CustomString> strings = new ArrayList<>();
+        if (Constants.user.adminStatus > 0 && Constants.currentUser.id!=Constants.user.id)
+            strings.add(new CustomString("for_user", String.valueOf( Constants.currentUser.id)));
+        strings.add(new CustomString("name", field.name));
+        strings.add(new CustomString("token", Constants.user.token));
+        strings.add(new CustomString("value", field.value));
         API.updateFields(new ApiListener() {
             Dialog d;
 
@@ -124,17 +141,17 @@ public class EditFieldsLayout extends Her {
 
             @Override
             public void onError(JSONObject json) throws JSONException {
-                this.createNotification(rootView,json.getString("message"));
+                this.createNotification(rootView, json.getString("message"));
                 d.dismiss();
             }
 
             @Override
             public void onSuccess(JSONObject json) throws JSONException {
-                Constants.user.addFields(json.getString("fields"));
+                Constants.currentUser.addFields(json.getString("fields"));
                 d.dismiss();
                 finish();
             }
-        }, new CustomString("name", field.name), new CustomString("token", Constants.user.token), new CustomString("value", field.value));
+        }, strings);
 
     }
 

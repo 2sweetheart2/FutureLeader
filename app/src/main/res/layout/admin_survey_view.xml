@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="5dp"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/guideline36"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/admin_surveys_view_name"
+        android:textColor="@color/black"
+        />
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/admin_surveys_view_creator_image"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:layout_constraintTop_toBottomOf="@id/admin_surveys_view_name"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toLeftOf="@id/guideline36"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/admin_surveys_view_name"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toRightOf="@id/admin_surveys_view_creator_image"
+        app:layout_constraintRight_toRightOf="@id/admining_survey_view_date"
+        app:layout_constraintTop_toTopOf="@id/admin_surveys_view_creator_image"
+        app:layout_constraintBottom_toBottomOf="@id/admin_surveys_view_creator_image"
+        android:textColor="@color/black"
+        android:layout_marginStart="5dp"
+        android:id="@+id/admin_surveys_view_creator_name"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/admin_surveys_view_creator_name"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/admining_survey_view_date"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

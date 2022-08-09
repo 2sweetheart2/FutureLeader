@@ -13,6 +13,7 @@ public class Chat {
     public String name;
 
     public Message lastMessage;
+    public int ownerId;
 
     public List<ChatMember> members = new ArrayList<>();
 
@@ -24,6 +25,7 @@ public class Chat {
             if(!payload.isNull("image"))
                 photo = payload.getString("image");
             peerId = payload.getInt("id");
+            ownerId = payload.getInt("owner_id");
             if(payload.has("last_message"))
                 lastMessage = new Message(payload.getJSONObject("last_message"));
             JSONArray mem = payload.getJSONArray("members");

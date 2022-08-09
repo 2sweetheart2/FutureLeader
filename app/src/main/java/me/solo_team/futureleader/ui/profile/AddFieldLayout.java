@@ -35,24 +35,24 @@ import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class AddFieldLayout extends Her {
     EditText text;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_field_layout);
-
         List<Field> fieldsThatNotAdded = new ArrayList<>();
-        for(Field f :Constants.user.fieldsStuff.fieldsCanEdit){
-            if(!Constants.user.fieldsStuff.fields.contains(f))
+        for(Field f :Constants.currentUser.fieldsStuff.fieldsCanEdit){
+            if(!Constants.currentUser.fieldsStuff.fields.contains(f))
                 fieldsThatNotAdded.add(f);
         }
 
-        View root = findViewById(R.id.edit_fields_layout);
 
         String[] values = new String[fieldsThatNotAdded.size()];
         for(int i=0;i<fieldsThatNotAdded.size();i++){
             values[i] = fieldsThatNotAdded.get(i).visualName;
         }
+
+        setContentView(R.layout.add_field_layout);
+
+        View root = findViewById(R.id.edit_fields_layout);
 
         Spinner spinner = findViewById(R.id.edit_fields_name);
         text = findViewById(R.id.edit_fields_value);
@@ -110,6 +110,12 @@ public class AddFieldLayout extends Her {
     }
 
     private void editInfo(Field field,View rootView) {
+        List<CustomString> params = new ArrayList<>();
+        if(Constants.user.adminStatus>0 && Constants.currentUser.id!=Constants.user.id)
+            params.add(new CustomString("for_user",String.valueOf(Constants.currentUser.id)));
+        params.add(new CustomString("name", field.name));
+        params.add(new CustomString("token", Constants.user.token));
+        params.add(new CustomString("value",field.value));
         API.updateFields(new ApiListener() {
             Dialog d;
 
@@ -126,11 +132,11 @@ public class AddFieldLayout extends Her {
 
             @Override
             public void onSuccess(JSONObject json) throws JSONException {
-                Constants.user.addFields(json.getString("fields"));
+                Constants.currentUser.addFields(json.getString("fields"));
                 d.dismiss();
                 finish();
             }
-        }, new CustomString("name", field.name), new CustomString("token", Constants.user.token),new CustomString("value",field.value));
+        },params);
 
 
     }

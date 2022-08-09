@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         WebScoketClient.mSocket.on("chat_invite", onChatInvite);
         //WebScoketClient.mSocket.on("chat_remove", OnChatRemoved);
         WebScoketClient.mSocket.on("new_message", onMessageNew);
+        WebScoketClient.mSocket.on("chat_title_update",onChatTitleChange);
+
         // КРЧ ТУТ НИЧЕГО НЕ ТРОГАЕМ, ЭТО ОСНОВНОЕ ОКНО В КОТОРОМ У НАС ВСЁ: НАЖНЯЯ ПАНЕЛЬ И ОСТАЛЬНЫЕ ФРАГМЕНТЫ
         super.onCreate(savedInstanceState);
         // метод для опрeделения ширины экрана
@@ -245,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
     // SOCKETS STUFF
 
     public Emitter.Listener onChatInvite = args -> MainActivity.this.runOnUiThread(() -> {
-        System.out.println(args[0]);
         Chat chat = new Chat((JSONObject) args[0]);
         Constants.chatsCache.chats.add(chat);
         if(Constants.chatListeners.chatInviteCallback!=null)
@@ -259,11 +260,16 @@ public class MainActivity extends AppCompatActivity {
 
     });
 
+    public Emitter.Listener onChatTitleChange = args -> MainActivity.this.runOnUiThread(()->{
+        System.out.println("onChatTitleChange: "+args[0]);
+    });
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         WebScoketClient.mSocket.off("new_message", onMessageNew);
         WebScoketClient.mSocket.off("chat_invite", onChatInvite);
+        WebScoketClient.mSocket.off("chat_title_update",onChatTitleChange);
         //WebScoketClient.mSocket.off("chat_removed", OnChatRemoved);
     }
 

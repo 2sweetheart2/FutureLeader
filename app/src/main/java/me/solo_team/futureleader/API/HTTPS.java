@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.API;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -304,7 +305,9 @@ public class HTTPS {
                         writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(file.getName())).append("\r\n");
                         writer.append("Content-Transfer-Encoding: binary").append("\r\n");
                         writer.append("\r\n").flush();
-                        Files.copy(file.toPath(), output);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            Files.copy(file.toPath(), output);
+                        }
                         output.flush(); // Important before continuing with writer!
                         writer.append("\r\n").flush(); // CRLF is important! It indicates end of boundary.
 

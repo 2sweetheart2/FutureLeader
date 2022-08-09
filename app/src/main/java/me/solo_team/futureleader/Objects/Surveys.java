@@ -12,7 +12,7 @@ public class Surveys {
 
 
 
-
+    public ChatMember creator;
     public int id;
     public String name;
     public Date date;
@@ -30,6 +30,8 @@ public class Surveys {
             }
             if(payload.has("answers"))
                 answers.addAll(Arrays.asList(payload.getString("answers").split("\\{\\{\\{<--->\\}\\}\\}")));
+            if(payload.has("creator"))
+                creator = new ChatMember(payload.getJSONObject("creator"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

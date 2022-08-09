@@ -20,6 +20,12 @@ public class Date {
         year = Integer.parseInt(d[2]);
     }
 
+    public Date(String[] date) {
+        this.day = Integer.parseInt(date[0]);
+        this.month = Integer.parseInt(date[1]);
+        this.year = Integer.parseInt(date[2]);
+    }
+
     public String toStr(){
         String dayStr = ""+day;
         if(dayStr.length()==1) dayStr="0"+dayStr;

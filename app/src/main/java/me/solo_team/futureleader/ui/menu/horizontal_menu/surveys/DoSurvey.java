@@ -1,7 +1,11 @@
 package me.solo_team.futureleader.ui.menu.horizontal_menu.surveys;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -10,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +28,9 @@ import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
+import me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.fragments.SurveysForMe;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
+import me.solo_team.futureleader.ui.news.open_news.EditNews;
 
 public class DoSurvey extends Her implements View.OnClickListener {
     Surveys currentSurveys = null;
@@ -52,6 +59,8 @@ public class DoSurvey extends Her implements View.OnClickListener {
             case "check":
                 currentSurveys = Constants.surveysCache.getCompleteById(getIntent().getIntExtra("id", -1));
                 break;
+            case "check_admin":
+                currentSurveys = Constants.surveysCache.getAllByIdAdmin(getIntent().getIntExtra("id",-1));
         }
 
         if (currentSurveys == null)
@@ -70,6 +79,16 @@ public class DoSurvey extends Her implements View.OnClickListener {
             for(String s : currentSurveys.answers){
                 text.append(index+1).append(')').append(" ").append(currentSurveys.fields.get(index).name).append("\n")
                         .append('-').append(' ').append(s).append("\n");
+                index++;
+            }
+            label.setText(text.toString());
+            return;
+        }
+        if(type.equals("check_admin")){
+            findViewById(R.id.do_survey_next_btn).setVisibility(View.GONE);
+            StringBuilder text = new StringBuilder();
+            for(Surveys.SurveysObject s : currentSurveys.fields){
+                text.append(index+1).append(')').append(" ").append(s.name).append("\n");
                 index++;
             }
             label.setText(text.toString());
@@ -162,5 +181,45 @@ public class DoSurvey extends Her implements View.OnClickListener {
                 new CustomString("token",Constants.user.token),
                 new CustomString("answers",answers.substring(0,answers.toString().length()-11)),
                 new CustomString("id",String.valueOf(currentSurveys.id)));
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(type.equals("check_admin"))
+            menu.add(0, 1, 0, "")
+                    .setIcon(R.drawable.trash)
+                    .setOnMenuItemClickListener(item -> {
+                        AlertDialog.Builder obj = new AlertDialog.Builder(DoSurvey.this);
+                        obj.setTitle("Удалить опрос?");
+                        obj.setIcon(R.drawable.resize_300x0);
+                        obj.setPositiveButton("да", (dialog, which) -> {
+                            API.deleteSurvey(new ApiListener() {
+                                Dialog d;
+                                @Override
+                                public void onError(JSONObject json) throws JSONException {
+                                    d.dismiss();
+                                    createNotification(list,json.getString("message"));
+                                }
+
+                                @Override
+                                public void inProcess() {
+                                    d = openWaiter(DoSurvey.this);
+                                }
+
+                                @Override
+                                public void onSuccess(JSONObject json) throws JSONException {
+                                    d.dismiss();
+                                    Constants.surveysCache.deleteSurvey(currentSurveys.id);
+                                    finish();
+                                }
+                            },new CustomString("token",Constants.user.token),new CustomString("survey_id",String.valueOf(currentSurveys.id)));
+                        });
+                        obj.setNegativeButton("нет", null);
+                        obj.setMessage("этот опрос удалится вместе с результатами");
+                        obj.show();
+                        return true;
+                    })
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        return super.onPrepareOptionsMenu(menu);
     }
 }

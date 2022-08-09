@@ -73,7 +73,7 @@
         <activity
             android:name=".MediaAudioAdapters.VideoAdapter.VideoView"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".ui.menu.statical.admining.layouts.users.ViewUserProfile" />
+        <activity android:name=".ui.profile.view_prof.ViewProfile" />
         <activity android:name=".ui.menu.horizontal_menu.calendar.Calendar" />
         <activity android:name=".ui.menu.horizontal_menu.idea.Idea" />
         <activity android:name=".ui.menu.horizontal_menu.idea.Showidea" />
@@ -120,6 +120,12 @@
             android:label=""/>
         <activity android:name=".ui.menu.horizontal_menu.messanger.CreateChat"/>
         <activity android:name=".ui.SelectMembers"/>
+        <activity android:name=".ui.menu.statical.applications.YourApplications"/>
+        <activity android:name=".ui.menu.statical.applications.ApplicationsView"/>
+        <activity android:name=".ui.menu.statical.applications.Uslugi"/>
+        <activity android:name=".ui.menu.statical.applications.ViewUsluga"/>
+        <activity android:name=".ui.DateTimePicker"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysLayout"/>
     </application>
 
 </manifest>

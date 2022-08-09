@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.ui.menu.statical.Media;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -119,20 +120,6 @@ public class AddMusic extends Her {
         );
     };
 
-    public byte[] convert(String path) throws IOException {
-
-        FileInputStream fis = new FileInputStream(path);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] b = new byte[1024];
-
-        for (int readNum; (readNum = fis.read(b)) != -1; ) {
-            bos.write(b, 0, readNum);
-        }
-
-        byte[] bytes = bos.toByteArray();
-
-        return bytes;
-    }
 
     private void selectImage() {
         if (!checkPerm(AddMusic.this, Manifest.permission.READ_EXTERNAL_STORAGE)) return;
@@ -166,7 +153,7 @@ public class AddMusic extends Her {
                 try {
                     InputStream  inputStream = getContentResolver().openInputStream(audioFileUri);
                     System.out.println("STEP 2");
-                    bytes = read(inputStream);
+                    bytes = Utils.read(inputStream);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Utils.ShowSnackBar.show(AddMusic.this, "что-то с вашим файлом песни не так:/", root);
@@ -214,6 +201,7 @@ public class AddMusic extends Her {
         }
     }
 
+    @SuppressLint("NewApi")
     public boolean checkPerm(Context context, String permission) {
         int permissionStatus = ContextCompat.checkSelfPermission(context, permission);
 
@@ -226,14 +214,6 @@ public class AddMusic extends Her {
         }
     }
 
-    public static byte[] read(InputStream is) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] buffer = new byte[0xFFFF];
-        for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
-            os.write(buffer, 0, len);
-        }
 
-        return os.toByteArray();
-    }
 
 }

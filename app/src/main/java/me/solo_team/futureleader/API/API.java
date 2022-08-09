@@ -6,6 +6,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import me.solo_team.futureleader.Objects.CustomString;
@@ -23,6 +27,18 @@ public class API {
      * @return {@link JSONObject}
      */
     private static JSONObject createJsonObj(CustomString... params) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            for (CustomString s : params) {
+                jsonObject.put(s.name, s.value);
+            }
+            return jsonObject;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    private static JSONObject createJsonObj(List<CustomString> params) {
         try {
             JSONObject jsonObject = new JSONObject();
             for (CustomString s : params) {
@@ -66,6 +82,9 @@ public class API {
     public static void updateFields(ApiListener listener, CustomString... fields) {
         HTTPS.sendPost(Methods.UPD_FIELD, Objects.requireNonNull(createJsonObj(fields)), listener);
     }
+    public static void updateFields(ApiListener listener, List<CustomString> fields) {
+        HTTPS.sendPost(Methods.UPD_FIELD, Objects.requireNonNull(createJsonObj(fields)), listener);
+    }
 
     public static void getAchivement(ApiListener listener, CustomString... ids) {
         HTTPS.sendPost(Methods.GET_ACHIEVEMENT, Objects.requireNonNull(createJsonObj(ids)), listener);
@@ -99,10 +118,6 @@ public class API {
         HTTPS.u(Methods.ADD_MUSIC_PHOTO, Objects.requireNonNull(createJsonObj(params)), bitmap, listener);
     }
 
-
-    public static void getUser(ApiListener listener, CustomString... params) {
-        HTTPS.sendPost(Methods.GET_USER, Objects.requireNonNull(createJsonObj(params)), listener);
-    }
 
     public static void getIdeas(ApiListener listener, CustomString... params) {
         HTTPS.sendPost(Methods.GET_IDEAS, Objects.requireNonNull(createJsonObj(params)), listener);
@@ -164,5 +179,20 @@ public class API {
     }
     public static void createChat(ApiListener listener, JSONObject object){
         HTTPS.sendPost(Methods.CREATE_CHAT,object,listener);
+    }
+    public static void changeChatTitle(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.CHANGE_CHAT_TITLE,createJsonObj(params),listener);
+    }
+    public static void uploadApplication(ApiListener listener,JSONObject object){
+        HTTPS.sendPost(Methods.UPPLOAD_APPLICATION,object,listener);
+    }
+    public static void addDOCXFile(ApiListener listener, byte[] bytes, String name, CustomString...params){
+        HTTPS.sendAudio(Methods.ADD_DOCX_FILE,createJsonObj(params),bytes,name,listener);
+    }
+    public static void getSurveysAdmin(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.GET_SURVEYS_FOR_ADMIN,createJsonObj(params),listener);
+    }
+    public static void deleteSurvey(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.DELETE_SURVEYS,createJsonObj(params),listener);
     }
 }

@@ -71,10 +71,9 @@ public class ChatInfodialog extends AppCompatDialogFragment {
         logo = view.findViewById(R.id.chat_info_dialog_image);
         text = view.findViewById(R.id.chat_info_dialog_name);
         list = view.findViewById(R.id.chat_info_members);
-
         Constants.cache.addPhoto(chat.photo, true, logo, activity);
         text.setText(chat.name);
-        MemberAdapter adapter = new MemberAdapter(getContext(), getActivity());
+        MemberAdapter adapter = new MemberAdapter(getContext(), getActivity(),chat.ownerId);
         adapter.addAll(chat.members);
         list.setAdapter(adapter);
         logo.setOnClickListener(v -> {
@@ -141,15 +140,43 @@ public class ChatInfodialog extends AppCompatDialogFragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(!text.getText().toString().equals(chat.name)){
+            API.changeChatTitle(new ApiListener() {
+                @Override
+                public void onError(JSONObject json) throws JSONException {
+
+                }
+
+                @Override
+                public void inProcess() {
+
+                }
+
+                @Override
+                public void onSuccess(JSONObject json) throws JSONException {
+                    chat.name = text.getText().toString();
+                }
+            },
+                    new CustomString("token",Constants.user.token),
+                    new CustomString("peer_id",String.valueOf(chat.peerId)),
+                    new CustomString("title",text.getText().toString())
+                    );
+        }
+    }
+
     public static class MemberAdapter extends ArrayAdapter<ChatMember> {
 
         Context context;
         Activity activity;
-
-        public MemberAdapter(Context context, Activity activity) {
+        int ownerId;
+        public MemberAdapter(Context context, Activity activity, int ownerId) {
             super(context, R.layout.member, R.id.member_name);
             this.context = context;
             this.activity = activity;
+            this.ownerId = ownerId;
         }
 
         @SuppressLint("ViewHolder")
@@ -163,6 +190,8 @@ public class ChatInfodialog extends AppCompatDialogFragment {
             LayoutInflater vi = LayoutInflater.from(context);
             v = vi.inflate(R.layout.member, null);
             if (member != null) {
+                if(ownerId==member.userId)
+                    v.findViewById(R.id.member_owner).setVisibility(View.VISIBLE);
                 ImageView image = v.findViewById(R.id.member_photo);
                 Constants.cache.addPhoto(member.profilePicture, true, image, activity);
                 ((TextView) v.findViewById(R.id.member_name)).setText(member.firstName + " " + member.lastName);

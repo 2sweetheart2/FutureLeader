@@ -54,7 +54,7 @@ public class CreateChat extends Her {
         btn = findViewById(R.id.complete);
         privat = findViewById(R.id.create_chat_private);
         setTitle("Создание чата");
-        adapter = new ChatInfodialog.MemberAdapter(getApplicationContext(), this);
+        adapter = new ChatInfodialog.MemberAdapter(getApplicationContext(), this,-1);
 
         Drawable wrappedDrawable = DrawableCompat.wrap(getDrawable(R.drawable.trash));
         DrawableCompat.setTint(wrappedDrawable, Color.BLACK);

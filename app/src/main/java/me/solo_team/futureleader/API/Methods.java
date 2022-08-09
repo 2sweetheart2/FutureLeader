@@ -49,6 +49,13 @@ public enum Methods {
     SEND_MESSAGE("send_message"),
     CHANGE_CHAT_IMAGE("change_chat_image"),
     CREATE_CHAT("create_chat"),
+    CHANGE_CHAT_TITLE("change_chat_name"),
+
+    UPPLOAD_APPLICATION("add_application"),
+    ADD_DOCX_FILE("add_docx_file"),
+
+    GET_SURVEYS_FOR_ADMIN("get_surveys_admin"),
+    DELETE_SURVEYS("delete_survey"),
 
     GET_USER("get_user");
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,17 +30,26 @@ import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.WebViewsContent.MyWebViewClient;
 
 public class LoginOrRegisterLayout extends AppCompatActivity {
+
+    Switch aSwitch;
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_or_register_layout);
         Button button_login = findViewById(R.id.login_button);
+        aSwitch = findViewById(R.id.login_or_register_swith);
         WebView webView = findViewById(R.id.webvuiew_login_or_register_layout);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
         webView.loadUrl("file:///android_asset/index.html");
         Button button_register = findViewById(R.id.register_button);
+        aSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked)
+                webView.setVisibility(View.VISIBLE);
+            else
+                webView.setVisibility(View.GONE);
+        });
         GFB();
         Constants.MainContext = getApplicationContext();
         HTTPS.getMobileToken(token -> button_login.setOnClickListener(new View.OnClickListener() {
@@ -62,23 +72,8 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
 
                                   @Override
                                   public void onSuccess(JSONObject json) throws JSONException {
-                                      System.out.println(json);
-                                      User user = new User();
-                                      user.firstName = json.getString("first_name");
-                                      user.lastName = json.getString("last_name");
-                                      user.achievementsIds = json.getString("achievement_ids");
-                                      user.adminStatus = json.getInt("admin_status");
-                                      user.age = json.getInt("age");
-                                      JSONObject field_stuff = json.getJSONObject("fields_stuff");
-                                      user.addFields(field_stuff.getString("fields"));
-                                      user.fieldsStuff = new FieldsStuff(user.fields, user.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
-                                      user.id = json.getInt("id");
-                                      user.profilePictureLink = json.getString("profile_picture");
-                                      user.status = json.getString("status");
-                                      user.token = json.getString("token");
-                                      user.currency = json.getInt("currency");
+                                      User user = new User(json);
                                       user.mobileToken = token;
-                                      System.out.println(json);
                                       Constants.user = user;
                                       d.dismiss();
                                       startActivity(new Intent(LoginOrRegisterLayout.this, MainActivity.class));

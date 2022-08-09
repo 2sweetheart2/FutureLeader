@@ -102,6 +102,7 @@ public class AddEvent extends Her {
 
                               @Override
                               public void onError(JSONObject json) throws JSONException {
+                                  System.out.println(json);
                                     d.dismiss();
                               }
 
