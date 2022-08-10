@@ -20,4 +20,8 @@ public class ChatMember {
             e.printStackTrace();
         }
     }
+
+    public String toChatMemder(){
+        return "{\"first_name\":\""+firstName+"\",\"last_name\":\""+lastName+"\",\"profile_picture\":\""+profilePicture+"\",\"id\":\""+userId+"\"}";
+    }
 }

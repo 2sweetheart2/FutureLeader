@@ -18,6 +18,7 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.MediaAudioAdapters.VideoAdapter.VideoView;
 import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.DoSurvey;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.SurveysView;
 
@@ -59,6 +60,16 @@ public class SurveysForAll extends Fragment implements DialogInterface.OnClickLi
         Intent intent = new Intent(SurveysForAll.this.requireContext(), DoSurvey.class);
         intent.putExtra("type","all");
         intent.putExtra("id",currentSurvey.id);
-        startActivity(intent);
+        startActivityForResult(intent,100);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==1){
+            if(requestCode==100){
+                Utils.ShowSnackBar.show(requireContext(),"Опрос успешно пройден!",list);
+            }
+        }
     }
 }

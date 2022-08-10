@@ -210,7 +210,9 @@ public class ChatInfodialog extends AppCompatDialogFragment {
                     return true;
                 });
             }
-
+            ViewHeight+=v.getHeight();
+            if(oneViewHeight==0)
+                oneViewHeight=v.getHeight();
             return v;
         }
 
@@ -245,6 +247,16 @@ public class ChatInfodialog extends AppCompatDialogFragment {
         public void remove(@Nullable ChatMember object) {
             super.remove(object);
             count--;
+        }
+
+        private int ViewHeight =0;
+        private int oneViewHeight = 0;
+
+        public int getViewsHeight(){
+            return ViewHeight;
+        }
+        public int getOneViewHeight(){
+            return oneViewHeight;
         }
 
         @Override

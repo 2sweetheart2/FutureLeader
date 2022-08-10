@@ -25,16 +25,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.ChatMember;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.Objects.FieldsStuff;
+import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.DoSurvey;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.SurveysLayout;
 import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
 public class SelectMembers extends AppCompatActivity {
@@ -54,6 +60,9 @@ public class SelectMembers extends AppCompatActivity {
     boolean checker = false;
     boolean removeSelf = false;
 
+    boolean showStat = false;
+    HashMap<ChatMember,Surveys> surveys = new HashMap<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,60 +78,116 @@ public class SelectMembers extends AppCompatActivity {
         needStuff = getIntent().getBooleanExtra("needStuff", true);
         checker = getIntent().getBooleanExtra("checker", false);
         removeSelf = getIntent().getBooleanExtra("removeSelf",false);
+        showStat = getIntent().getBooleanExtra("showStatistic",false);
 
-        API.getUsers(new ApiListener() {
-            Dialog d;
+        if(showStat){
+                API.getSurveysAdminStaticstic(new ApiListener() {
+                    Dialog d;
+                    @Override
+                    public void onError(JSONObject json) throws JSONException {
+                        System.out.println(json);
+                        d.dismiss();
+                    }
 
-            @Override
-            public void onError(JSONObject json) {
-                try {
-                    createNotification(findViewById(R.id.admining_users_layout), json.getString("message"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+                    @Override
+                    public void inProcess() {
+                        d = openWaiter(SelectMembers.this);
+                    }
 
-            @Override
-            public void inProcess() {
-                d = openWaiter(SelectMembers.this);
-            }
-
-            @Override
-            public void onSuccess(JSONObject json) {
-                try {
-                    arr = json.getJSONArray("users");
-
-                    addUsers(null);
-                    d.dismiss();
-                    searchUser.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    @Override
+                    public void onSuccess(JSONObject json) throws JSONException {
+                        JSONArray sur = json.getJSONArray("survey");
+                        JSONArray arr_ = new JSONArray();
+                        surveys = new HashMap<>();
+                        for(int i =0;i<sur.length();i++){
+                            JSONObject o = sur.getJSONObject(i);
+                            ChatMember chatMember = new ChatMember(o.getJSONObject("user"));
+                            Surveys surveys_ = new Surveys(o);
+                            surveys.put(chatMember,surveys_);
+                            arr_.put(new JSONObject(chatMember.toChatMemder()));
                         }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            try {
-                                if (s.toString().length() == 0) offset = oldOffset;
-                                else {
-                                    oldOffset = offset;
-                                    offset = 0;
-                                }
-                                addUsers(s.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        arr = arr_;
+                        addUsers(null);
+                        d.dismiss();
+                        searchUser.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                             }
-                        }
 
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                try {
+                                    if (s.toString().length() == 0) offset = oldOffset;
+                                    else {
+                                        oldOffset = offset;
+                                        offset = 0;
+                                    }
+                                    addUsers(s.toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                            }
+                        });
+                    }
+                }, new CustomString("token",Constants.user.token),new CustomString("id",getIntent().getStringExtra("id")));
+        }else
+            API.getUsers(new ApiListener() {
+                Dialog d;
+
+                @Override
+                public void onError(JSONObject json) {
+                    try {
+                        createNotification(findViewById(R.id.admining_users_layout), json.getString("message"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-            }
-        }, new CustomString("token", Constants.user.token));
+                @Override
+                public void inProcess() {
+                    d = openWaiter(SelectMembers.this);
+                }
+
+                @Override
+                public void onSuccess(JSONObject json) {
+                    try {
+                        arr = json.getJSONArray("users");
+
+                        addUsers(null);
+                        d.dismiss();
+                        searchUser.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                try {
+                                    if (s.toString().length() == 0) offset = oldOffset;
+                                    else {
+                                        oldOffset = offset;
+                                        offset = 0;
+                                    }
+                                    addUsers(s.toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }, new CustomString("token", Constants.user.token));
         back.setOnClickListener(v -> {
             if (offset == 0) Snackbar.make(v, "Это начало списка", Snackbar.LENGTH_LONG)
                     .show();
@@ -215,57 +280,87 @@ public class SelectMembers extends AppCompatActivity {
         int count = 0;
         int lastIndex = 0;
         filterArray(filterName);
-        for (int i = (10 * offset); i < (10 * offset) + 10; i++) {
+        int curSize = (10 * offset) + 10;
+        if(arr.length()<10)
+            curSize = arr.length();
+        for (int i = (10 * offset); i < curSize; i++) {
             if (i >= curentSize) continue;
             JSONObject o = filteredList.getJSONObject(i);
-            if(o.getInt("id")==Constants.user.id)
+            if(o.getInt("id")==Constants.user.id && !showStat)
                 continue;
             lastIndex = i + 1;
-            User user = new User(o);
-            user.enums = Constants.user.enums;
-            String division = "Отсутствует";
-            String post = "Отсутствует";
+            if(showStat){
+                ChatMember member = new ChatMember(o);
+                ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout, null);
+                ((TextView) constraintLayout.findViewById(R.id.admining_user_content_name)).setText(member.firstName + " " + member.lastName);
+                ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setVisibility(View.GONE);
 
-            for (Field field : user.fields) {
-                if (field.name.equals("division"))
-                    division = field.value;
-                if (field.name.equals("post"))
-                    post = field.value;
-            }
-
-            ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout, null);
-            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_name)).setText(user.firstName + " " + user.lastName);
-            ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: " + o.getString("email"));
-
-            TextView div = constraintLayout.findViewById(R.id.admining_user_content_division);
-            TextView pot = constraintLayout.findViewById(R.id.admining_user_content_post);
-            CheckBox check = constraintLayout.findViewById(R.id.admining_user_content_check);
-            div.setText(division);
-            pot.setText(post);
-            if (checker) {
                 constraintLayout.findViewById(R.id.admining_user_content_huina).setVisibility(View.GONE);
-                check.setVisibility(View.VISIBLE);
-                check.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) {
-                        addCkeduser(user);
-                    }
-                    else
-                        removeUser(user);
-                });
-                if(containsUser(user) && !check.isChecked())
-                    check.setChecked(true);
-            }
-            if (!needStuff) {
                 constraintLayout.findViewById(R.id.admining_user_content_huina).setVisibility(View.GONE);
-            }
-            Constants.cache.addPhoto(o.getString("profile_picture"), true, constraintLayout.findViewById(R.id.admining_user_content_logo), this);
-            runOnUiThread(() -> usersList.addView(constraintLayout));
-            if (!checker)
+                Constants.cache.addPhoto(o.getString("profile_picture"), true, constraintLayout.findViewById(R.id.admining_user_content_logo), this);
+                runOnUiThread(() -> usersList.addView(constraintLayout));
                 constraintLayout.setOnClickListener(v -> {
-                    Intent intent = new Intent(this, ViewProfile.class);
-                    Constants.currentUser = user;
+                    Intent intent = new Intent(this, DoSurvey.class);
+                    intent.putExtra("type", "check");
+                    intent.putExtra("custom_check", true);
+                    for (Map.Entry<ChatMember, Surveys> surveys : surveys.entrySet()) {
+                        if (surveys.getKey().userId == member.userId) {
+                            Constants.surveysCache.currentSurvey = surveys.getValue();
+                            break;
+                        }
+                    }
                     startActivity(intent);
                 });
+            }
+            else {
+                User user = new User(o);
+                user.enums = Constants.user.enums;
+                String division = "Отсутствует";
+                String post = "Отсутствует";
+
+                for (Field field : user.fields) {
+                    if (field.name.equals("division"))
+                        division = field.value;
+                    if (field.name.equals("post"))
+                        post = field.value;
+                }
+
+                ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout, null);
+                ((TextView) constraintLayout.findViewById(R.id.admining_user_content_name)).setText(user.firstName + " " + user.lastName);
+                ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: " + o.getString("email"));
+
+                TextView div = constraintLayout.findViewById(R.id.admining_user_content_division);
+                TextView pot = constraintLayout.findViewById(R.id.admining_user_content_post);
+                CheckBox check = constraintLayout.findViewById(R.id.admining_user_content_check);
+                div.setText(division);
+                pot.setText(post);
+
+                if (checker) {
+                    constraintLayout.findViewById(R.id.admining_user_content_huina).setVisibility(View.GONE);
+                    check.setVisibility(View.VISIBLE);
+                    check.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            addCkeduser(user);
+                        } else
+                            removeUser(user);
+                    });
+                    if (containsUser(user) && !check.isChecked())
+                        check.setChecked(true);
+                }
+                if (!needStuff) {
+                    constraintLayout.findViewById(R.id.admining_user_content_huina).setVisibility(View.GONE);
+                }
+                Constants.cache.addPhoto(o.getString("profile_picture"), true, constraintLayout.findViewById(R.id.admining_user_content_logo), this);
+                runOnUiThread(() -> usersList.addView(constraintLayout));
+                if (!checker) {
+                    if (!showStat)
+                        constraintLayout.setOnClickListener(v -> {
+                            Intent intent = new Intent(this, ViewProfile.class);
+                            Constants.currentUser = user;
+                            startActivity(intent);
+                        });
+                }
+            }
             count++;
         }
         int finalCount = count;
@@ -308,5 +403,12 @@ public class SelectMembers extends AppCompatActivity {
                 })
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(showStat)
+            setResult(1);
     }
 }

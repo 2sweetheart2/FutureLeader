@@ -41,13 +41,16 @@ public class Surveys {
         public String type;
         public String name;
         public String extras;
+        public String image = null;
 
         public SurveysObject(JSONObject payload){
             try {
                 type = payload.getString("type");
                 name = payload.getString("name");
-                if(payload.has("extras"))
-                    extras = payload.getString("extras");
+                if(payload.has("extra"))
+                    extras = payload.getString("extra");
+                if(payload.has("image"))
+                    image = payload.getString("image");
 
 
             } catch (JSONException e) {

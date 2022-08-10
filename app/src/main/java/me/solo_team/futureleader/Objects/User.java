@@ -40,7 +40,6 @@ public class User {
             }catch (Exception ignored){}
             JSONObject field_stuff = payload.getJSONObject("fields_stuff");
             this.addFields(field_stuff.getString("fields"));
-            System.out.println(field_stuff.toString(1));
             this.fieldsStuff = new FieldsStuff(this.fields, this.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
             this.id = payload.getInt("id");
             this.profilePictureLink = payload.getString("profile_picture");

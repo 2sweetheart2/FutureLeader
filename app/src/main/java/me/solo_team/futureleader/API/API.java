@@ -195,4 +195,11 @@ public class API {
     public static void deleteSurvey(ApiListener listener,CustomString...params){
         HTTPS.sendPost(Methods.DELETE_SURVEYS,createJsonObj(params),listener);
     }
+    public static void createSurveys(ApiListener listener, JSONObject object){
+        HTTPS.sendPost(Methods.CREATE_SURVEYS,object,listener);
+    }
+
+    public static void getSurveysAdminStaticstic(ApiListener listener, CustomString...params) {
+        HTTPS.sendPost(Methods.GET_SURVEYS_STAT,createJsonObj(params),listener);
+    }
 }

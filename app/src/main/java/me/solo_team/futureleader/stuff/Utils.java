@@ -1,9 +1,11 @@
 package me.solo_team.futureleader.stuff;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +39,7 @@ import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -66,6 +69,19 @@ public class Utils {
         }
 
         return os.toByteArray();
+    }
+
+    @SuppressLint("NewApi")
+    public static boolean checkPerm(Context context, String permission, Activity activity) {
+        int permissionStatus = ContextCompat.checkSelfPermission(context, permission);
+
+        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            activity.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    1);
+            return false;
+        }
     }
 
     @SuppressLint("Range")

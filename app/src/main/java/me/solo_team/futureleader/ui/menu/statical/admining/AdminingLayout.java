@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.SurveysLayout;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.SurveysStatistic;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.StructurLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.UsersLayout;
 
@@ -92,10 +93,12 @@ public class AdminingLayout extends AppCompatActivity {
         HashMap<Integer,Class> m = new HashMap<>();
         m.put(0, UsersLayout.class);
         m.put(1, StructurLayout.class);
+        classes.put(0,m);
 
         HashMap<Integer,Class> surveys = new HashMap<>();
-        m.put(0, SurveysLayout.class);
-        classes.put(3,m);
+        surveys.put(0, SurveysLayout.class);
+        surveys.put(1, SurveysStatistic.class);
+        classes.put(3,surveys);
 
 
         expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {

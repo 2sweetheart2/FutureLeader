@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.DoSurvey;
 
 public class SurveysForMe extends Fragment implements DialogInterface.OnClickListener {
@@ -56,6 +57,16 @@ public class SurveysForMe extends Fragment implements DialogInterface.OnClickLis
         Intent intent = new Intent(SurveysForMe.this.requireContext(), DoSurvey.class);
         intent.putExtra("type","me");
         intent.putExtra("id",currentSurvey.id);
-        startActivity(intent);
+        startActivityForResult(intent,100);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==1){
+            if(requestCode==100){
+                Utils.ShowSnackBar.show(requireContext(),"Опрос успешно пройден!",list);
+            }
+        }
     }
 }

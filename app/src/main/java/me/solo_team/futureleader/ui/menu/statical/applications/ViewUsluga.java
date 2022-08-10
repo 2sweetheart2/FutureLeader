@@ -278,7 +278,6 @@ public class ViewUsluga extends Her {
                                 }
                             },n
                                     );
-                        System.out.println(n.toString(1));
 
                     } catch (JSONException e) {
                         e.printStackTrace();

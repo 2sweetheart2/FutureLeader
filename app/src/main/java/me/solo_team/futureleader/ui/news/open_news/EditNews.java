@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.ui.news.open_news;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -140,6 +141,7 @@ public class EditNews extends Her {
     }
 
 
+    @SuppressLint("NewApi")
     private boolean checkPerm(Context context) {
         int permissionStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
 

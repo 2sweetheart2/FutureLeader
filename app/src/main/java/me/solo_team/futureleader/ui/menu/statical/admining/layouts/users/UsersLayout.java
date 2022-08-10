@@ -76,7 +76,6 @@ public class UsersLayout extends Her {
             public void onSuccess(JSONObject json) {
                 try {
                     arr = json.getJSONArray("users");
-                    System.out.println(arr.getJSONObject(0).toString(1));
                     addUsers(null);
                     d.dismiss();
                     searchUser.addTextChangedListener(new TextWatcher() {

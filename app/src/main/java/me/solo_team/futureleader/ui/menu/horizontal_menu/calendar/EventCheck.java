@@ -60,7 +60,6 @@ public class EventCheck extends Her {
                           @Override
                           public void onSuccess(JSONObject json) throws JSONException {
                               JSONArray events = json.getJSONArray("events");
-                              System.out.println(events.toString(1));
                               List<Event> eventList = new ArrayList<>();
                               for(int i=0;i<events.length();i++) {
                                   eventList.add(new Event(events.getJSONObject(i)));

@@ -193,6 +193,7 @@ public class Constants {
         public List<Surveys>  surveysForAll;
         public List<Surveys> completeSurveys;
         public List<Surveys> allSurveys = new ArrayList<>();
+        public Surveys currentSurvey;
 
         public Surveys getMeById(int id){
             for(Surveys sur : surveysForUser){

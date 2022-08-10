@@ -56,6 +56,8 @@ public enum Methods {
 
     GET_SURVEYS_FOR_ADMIN("get_surveys_admin"),
     DELETE_SURVEYS("delete_survey"),
+    CREATE_SURVEYS("create_surveys"),
+    GET_SURVEYS_STAT("get_complete_surveys"),
 
     GET_USER("get_user");
 

@@ -126,6 +126,10 @@
         <activity android:name=".ui.menu.statical.applications.ViewUsluga"/>
         <activity android:name=".ui.DateTimePicker"/>
         <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysLayout"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveys"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveysObject"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveusForUsers"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysStatistic"/>
     </application>
 
 </manifest>
