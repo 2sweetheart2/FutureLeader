@@ -22,10 +22,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import io.socket.client.Ack;
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
+import me.solo_team.futureleader.API.websocket.WebScoketClient;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
@@ -55,7 +60,6 @@ public class PopularMusic extends Her {
         yourMusicList = findViewById(R.id.pop_music_your_music_list);
 
         searchPopMusic.addTextChangedListener(textChenger);
-
         API.getMusics(new ApiListener() {
                           Dialog d;
 
@@ -128,37 +132,104 @@ public class PopularMusic extends Her {
 
     }
 
+    public HashMap<Audio,View> youMusicsViews = new HashMap<>();
+    public HashMap<Audio,View> popMusicsViews = new HashMap<>();
+
     private void addYourMusic() {
             for(Audio audio : Constants.audioCache.yourMusics){
                 View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
                 ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
                 ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
-                ((TextView) view.findViewById(R.id.obj_music_duratation)).setText(String.valueOf(audio.duratation));
+                ((ImageView) view.findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
                 Constants.cache.addPhoto(audio.urlPhoto,false,((ImageView)view.findViewById(R.id.obj_music_image)),this);
                 Constants.audioCache.yourMusicsViews.add(view);
                 view.setOnClickListener(v -> {
                     Constants.audioCache.setCurrentAudio(0,audio);
+                    Constants.audioCache.curAudio = null;
                     Intent intent = new Intent(PopularMusic.this,MusicPlayer.class);
                     startActivity(intent);
                 });
+                view.findViewById(R.id.obj_music_fav).setOnClickListener(v -> {
+                    sendMessage(audio.id);
+                });
                 yourMusicList.addView(view);
+                youMusicsViews.put(audio,view);
             }
     }
+
+    public void sendMessage(int id){
+        JSONObject jsonInput = new JSONObject();
+        try {
+            jsonInput.put("id", id);
+            jsonInput.put("token", Constants.user.token);
+            jsonInput.put("mobile_token",Constants.user.mobileToken);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        System.out.println("SET LIKE");
+        System.out.println(id);
+        WebScoketClient.mSocket.emit("set_like_audio", jsonInput, emitterCallback);
+    }
+
+    public Ack emitterCallback = args -> {
+        try {
+            JSONObject o = ((JSONObject) args[0]).getJSONObject("response");
+            for(Map.Entry<Audio,View > entry : youMusicsViews.entrySet()){
+                if(entry.getKey().id==o.getInt("audio_id")){
+                    runOnUiThread(()->{
+                        try {
+                            if(o.getBoolean("add"))
+                                ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
+                            else
+                                ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    return;
+                }
+            }
+            for(Map.Entry<Audio,View > entry : popMusicsViews.entrySet()){
+                if(entry.getKey().id==o.getInt("audio_id")){
+                    runOnUiThread(()->{
+                        try {
+                            if(o.getBoolean("add"))
+                                ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
+                            else
+                                ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    return;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    };
+
 
     private void addPopMusicViews() {
             for(Audio audio : Constants.audioCache.popMusics){
                 View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
                 ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
                 ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
-                ((TextView) view.findViewById(R.id.obj_music_duratation)).setText(String.valueOf(audio.duratation));
                 Constants.cache.addPhoto(audio.urlPhoto,false,((ImageView)view.findViewById(R.id.obj_music_image)),this);
                 Constants.audioCache.popMusicsViews.add(view);
+                if(audio.liked)
+                    ((ImageView)view.findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
                 view.setOnClickListener(v -> {
+                    Constants.audioCache.curAudio = null;
                     Constants.audioCache.setCurrentAudio(1,audio);
                     Intent intent = new Intent(PopularMusic.this,MusicPlayer.class);
                     startActivity(intent);
                 });
+                view.findViewById(R.id.obj_music_fav).setOnClickListener(v -> {
+                    sendMessage(audio.id);
+                });
                 musicList.addView(view);
+                popMusicsViews.put(audio,view);
             }
     }
 

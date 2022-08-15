@@ -65,8 +65,10 @@ public class ViewProfile extends Her {
         name = root.findViewById(R.id.profile_name);
         description = root.findViewById(R.id.profile_description);
         button = root.findViewById(R.id.profile_add_field_btn);
-
-        if(Constants.currentUser.id==Constants.user.id)
+        boolean removeSelf = true;
+        if(getIntent().hasExtra("removeSelf"))
+            removeSelf = getIntent().getBooleanExtra("removeSelf",true);
+        if(Constants.currentUser.id==Constants.user.id && removeSelf)
             finish();
         name.setText(Constants.currentUser.firstName + " " + Constants.currentUser.lastName);
         description.setText(Constants.currentUser.status);
@@ -143,7 +145,7 @@ public class ViewProfile extends Her {
                 grid.addElement(name, Utils.parseDateBirthday(field.value));
             else {
                 View v = grid.addElement(name, field.value);
-                if(field.canEdit || Constants.user.adminStatus>0)
+                if(field.canEdit)
                     v.setOnLongClickListener(v_ -> cr(field.visualName, field.value));
             }
         }

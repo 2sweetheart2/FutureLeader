@@ -23,6 +23,7 @@ public enum Methods {
     UPL_IMAGE("upload_image"),
     GET_YT_LOGO("get_yt_logo"),
     GET_IDEAS("get_ideas"),
+    CREATE_IDEA("create_idea"),
     SEND_VIDEO("send_video"),
 
     ADD_EVENT("add_event"),
@@ -58,6 +59,23 @@ public enum Methods {
     DELETE_SURVEYS("delete_survey"),
     CREATE_SURVEYS("create_surveys"),
     GET_SURVEYS_STAT("get_complete_surveys"),
+
+    GET_WEITED_IDEAS("get_waited_ideas"),
+    SET_IDEAS_STATUS("set_idea_status"),
+
+    GET_UNVERIFIED_USERS("get_unverified_users_by_admin"),
+    VERIFI_USER("verifi_user"),
+
+    GET_ALLSTAT("get_login_statistic"),
+
+    GET_FILES_LOGS("get_files_logs"),
+    GET_LOGINS_LOGS("get_login_logs"),
+
+    GET_SHOP_REQUESTS("get_shop_requests"),
+    SET_SHOP_REQUESTS("set_shop_request"),
+    GET_SHOP_HISTORY("get_shop_history"),
+    SET_ADUIO_LIKE("set_like_audio"),
+    SEARCH_by_name("search_music_by_name"),
 
     GET_USER("get_user");
 

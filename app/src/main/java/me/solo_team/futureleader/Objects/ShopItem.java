@@ -19,13 +19,20 @@ public class ShopItem {
             name = payload.getString("name");
             if(!payload.isNull("description"))
                 description = payload.getString("description");
-            id = payload.getInt("id");
+            if(payload.has("id"))
+                id = payload.getInt("id");
+            if(payload.has("sell_id"))
+                id = payload.getInt("sell_id");
             photo = payload.getString("image");
             count = payload.getInt("count");
             maxCount = payload.getInt("max_count");
             cost = payload.getInt("cost");
             if(payload.has("auto"))
-                auto = payload.getBoolean("auto");
+                try {
+                    auto = payload.getBoolean("auto");
+                }catch (JSONException ignored){
+                    auto = payload.getInt("auto") != 0;
+                }
         } catch (JSONException e) {
             System.err.println(payload);
             e.printStackTrace();

@@ -60,6 +60,8 @@ public class SelectMembers extends AppCompatActivity {
     boolean checker = false;
     boolean removeSelf = false;
 
+    boolean selectOne = false;
+
     boolean showStat = false;
     HashMap<ChatMember,Surveys> surveys = new HashMap<>();
 
@@ -79,7 +81,9 @@ public class SelectMembers extends AppCompatActivity {
         checker = getIntent().getBooleanExtra("checker", false);
         removeSelf = getIntent().getBooleanExtra("removeSelf",false);
         showStat = getIntent().getBooleanExtra("showStatistic",false);
-
+        selectOne = getIntent().getBooleanExtra("selectOne",false);
+        if(getIntent().hasExtra("title"))
+            setTitle(getIntent().getStringExtra("title"));
         if(showStat){
                 API.getSurveysAdminStaticstic(new ApiListener() {
                     Dialog d;
@@ -286,7 +290,7 @@ public class SelectMembers extends AppCompatActivity {
         for (int i = (10 * offset); i < curSize; i++) {
             if (i >= curentSize) continue;
             JSONObject o = filteredList.getJSONObject(i);
-            if(o.getInt("id")==Constants.user.id && !showStat)
+            if(o.getInt("id")==Constants.user.id && !showStat && removeSelf)
                 continue;
             lastIndex = i + 1;
             if(showStat){
@@ -353,12 +357,20 @@ public class SelectMembers extends AppCompatActivity {
                 Constants.cache.addPhoto(o.getString("profile_picture"), true, constraintLayout.findViewById(R.id.admining_user_content_logo), this);
                 runOnUiThread(() -> usersList.addView(constraintLayout));
                 if (!checker) {
-                    if (!showStat)
+                    if (!showStat && !selectOne)
                         constraintLayout.setOnClickListener(v -> {
                             Intent intent = new Intent(this, ViewProfile.class);
                             Constants.currentUser = user;
                             startActivity(intent);
                         });
+                    if(selectOne){
+                        constraintLayout.setOnClickListener(v -> {
+                            Intent data = new Intent();
+                            data.putExtra("user_id", user.id);
+                            setResult(1, data);
+                            finish();
+                        });
+                    }
                 }
             }
             count++;

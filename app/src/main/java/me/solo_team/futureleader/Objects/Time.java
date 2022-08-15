@@ -20,16 +20,30 @@ public class Time {
     public Time(String time){
         this.hour = Integer.parseInt(time.split(":")[0]);
         this.minute = Integer.parseInt(time.split(":")[1]);
-    }
-
-    public Time(long time) {
 
     }
+
 
     public String toStr(){
         String timeMinute = ""+minute;
         if(minute<10)
             timeMinute = "0"+minute;
         return hour+":"+timeMinute;
+    }
+
+    public String toString(boolean useSec) {
+        String timeMinute = ""+minute;
+        String timeHour = ""+hour;
+        String timeSec = ""+sec;
+        if(minute<10)
+            timeMinute = "0"+minute;
+        if(hour<10)
+            timeHour = "0"+hour;
+        if(sec<10)
+            timeSec = "0"+sec;
+        if(useSec)
+            return timeHour+":"+timeMinute+":"+timeSec;
+        else
+            return timeHour+":"+timeMinute;
     }
 }

@@ -27,6 +27,7 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.IdeasStuff;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.news.open_news.EditNews;
 
@@ -77,12 +78,13 @@ public class Idea extends Her {
                     addAll(ideasStuff.waitIdea);
                 d.dismiss();
             }
-        }, new CustomString("token", Constants.user.token), new CustomString("user_id", ""));
+        }, new CustomString("token", Constants.user.token));
 
 
     }
 
-    private void addAll(List<IdeasStuff.Idea> ideas) {
+    public void addAll(List<IdeasStuff.Idea> ideas) {
+        runOnUiThread(()->list.removeAllViews());
         for (IdeasStuff.Idea idea : ideas) {
             View view = getLayoutInflater().inflate(R.layout.idea_object, null);
             TextView text = view.findViewById(R.id.idea_object_label);
@@ -105,6 +107,8 @@ public class Idea extends Her {
                     Intent intent = new Intent(getApplicationContext(), Showidea.class);
                     intent.putExtra("label", idea.label);
                     intent.putExtra("text", idea.text);
+                    if(idea.comment!=null)
+                        intent.putExtra("comment",idea.comment);
                     intent.putExtra("status", idea.status);
                     startActivity(intent);
                 });
@@ -125,11 +129,26 @@ public class Idea extends Her {
             menu.add(0, 1, 0, "")
                     .setIcon(R.drawable.plus)
                     .setOnMenuItemClickListener(item -> {
-                        startActivity(new Intent(this,CreateIdea.class));
+                        startActivityIfNeeded(new Intent(this,CreateIdea.class),100);
                         return true;
                     })
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         return super.onPrepareOptionsMenu(menu);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100){
+            if(resultCode==-1)
+                Utils.ShowSnackBar.show(Idea.this,"что-то пошло не так :/",list);
+            if(resultCode==1) {
+                assert data != null;
+                ideasStuff.waitIdea.add(new IdeasStuff.Idea(data.getStringExtra("label"),data.getStringExtra("text"),Constants.user.id,"wait"));
+                addAll(ideasStuff.waitIdea);
+                Utils.ShowSnackBar.show(Idea.this, "идея успешно создана!", list);
+            }
+        }
+    }
 }

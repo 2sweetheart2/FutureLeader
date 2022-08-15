@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/admin_view_idea_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_alignParentTop="true"/>
+
+        <ImageView
+            android:id="@+id/admin_view_idea_user_logo"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/admin_view_idea_name"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/admin_view_idea_user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_alignBottom="@id/admin_view_idea_user_logo"
+            android:layout_toEndOf="@id/admin_view_idea_user_logo"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/admin_view_idea_user_logo"
+             />
+
+        <TextView
+            android:id="@+id/admin_view_idea_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/gray_gradient_with_corners"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_below="@id/admin_view_idea_user_logo" />
+
+        <CheckBox
+            android:id="@+id/admin_view_idea_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Одобрено"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/admin_view_idea_text"
+            tools:ignore="HardcodedText" />
+
+
+        <EditText
+            android:id="@+id/admin_view_idea_comment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:hardwareAccelerated="true"
+            android:inputType="textMultiLine"
+            android:layout_below="@id/admin_view_idea_status"
+            android:hint="комментарий (не обязательно)"
+            tools:ignore="Autofill,HardcodedText,TextFields" />
+
+        <Button
+            android:id="@+id/admin_view_idea_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/admin_view_idea_comment"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="15dp"
+            android:text="утвердить"
+            tools:ignore="HardcodedText" />
+
+
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

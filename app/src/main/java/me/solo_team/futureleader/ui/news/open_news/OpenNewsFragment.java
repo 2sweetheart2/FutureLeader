@@ -29,12 +29,15 @@ import java.util.List;
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.FullScreenPhoto;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.dialogs.SaveOrSeePhoto;
 import me.solo_team.futureleader.ui.WebViewsContent.WebView;
+import me.solo_team.futureleader.ui.menu.statical.Media.MusicPlayer;
+import me.solo_team.futureleader.ui.menu.statical.Media.PopularMusic;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class OpenNewsFragment extends Her {
@@ -189,6 +192,19 @@ public class OpenNewsFragment extends Her {
                     textView1.setLayoutParams(lp);
                     runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(textView1));
                     break;
+                case "audio":
+                    Audio audio = new Audio(new JSONObject(o.getString("value")),OpenNewsFragment.this);
+                    View v = getLayoutInflater().inflate(R.layout.obj_music,null);
+                    Constants.cache.addPhoto(audio.urlPhoto, true, v.findViewById(R.id.obj_music_image), this);
+                    ((TextView) v.findViewById(R.id.obj_music_name)).setText(audio.name);
+                    ((TextView) v.findViewById(R.id.obj_music_author)).setText(audio.author);
+                    v.findViewById(R.id.obj_music_fav).setVisibility(View.GONE);
+                    v.setOnClickListener(v1 -> {
+                        Intent intent = new Intent(OpenNewsFragment.this, MusicPlayer.class);
+                        Constants.audioCache.curAudio = audio;
+                        startActivity(intent);
+                    });
+                    runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(v));
             }
         }
     }

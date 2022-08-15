@@ -14,14 +14,13 @@
         app:layout_constraintRight_toRightOf="@id/guideline24"
         app:layout_constraintBottom_toBottomOf="@id/hina"
         app:layout_constraintDimensionRatio="1:1"
-        android:src="@drawable/hyui"
         app:layout_constraintTop_toTopOf="@id/hina" />
 
     <LinearLayout
         android:id="@+id/hina"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/obj_music_duratation"
+        app:layout_constraintRight_toLeftOf="@id/obj_music_fav"
         app:layout_constraintLeft_toRightOf="@id/obj_music_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -48,7 +47,7 @@
             app:layout_constraintLeft_toLeftOf="@id/guideline24"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/obj_music_name"
-            app:layout_constraintBottom_toTopOf="@id/obj_music_duratation"
+            app:layout_constraintBottom_toTopOf="@id/obj_music_fav"
             android:layout_marginLeft="15dp"
             android:textColor="@color/black"
             android:text="123123123"
@@ -58,14 +57,14 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/obj_music_duratation"
+    <ImageView
+        android:id="@+id/obj_music_fav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/hina"
         app:layout_constraintBottom_toBottomOf="@id/hina"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="0:30"
+        android:src="@drawable/favorite_false"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline24"

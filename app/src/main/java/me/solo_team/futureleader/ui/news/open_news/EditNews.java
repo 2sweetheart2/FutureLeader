@@ -32,6 +32,7 @@ import java.util.HashMap;
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
@@ -106,6 +107,7 @@ public class EditNews extends Her {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        d.dismiss();
                     }
 
                     @Override
@@ -219,7 +221,17 @@ public class EditNews extends Her {
                     });
                     runOnUiThread(() -> list.addView(imageView));
                     break;
-
+                case "audio":
+                    LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(200, 200);
+                    lp3.setMargins(0, 5, 0, 5);
+                    Audio meow = new Audio (new JSONObject(o.getString("value")),EditNews.this);
+                    View v = getLayoutInflater().inflate(R.layout.obj_music,null);
+                    Constants.cache.addPhoto(meow.urlPhoto, true, v.findViewById(R.id.obj_music_image), this);
+                    ((TextView) v.findViewById(R.id.obj_music_name)).setText(meow.name);
+                    ((TextView) v.findViewById(R.id.obj_music_author)).setText(meow.author);
+                    v.findViewById(R.id.obj_music_fav).setVisibility(View.GONE);
+                    runOnUiThread(() -> list.addView(v));
+                    break;
             }
         }
     }

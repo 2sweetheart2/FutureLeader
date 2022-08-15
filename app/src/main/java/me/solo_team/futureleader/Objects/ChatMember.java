@@ -24,4 +24,8 @@ public class ChatMember {
     public String toChatMemder(){
         return "{\"first_name\":\""+firstName+"\",\"last_name\":\""+lastName+"\",\"profile_picture\":\""+profilePicture+"\",\"id\":\""+userId+"\"}";
     }
+
+    public String getFullName(){
+        return firstName+" "+lastName;
+    }
 }

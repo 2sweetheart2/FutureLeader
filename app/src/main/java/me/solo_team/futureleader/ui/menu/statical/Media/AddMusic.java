@@ -24,15 +24,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
@@ -107,18 +109,34 @@ public class AddMusic extends Her {
                          @Override
                          public void onSuccess(JSONObject json) throws JSONException {
                              System.out.println(json);
+                             if (getIntent().getBooleanExtra("rrr",false)){
+                                 Intent intent = new Intent ();
+                                 intent.putExtra("audio",(new Audio(json.getJSONObject("audio"),AddMusic.this)).toString());
+                                 setResult(1,intent);
+                             }
+                             d.dismiss();
                              finish();
                          }
                      },
                 bytes,
                 Utils.getFileName(currentAudioUri, AddMusic.this),
                 new CustomString("token", Constants.user.token),
-                new CustomString("name", name.getText().toString()),
-                new CustomString("author", author.getText().toString()),
+                new CustomString("name", decodeString(name.getText().toString())),
+                new CustomString("author", decodeString(author.getText().toString())),
                 new CustomString("photo", currentPhotoUrl)
 
         );
     };
+
+    public String decodeString(String input) {
+        try {
+            String transportString = URLEncoder.encode(input, "UTF-8");
+            return URLDecoder.decode(transportString, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
     private void selectImage() {

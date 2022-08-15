@@ -77,8 +77,12 @@
         <activity android:name=".ui.menu.horizontal_menu.calendar.Calendar" />
         <activity android:name=".ui.menu.horizontal_menu.idea.Idea" />
         <activity android:name=".ui.menu.horizontal_menu.idea.Showidea" />
-        <activity android:name=".ui.menu.horizontal_menu.idea.CreateIdea" />
-        <activity android:name=".ui.menu.horizontal_menu.calendar.AddEvent" />
+        <activity android:name=".ui.menu.horizontal_menu.idea.CreateIdea"
+            android:hardwareAccelerated="true"
+            />
+        <activity android:name=".ui.menu.horizontal_menu.calendar.AddEvent"
+            android:hardwareAccelerated="true"
+            />
         <activity android:name=".ui.menu.horizontal_menu.calendar.EventCheck" />
         <activity android:name=".ui.menu.horizontal_menu.calendar.ViewEvent" />
         <activity android:name=".ui.menu.horizontal_menu.surveys.SurveysView" />
@@ -130,6 +134,21 @@
         <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveysObject"/>
         <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveusForUsers"/>
         <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysStatistic"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.Ideas"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SubmitIdea"
+
+            android:hardwareAccelerated="true"
+            />
+        <activity android:name=".ui.menu.statical.admining.layouts.moderation.UnverifyUsers"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.moderation.VerifiUser"
+            android:hardwareAccelerated="true"
+            />
+        <activity android:name=".ui.menu.statical.admining.layouts.stat.UploadStat"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.stat.LoginStat"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.stat.AllStat"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.moderation.GetShopRequests"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.moderation.GetOldShopRequest"/>
+        <activity android:name=".ui.menu.statical.Media.SearchMusic"/>
     </application>
 
 </manifest>

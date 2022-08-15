@@ -224,6 +224,15 @@ public class Utils {
             }
             Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
         }
+
+        public static void show(Context context, String message, View view, String buttonText, View.OnClickListener listener) {
+            try {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            } catch (Exception ignored) {
+            }
+            Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAction(buttonText,listener).show();
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package me.solo_team.futureleader.ui.menu.horizontal_menu.idea;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -33,7 +34,11 @@ public class Showidea extends Her {
         TextView label_ = findViewById(R.id.idea_full_label);
         TextView status_ = findViewById(R.id.idea_full_status);
         TextView text_ = findViewById(R.id.idea_full_text);
-
+        if(getIntent().hasExtra("comment")){
+            ((TextView)findViewById(R.id.idea_full_comment)).setText(getIntent().getStringExtra("comment"));
+        }
+        else
+            findViewById(R.id.idea_full_huina).setVisibility(View.GONE);
         label_.setText(label);
         status_.setText(status_.getText()+status);
         text_.setText(text);

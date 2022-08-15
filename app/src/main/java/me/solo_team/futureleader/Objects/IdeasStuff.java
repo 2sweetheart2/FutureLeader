@@ -31,17 +31,21 @@ public class IdeasStuff {
                 idea = new Idea(id.getString("text"),id.getString("label"),id.getInt("user_id"),id.getString("status"));
             else
                 idea = new Idea(id.getString("text"),id.getString("label"),id.getInt("user_id"));
+            if(id.has("comment") && !id.isNull("comment"))
+                idea.comment = id.getString("comment");
             ideaslist.add(idea);
         }
         return ideaslist;
     }
 
 
-    public class Idea{
+    public static class Idea{
+        public String comment = null;
         public String text;
         public String label;
         public int user_id;
         public String status;
+        public int id;
 
 
         public Idea(String text, String label, int user_id){
@@ -56,6 +60,16 @@ public class IdeasStuff {
             this.label = label;
             this.user_id = user_id;
             this.status = status;
+        }
+
+        public Idea(JSONObject payload){
+            try{
+                text = payload.getString("text");
+                label = payload.getString("label");
+                id = payload.getInt("some_id");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

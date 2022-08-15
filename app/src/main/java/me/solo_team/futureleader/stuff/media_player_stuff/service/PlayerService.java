@@ -219,7 +219,6 @@ public class PlayerService extends Service {
         @Override
         public void onSkipToNext() {
             Audio audio = Constants.audioCache.next();
-            exoPlayer.stop(true);
             updateMetadataFromTrack(audio);
             prepareToPlay(audio.url);
             refreshState(PlaybackStateCompat.STATE_PLAYING, chekDuratation(audio));
@@ -253,7 +252,6 @@ public class PlayerService extends Service {
         @Override
         public void onSkipToPrevious() {
             Audio audio = Constants.audioCache.previous();
-            exoPlayer.stop(true);
             prepareToPlay(audio.url);
             updateMetadataFromTrack(audio);
             refreshState(PlaybackStateCompat.STATE_PLAYING, chekDuratation(audio));
@@ -261,6 +259,7 @@ public class PlayerService extends Service {
 
         private void prepareToPlay(String url) {
             if (!url.equals(currentUrl)) {
+                exoPlayer.stop(true);
                 currentUrl = url;
                 MediaItem mediaItem = MediaItem.fromUri(currentUrl);
                 exoPlayer.addMediaItem(mediaItem);

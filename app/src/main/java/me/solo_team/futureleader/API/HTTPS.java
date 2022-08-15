@@ -368,6 +368,7 @@ public class HTTPS {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            System.out.println(data.toString(1));
 
             new Thread(() -> {
                 try {

@@ -18,21 +18,28 @@ import java.util.Map;
 import java.util.Objects;
 
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.GetShopRequests;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.ModerationRequest;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.UnverifyUsers;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.AllStat;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.LoginStat;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.UploadStat;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.Ideas;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.SurveysLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.SurveysStatistic;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.StructurLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.UsersLayout;
 
 public class AdminingLayout extends AppCompatActivity {
-    private final String[] mGroupsArray = new String[]{"Пользователи", "Контент", "Геймификация", "Опросы и ОС", "Модерация", "Обслуживание", "Интеграция"};
+    private final String[] mGroupsArray = new String[]{"Пользователи", "Контент", "Геймификация", "Опросы и ОС", "Модерация", "Статистика", "Интеграция"};
 
     private final String[] govno1 = new String[]{"Список пользователей", "Структура подразделения", "Статусы пользователей"};
     private final String[] govno2 = new String[]{};
     private final String[] govno3 = new String[]{"Достижения", "Открытки", "Журнал отправленных открыток", "Валютный банк", "Отчет по активностям"};
-    private final String[] govno4 = new String[]{"Опросы", "Сессии опросов", "Отчет по обратной связи"};
-    private final String[] govno5 = new String[]{"Запросы на модерацию", "Подтверждение регистрации пользователей"};
+    private final String[] govno4 = new String[]{"Опросы", "Сессии опросов", "Идеи"};
+    private final String[] govno5 = new String[]{"Запросы на модерацию", "Подтверждение регистрации пользователей","заявки в магазине"};
     private final String[] govno6 = new String[]{"соси хуй а не итеграцию"};
-    private final String[] govno7 = new String[]{"Статистика", "Журнал изменений", "Журнал авторизаций", "Журнал регистраций"};
+    private final String[] govno7 = new String[]{"Статистика", "Журнал добавления файлов", "Журнал авторизаций"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,7 +105,21 @@ public class AdminingLayout extends AppCompatActivity {
         HashMap<Integer,Class> surveys = new HashMap<>();
         surveys.put(0, SurveysLayout.class);
         surveys.put(1, SurveysStatistic.class);
+        surveys.put(2, Ideas.class);
         classes.put(3,surveys);
+
+        HashMap<Integer, Class> moderarion = new HashMap<>();
+        moderarion.put(0, ModerationRequest.class);
+        moderarion.put(1, UnverifyUsers.class);
+        moderarion.put(2, GetShopRequests.class);
+        classes.put(4,moderarion);
+
+        HashMap<Integer, Class> stat = new HashMap<>();
+        stat.put(0, AllStat.class);
+        stat.put(1, UploadStat.class);
+        stat.put(2, LoginStat.class);
+        classes.put(5,stat);
+
 
 
         expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {

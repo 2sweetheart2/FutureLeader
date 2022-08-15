@@ -16,6 +16,8 @@ public class Audio {
     public String url;
     public String urlPhoto;
 
+    public boolean liked = false;
+
     public Bitmap imageBitmap;
 
     public long duratation=0;
@@ -28,13 +30,19 @@ public class Audio {
             name = json.getString("name");
             author = json.getString("author");
             id = json.getInt("id");
-            userId = json.getInt("user_id");
+            if(json.has("user_id"))
+                userId = json.getInt("user_id");
             url = json.getString("url");
             urlPhoto = json.getString("photo");
-            duratation = json.getInt("duratation");
+            if(json.has("like"))
+                liked = json.getBoolean("like");
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public String toString(){
+        return "{\"name\":\""+name+"\",\"author\":\""+author+"\",\"id\":\""+id+"\",\"url\":\""+url+"\",\"photo\":\""+urlPhoto+"\",\"like\":\""+liked+"\"}";
     }
 
 }

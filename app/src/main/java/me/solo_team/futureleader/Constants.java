@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -123,19 +122,21 @@ public class Constants {
         public List<Message> newMessages = new ArrayList<>();
     }
 
-    public static class AudioCache{
+    public static class AudioCache {
         public List<View> yourMusicsViews = new ArrayList<>();
         public List<View> popMusicsViews = new ArrayList<>();
         public List<Audio> yourMusics = new ArrayList<>();
         public List<Audio> popMusics = new ArrayList<>();
 
-        List<Audio> currentPlayList;
+        public Audio curAudio = null;
+
+        List<Audio> currentPlayList = null;
 
         private int pos = -1;
         public int curList = 0;
         private int oldCurList = -1;
 
-        public void setCurrentAudio(int playList, Audio audio){
+        public void setCurrentAudio(int playList, Audio audio) {
             curList = playList;
             oldCurList = playList;
             checkPlayList();
@@ -144,6 +145,7 @@ public class Constants {
 
         public Audio next(){
             checkPlayList();
+            if(curAudio!=null) return curAudio;
             if(playListCanged())
                 pos = 0;
             else
@@ -155,6 +157,7 @@ public class Constants {
 
         public Audio previous(){
             checkPlayList();
+            if(curAudio!=null) return curAudio;
             if(playListCanged())
                 pos = 0;
             else
@@ -164,7 +167,9 @@ public class Constants {
             return currentPlayList.get(pos);
         }
 
-        public Audio getCurrentAudio(){
+        public Audio getCurrentAudio() {
+            if (curAudio != null)
+                return curAudio;
             checkPlayList();
             return currentPlayList.get(pos);
         }
@@ -173,8 +178,10 @@ public class Constants {
             switch (curList){
                 case 1:
                     currentPlayList =  popMusics;
+                    break;
                 case 0:
                     currentPlayList =  yourMusics;
+                    break;
             }
         }
 
@@ -282,6 +289,7 @@ public class Constants {
 
     public static class CachePhoto {
         private HashMap<ImageView, Bitmap> cache = new HashMap<>();
+        private HashMap<String, Bitmap> UIDcache = new HashMap<>();
         /**
          * Динамическое получени фото по URL  и кешерировани его в HashMap по URL и подстваление в {@link ImageView}
          *
@@ -345,7 +353,7 @@ public class Constants {
             v.setImageBitmap(bitmap);
         }
 
-        public void addPhoto(String profilePicture, ShapeableImageView viewById,Activity c) {
+        public void addPhoto(String profilePicture, ShapeableImageView viewById, Activity c) {
             Utils.getBitmapFromURL(profilePicture, bitmap -> {
                 if (bitmap == null) {
                     c.runOnUiThread(() -> viewById.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
@@ -353,6 +361,23 @@ public class Constants {
                 }
                 c.runOnUiThread(() -> viewById.setImageBitmap(bitmap));
             });
+        }
+
+        public void addPhoto(String url, String UID, ImageView imageView, Activity activity) {
+            if (UIDcache.containsKey(UID)) {
+                activity.runOnUiThread(() -> imageView.setImageBitmap(UIDcache.get(UID)));
+            } else {
+                Utils.getBitmapFromURL(url, bitmap -> {
+                    if (bitmap == null)
+                        return;
+                    bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
+                    UIDcache.put(UID, bitmap);
+                    Bitmap finalBitmap = bitmap;
+                    activity.runOnUiThread(() -> {
+                        imageView.setImageBitmap(finalBitmap);
+                    });
+                });
+            }
         }
 
         public interface ImageBitmaps {

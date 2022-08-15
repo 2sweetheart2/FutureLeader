@@ -23,6 +23,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -200,12 +202,20 @@ public class ViewUsluga extends Her {
                             }
                         });
                     }
-                },getBytesFromUri(uri),Utils.getFileName(uri, ViewUsluga.this),new CustomString("token",Constants.user.token));
+                },getBytesFromUri(uri),decodeString(Utils.getFileName(uri, ViewUsluga.this)),new CustomString("token",Constants.user.token));
             }
         }
     }
     String docxUrl;
-
+    public String decodeString(String input) {
+        try {
+            String transportString = URLEncoder.encode(input, "UTF-8");
+            return URLDecoder.decode(transportString, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.add(0, 1, 0, "")

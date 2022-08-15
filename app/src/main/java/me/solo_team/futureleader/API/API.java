@@ -6,9 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -192,14 +189,71 @@ public class API {
     public static void getSurveysAdmin(ApiListener listener,CustomString...params){
         HTTPS.sendPost(Methods.GET_SURVEYS_FOR_ADMIN,createJsonObj(params),listener);
     }
-    public static void deleteSurvey(ApiListener listener,CustomString...params){
-        HTTPS.sendPost(Methods.DELETE_SURVEYS,createJsonObj(params),listener);
-    }
-    public static void createSurveys(ApiListener listener, JSONObject object){
-        HTTPS.sendPost(Methods.CREATE_SURVEYS,object,listener);
+
+    public static void deleteSurvey(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.DELETE_SURVEYS, createJsonObj(params), listener);
     }
 
-    public static void getSurveysAdminStaticstic(ApiListener listener, CustomString...params) {
-        HTTPS.sendPost(Methods.GET_SURVEYS_STAT,createJsonObj(params),listener);
+    public static void createSurveys(ApiListener listener, JSONObject object) {
+        HTTPS.sendPost(Methods.CREATE_SURVEYS, object, listener);
+    }
+
+    public static void getSurveysAdminStaticstic(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_SURVEYS_STAT, createJsonObj(params), listener);
+    }
+
+    public static void getWaitedIdeas(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_WEITED_IDEAS, createJsonObj(params), listener);
+    }
+
+    public static void setIdeasStatus(ApiListener listener, JSONObject params) {
+        HTTPS.sendPost(Methods.SET_IDEAS_STATUS, params, listener);
+    }
+
+    public static void createIdea(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.CREATE_IDEA, createJsonObj(params), listener);
+    }
+
+    public static void getUnverifiedUsers(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_UNVERIFIED_USERS, createJsonObj(params), listener);
+    }
+
+    public static void verifiUser(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.VERIFI_USER, createJsonObj(params), listener);
+    }
+
+    public static void getFilesLogs(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_FILES_LOGS, createJsonObj(params), listener);
+    }
+
+    public static void getLoginLogs(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_LOGINS_LOGS, createJsonObj(params), listener);
+    }
+
+    public static void getUser(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_USER, createJsonObj(params), listener);
+    }
+
+    public static void getAllStat(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_ALLSTAT, createJsonObj(params), listener);
+    }
+
+    public static void getShopRequests(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_SHOP_REQUESTS, createJsonObj(params), listener);
+    }
+
+    public static void setShopRequests(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.SET_SHOP_REQUESTS, createJsonObj(params), listener);
+    }
+
+    public static void getShopHistory(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.GET_SHOP_HISTORY, createJsonObj(params), listener);
+    }
+
+    public static void setAduioLike(ApiListener listener, CustomString... params) {
+        HTTPS.sendPost(Methods.SET_ADUIO_LIKE, createJsonObj(params), listener);
+    }
+    public static void searchMusicByName(ApiListener listener, CustomString... params){
+        HTTPS.sendPost(Methods.SEARCH_by_name, createJsonObj(params), listener);
     }
 }

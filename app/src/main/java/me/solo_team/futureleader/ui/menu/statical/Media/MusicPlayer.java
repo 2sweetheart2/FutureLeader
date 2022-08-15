@@ -16,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.TimeBar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 import me.solo_team.futureleader.Constants;
@@ -99,8 +102,17 @@ public class MusicPlayer extends AppCompatActivity {
             }
         }
         stopThread = false;
+        if(getIntent().hasExtra("audio")) {
+            try {
+                Constants.audioCache.curAudio = new Audio(new JSONObject(getIntent().getStringExtra("audio")),MusicPlayer.this);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         zalupa();
     }
+
+    Audio audio = null;
 
     private String getStringFromMilSec(long dur) {
         return DateUtils.formatElapsedTime(dur / 1000); // converting time in millis to minutes:second format eg 14:15 min

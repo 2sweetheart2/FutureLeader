@@ -271,6 +271,12 @@ public class MainActivity extends AppCompatActivity {
         WebScoketClient.mSocket.off("chat_invite", onChatInvite);
         WebScoketClient.mSocket.off("chat_title_update",onChatTitleChange);
         //WebScoketClient.mSocket.off("chat_removed", OnChatRemoved);
+        playerServiceBinder = null;
+        if (mediaController != null) {
+            mediaController.unregisterCallback(callback);
+            mediaController = null;
+        }
+        unbindService(serviceConnection);
     }
 
 }
