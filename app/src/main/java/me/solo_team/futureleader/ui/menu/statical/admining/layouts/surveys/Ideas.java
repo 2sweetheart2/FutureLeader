@@ -37,6 +37,11 @@ public class Ideas extends Her {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Идеи");
+        if(!Constants.user.permission.can_get_ideas)
+        {
+            setResult(-500);
+            finish();
+        }
         setContentView(R.layout.only_linearlayout);
         list = findViewById(R.id.list);
         API.getWaitedIdeas(new ApiListener() {
@@ -86,7 +91,7 @@ public class Ideas extends Her {
         for (Map.Entry<ChatMember, List<IdeasStuff.Idea>> entry : ideasList.entrySet()) {
             for (IdeasStuff.Idea idea : entry.getValue()) {
                 View view = getLayoutInflater().inflate(R.layout.admin_idea, null);
-                Constants.cache.addPhoto(entry.getKey().profilePicture, true, view.findViewById(R.id.admin_idea_user_logo), this);
+                Constants.cache.addPhoto(entry.getKey().profilePicture, view.findViewById(R.id.admin_idea_user_logo), this);
                 ((TextView) view.findViewById(R.id.admin_idea_name)).setText(idea.label);
                 ((TextView) view.findViewById(R.id.admin_idea_user_name)).setText(entry.getKey().getFullName());
                 view.setOnClickListener(v -> {
@@ -123,5 +128,7 @@ public class Ideas extends Her {
             assert data != null;
             Utils.ShowSnackBar.show(Ideas.this, data.getStringExtra("message"), list);
         }
+        if(resultCode==-500)
+            Utils.ShowSnackBar.show(Ideas.this,"Отказано в доступе!",list);
     }
 }

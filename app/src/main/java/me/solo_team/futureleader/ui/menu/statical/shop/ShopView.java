@@ -34,6 +34,7 @@ public class ShopView extends Her {
 
     LinearLayout list;
     TextView info;
+    List<ShopItem> items = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class ShopView extends Her {
             @Override
             public void onSuccess(JSONObject json) throws JSONException {
                 JSONArray shop = json.getJSONArray("shop");
-                List<ShopItem> items = new ArrayList<>();
+                items = new ArrayList<>();
                 for (int i = 0; i < shop.length(); i++) {
                     items.add(new ShopItem(shop.getJSONObject(i)));
                 }
@@ -89,8 +90,12 @@ public class ShopView extends Her {
             ((TextView) view.findViewById(R.id.obj_shop_cost)).setText("Стоимость: " + item.cost + " FBL");
             ((TextView) view.findViewById(R.id.obj_shop_count)).setText("Осталось: " + item.count);
             ((TextView) view.findViewById(R.id.obj_shop_description)).setText(item.description);
-            Constants.cache.addPhoto(item.photo, true, view.findViewById(R.id.obj_shop_photo), this);
+            Constants.cache.addPhoto(item.photo, view.findViewById(R.id.obj_shop_photo), this);
             ImageView plus = view.findViewById(R.id.obj_shop_added);
+            if(Constants.shopChache.corzina.contains(item))
+                view.setBackground(getDrawable(R.drawable.gray_gradient_with_corners));
+            else
+                view.setBackground(null);
             plus.setVisibility(View.GONE);
             if (item.count > 0)
                 view.setOnClickListener(v -> {
@@ -128,7 +133,7 @@ public class ShopView extends Her {
                     .setIcon(R.drawable.backet)
                     .setOnMenuItemClickListener(item -> {
                             Intent intent = new Intent(this, CorzinaView.class);
-                            startActivity(intent);
+                            startActivityIfNeeded(intent,100);
                         return true;
                     })
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -144,9 +149,13 @@ public class ShopView extends Her {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        updateCorzina();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100 && resultCode==1){
+            Constants.shopChache.corzina.clear();
+            currency = Constants.user.currency;
+            updateCorzina();
+            render(items);
+        }
     }
 }

@@ -72,7 +72,7 @@ public class ViewProfile extends Her {
             finish();
         name.setText(Constants.currentUser.firstName + " " + Constants.currentUser.lastName);
         description.setText(Constants.currentUser.status);
-        Constants.cache.addPhoto(Constants.currentUser.profilePictureLink, true, picture, this);
+        Constants.cache.addPhoto(Constants.currentUser.profilePictureLink, picture, this);
 
         picture.requestLayout();
         updateGrid(grid);
@@ -94,7 +94,7 @@ public class ViewProfile extends Her {
                 for (String s : Constants.currentUser.achievementsIds.split(",")) {
                     ids.add(Integer.parseInt(s));
                 }
-                API.getAchivement(new ApiListener() {
+                API.getAchievements(new ApiListener() {
                     Dialog d;
 
                     @Override
@@ -122,7 +122,7 @@ public class ViewProfile extends Her {
                             e.printStackTrace();
                         }
                     }
-                }, new CustomString("ids", Constants.currentUser.achievementsIds), new CustomString("token", Constants.user.token));
+                }, new CustomString("user_id", Constants.currentUser.achievementsIds), new CustomString("token", Constants.user.token));
 
 
             }

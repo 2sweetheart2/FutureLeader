@@ -57,6 +57,10 @@ public class AddEvent extends Her {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!Constants.user.permission.can_add_event){
+            setResult(-500);
+            finish();
+        }
         currentDate = new Date(getIntent().getStringExtra("date"));
         setContentView(R.layout.add_event);
         getObjects();
@@ -176,7 +180,7 @@ public class AddEvent extends Her {
                     @Override
                     public void onSuccess(JSONObject json) throws JSONException {
                         url = json.getString("url");
-                        Constants.cache.addPhoto(url, true, logo, AddEvent.this);
+                        Constants.cache.addPhoto(url, logo, AddEvent.this);
                         d.dismiss();
                     }
                 }, bitmap, new CustomString("token", Constants.user.token));

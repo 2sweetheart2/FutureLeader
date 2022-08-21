@@ -128,6 +128,8 @@ public class Constants {
         public List<Audio> yourMusics = new ArrayList<>();
         public List<Audio> popMusics = new ArrayList<>();
 
+        public List<Audio> seaechedAudios = new ArrayList<>();
+
         public Audio curAudio = null;
 
         List<Audio> currentPlayList = null;
@@ -182,6 +184,9 @@ public class Constants {
                 case 0:
                     currentPlayList =  yourMusics;
                     break;
+                case 2:
+                    currentPlayList = seaechedAudios;
+                    break;
             }
         }
 
@@ -193,6 +198,13 @@ public class Constants {
             else return oldCurList != curList;
         }
 
+        public boolean checkHas(Audio audio) {
+            for(Audio a : yourMusics){
+                if(a.url.equals(audio.url))
+                    return true;
+            }
+            return false;
+        }
     }
 
     public static class SurveysCache{
@@ -290,93 +302,54 @@ public class Constants {
     public static class CachePhoto {
         private HashMap<ImageView, Bitmap> cache = new HashMap<>();
         private HashMap<String, Bitmap> UIDcache = new HashMap<>();
-        /**
-         * Динамическое получени фото по URL  и кешерировани его в HashMap по URL и подстваление в {@link ImageView}
-         *
-         * @param url              ссылка на фото, тип: {@link String}
-         * @param needRoundCorners нужно ли закруглять фото, тип: {@link Boolean}
-         * @param v                {@link ImageView}
-         * @param c                {@link AppCompatActivity} для {@link AppCompatActivity#runOnUiThread}
-         */
-        public void addPhoto(String url, boolean needRoundCorners, ImageView v, Activity c) {
-            if (cache.containsKey(v)) {
-                c.runOnUiThread(() -> v.setImageBitmap(cache.get(v)));
-                return;
-            }
-            Utils.getBitmapFromURL(url, bitmap -> {
-                if (bitmap == null) {
-                    c.runOnUiThread(() -> v.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
+
+        public void addPhoto(String url, ImageView imageView, Activity activity) {
+            try {
+                if(url==null){
+                    activity.runOnUiThread(() -> imageView.setImageResource(R.drawable.resize_300x0));
                     return;
                 }
-                Bitmap bitmap_ = bitmap;
-                if (needRoundCorners) bitmap_ = Utils.getRoundedCornerBitmap(bitmap, 25);
-                cache.put(v, bitmap_);
-                Bitmap finalBitmap = bitmap_;
-                c.runOnUiThread(() -> v.setImageBitmap(finalBitmap));
-            });
-        }
-
-        /**
-         * Динамическое получени фото по URL  и кешерировани его в HashMap по URL и подстваление в {@link ImageView}
-         *
-         * @param url              ссылка на фото, тип: {@link String}
-         * @param needRoundCorners нужно ли закруглять фото, тип: {@link Boolean}
-         * @param v                {@link ImageView}
-         * @param c                {@link Fragment} для {@link Fragment#requireActivity}
-         */
-        public void addPhoto(String url, boolean needRoundCorners, ImageView v, Fragment c) {
-            if (cache.containsKey(v)) {
-                c.requireActivity().runOnUiThread(() -> v.setImageBitmap(cache.get(v)));
-                return;
-            }
-            Utils.getBitmapFromURL(url, bitmap -> {
-                if (bitmap == null) {
-                    c.requireActivity().runOnUiThread(() -> v.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
-                    return;
-                }
-                if (needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
-                cache.put(v, bitmap);
-                Bitmap finalBitmap = bitmap;
-                c.requireActivity().runOnUiThread(() -> v.setImageBitmap(finalBitmap));
-            });
-        }
-
-        public Bitmap getPhoto(ImageView v) {
-            if (!cache.containsKey(v))
-                return BitmapFactory.decodeResource(res, R.drawable.resize_300x0);
-            return cache.get(v);
-        }
-
-        public void addPhoto(Bitmap bitmap, boolean needRoundCorners, ImageView v) {
-            if (needRoundCorners) bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
-            cache.put(v, bitmap);
-            v.setImageBitmap(bitmap);
-        }
-
-        public void addPhoto(String profilePicture, ShapeableImageView viewById, Activity c) {
-            Utils.getBitmapFromURL(profilePicture, bitmap -> {
-                if (bitmap == null) {
-                    c.runOnUiThread(() -> viewById.setImageBitmap(BitmapFactory.decodeResource(res, R.drawable.resize_300x0)));
-                    return;
-                }
-                c.runOnUiThread(() -> viewById.setImageBitmap(bitmap));
-            });
-        }
-
-        public void addPhoto(String url, String UID, ImageView imageView, Activity activity) {
-            if (UIDcache.containsKey(UID)) {
-                activity.runOnUiThread(() -> imageView.setImageBitmap(UIDcache.get(UID)));
-            } else {
-                Utils.getBitmapFromURL(url, bitmap -> {
-                    if (bitmap == null)
-                        return;
-                    bitmap = Utils.getRoundedCornerBitmap(bitmap, 10);
-                    UIDcache.put(UID, bitmap);
-                    Bitmap finalBitmap = bitmap;
-                    activity.runOnUiThread(() -> {
-                        imageView.setImageBitmap(finalBitmap);
+                if (UIDcache.containsKey(url)) {
+                    activity.runOnUiThread(() -> imageView.setImageBitmap(UIDcache.get(url)));
+                } else {
+                    Utils.getBitmapFromURL(url, bitmap -> {
+                        if (bitmap == null)
+                        {
+                            activity.runOnUiThread(() -> imageView.setImageResource(R.drawable.resize_300x0));
+                            return;
+                        }
+                        bitmap = Utils.getRoundedCornerBitmap(bitmap, 25);
+                        UIDcache.put(url, bitmap);
+                        Bitmap finalBitmap = bitmap;
+                        activity.runOnUiThread(() -> imageView.setImageBitmap(finalBitmap));
                     });
-                });
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        public void addPhoto(String url, ImageView imageView, Fragment fragment) {
+            try {
+                if(url==null){
+                    fragment.getActivity().runOnUiThread(() -> imageView.setImageResource(R.drawable.resize_300x0));
+                    return;
+                }
+                if (UIDcache.containsKey(url)) {
+                    fragment.getActivity().runOnUiThread(() -> imageView.setImageBitmap(UIDcache.get(url)));
+                } else {
+                    Utils.getBitmapFromURL(url, bitmap -> {
+                        if (bitmap == null)
+                        {
+                            fragment.getActivity().runOnUiThread(() -> imageView.setImageResource(R.drawable.resize_300x0));
+                            return;
+                        }
+                        bitmap = Utils.getRoundedCornerBitmap(bitmap, 25);
+                        UIDcache.put(url, bitmap);
+                        Bitmap finalBitmap = bitmap;
+                        fragment.getActivity().runOnUiThread(() -> imageView.setImageBitmap(finalBitmap));
+                    });
+                }
+            } catch (Exception ignored) {
             }
         }
 

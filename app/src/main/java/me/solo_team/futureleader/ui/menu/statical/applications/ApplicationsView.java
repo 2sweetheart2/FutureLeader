@@ -47,7 +47,7 @@ public class ApplicationsView extends Her {
             boolean onAllColumn = false;
 
             ImageView v = (ImageView) grid.addImageElement(null,onAllColumn);
-            Constants.cache.addPhoto(urls.get(i),false,v,this);
+            Constants.cache.addPhoto(urls.get(i),v,this);
             v.setBackground(getDrawable(R.drawable.gray_gradient_with_corners));
 
             views.add(v);

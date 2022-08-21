@@ -2,6 +2,7 @@ package me.solo_team.futureleader.ui.menu.horizontal_menu.calendar;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Date;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class Calendar extends Her implements CalendarAdapter.OnItemListener, CalendarAdapter.onItemLongListener {
@@ -46,7 +48,9 @@ public class Calendar extends Her implements CalendarAdapter.OnItemListener, Cal
         setTitle("Календарь");
         setContentView(R.layout.calendar_menu);
         initWidgets();
-        selectedDate = LocalDate.now();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            selectedDate = LocalDate.now();
+        }
 
         setMonthView();
         API.getEventsDate(new ApiListener() {
@@ -91,20 +95,14 @@ public class Calendar extends Her implements CalendarAdapter.OnItemListener, Cal
     private List<Date> getEventsByDate() {
         List<Date> dates1 = new ArrayList<>();
         for (Date date : dates) {
-            if (selectedDate.getYear() == date.year && selectedDate.getMonthValue() == date.month)
-                dates1.add(date);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (selectedDate.getYear() == date.year && selectedDate.getMonthValue() == date.month)
+                    dates1.add(date);
+            }
         }
         return dates1;
     }
 
-    private List<Date> getEventsByDay() {
-        List<Date> dates1 = new ArrayList<>();
-        for (Date date : dates) {
-            if (selectedDate.getYear() == date.year && selectedDate.getMonthValue() == date.month && selectedDate.getDayOfMonth()==date.day)
-                dates1.add(date);
-        }
-        return dates1;
-    }
 
     private void setMonthView() {
         monthYearText.setText(monthYearFromDate(selectedDate));
@@ -118,12 +116,16 @@ public class Calendar extends Her implements CalendarAdapter.OnItemListener, Cal
 
     private ArrayList<String> daysInMonthArray(LocalDate date) {
         ArrayList<String> daysInMonthArray = new ArrayList<>();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
         YearMonth yearMonth = YearMonth.from(date);
 
         int daysInMonth = yearMonth.lengthOfMonth();
 
         LocalDate firstOfMonth = selectedDate.withDayOfMonth(1);
-        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
+        int dayOfWeek = 0;
+
+            dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
+
 
         for (int i = 2; i <= 42; i++) {
             if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
@@ -131,22 +133,32 @@ public class Calendar extends Her implements CalendarAdapter.OnItemListener, Cal
             } else {
                 daysInMonthArray.add(String.valueOf(i - dayOfWeek));
             }
-        }
+        }      }
         return daysInMonthArray;
     }
 
     private String monthYearFromDate(LocalDate date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
-        return date.format(formatter);
+        DateTimeFormatter formatter = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return date.format(formatter);
+        }
+        return "";
     }
 
     public void previousMonthAction(View view) {
-        selectedDate = selectedDate.minusMonths(1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            selectedDate = selectedDate.minusMonths(1);
+        }
         setMonthView();
     }
 
     public void nextMonthAction(View view) {
-        selectedDate = selectedDate.plusMonths(1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            selectedDate = selectedDate.plusMonths(1);
+        }
         setMonthView();
     }
 
@@ -166,7 +178,9 @@ public class Calendar extends Her implements CalendarAdapter.OnItemListener, Cal
             String message = "Выбрана дата " + dayText + " " + monthYearFromDate(selectedDate);
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             oldDateView.setBackground(getDrawable(R.drawable.gray_gradient_with_corners));
-            currentDate = new Date(Integer.parseInt(dayText), selectedDate.getMonthValue(), selectedDate.getYear());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                currentDate = new Date(Integer.parseInt(dayText), selectedDate.getMonthValue(), selectedDate.getYear());
+            }
         }
     }
 
@@ -183,7 +197,10 @@ public class Calendar extends Her implements CalendarAdapter.OnItemListener, Cal
                 .setOnMenuItemClickListener(item -> {
                     if (currentDate == null) return true;
                     if(needReturn) {
-                        String message = "Событий " + selectedDate.getDayOfMonth() + ' ' + monthYearFromDate(selectedDate) + " нету";
+                        String message = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            message = "Событий " + selectedDate.getDayOfMonth() + ' ' + monthYearFromDate(selectedDate) + " нету";
+                        }
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                         return true;
                     }
@@ -202,11 +219,18 @@ public class Calendar extends Her implements CalendarAdapter.OnItemListener, Cal
                         if (currentDate == null) return true;
                         Intent intent = new Intent(this, AddEvent.class);
                         intent.putExtra("date", currentDate.toStr());
-                        startActivity(intent);
+                        startActivityIfNeeded(intent,100);
                         return true;
                     })
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         } else menu.removeItem(1);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==-500)
+            Utils.ShowSnackBar.show(Calendar.this,"отказано в доступе!",list);
     }
 }

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp">
+
+        <EditText
+            android:id="@+id/admin_role_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="имя роли..."
+            android:inputType="text"
+            android:maxLines="1"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="Autofill,HardcodedText" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/admin_role_name">
+
+            <CheckBox
+                android:id="@+id/role_can_add_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может создавать новости"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_view_new_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать, кто посмотрел новость"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_view_like_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать, кто лайкнул новость"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_view_admin_panel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может заходить в админ панель"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_ideas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать идеи"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_set_ideas_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может ставить статусы к идеям"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_users"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может получать список всех пользователей"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать профиль другого пользователя"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_admin_roles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать роли"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_chage_admin_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может ставить пользователям роли"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_log_log"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать статистику входов"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_file_log"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать статистику добавления файлов"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_view_shop_request"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать запросы в магазине"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_set_shop_request"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может ставить статусы запросам в магазине"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_unverified_users"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может получать не подтверждённых пользователей"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_verifi_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может подтверждать регистрацию пользователей"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать всю статистику онлайна"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_create_achievement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может создавать достижения"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_remove_achievement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может удалять достижения"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_add_achievement_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может выдавать достижения пользователям"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_get_complete_surveys"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать результаты опросов"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_delete_survey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может удалять опросы"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_create_surveys"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может создавать опросы"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_delete_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может удалять мероприятия"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_add_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может создавать мероприятия"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_create_admin_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может создавать роли"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/role_can_remove_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может удалять роли"
+                tools:ignore="HardcodedText" />
+            <CheckBox
+                android:id="@+id/role_can_get_who_has_this_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может просматривать, кто имеет данную роль"
+                tools:ignore="HardcodedText" />
+            <CheckBox
+                android:id="@+id/role_can_update_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="может изменять роли"
+                tools:ignore="HardcodedText" />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/role_can_get_events_tickets"
+                android:text="может просматривать записи на событие"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

@@ -33,6 +33,10 @@ public class VerifiUser extends Her {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!Constants.user.permission.can_verifi_user){
+            setResult(-500);
+            finish();
+        }
         setTitle(getIntent().getStringExtra("name"));
         phone = getIntent().getStringExtra("phone");
         email = getIntent().getStringExtra("email");

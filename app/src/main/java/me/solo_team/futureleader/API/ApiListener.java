@@ -43,7 +43,7 @@ public interface ApiListener {
     default void createNotification(View v,String message) {
         try {
             Snackbar.make(v, message, Snackbar.LENGTH_LONG)
-                    .setAction("CLOSE", view -> {
+                    .setAction("ЗАКРЫТЬ", view -> {
                     })
                     .setActionTextColor(Color.RED)
                     .show();

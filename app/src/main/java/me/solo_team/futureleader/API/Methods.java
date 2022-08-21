@@ -77,6 +77,24 @@ public enum Methods {
     SET_ADUIO_LIKE("set_like_audio"),
     SEARCH_by_name("search_music_by_name"),
 
+    ADD_VIDEO_FILE("add_video_file"),
+    ADD_VIDEO("add_video"),
+
+    GET_ACHIEVEMENTS("get_achievement"),
+    ADD_ACHIEVEMENT_USER("add_achievement_user"),
+    REMOVE_ACHIEVEMENT("remove_achievement"),
+    CREATE_ACHIEVEMENT("create_achievement"),
+
+    GET_USERS_FOR_CHAT("get_users_for_chat"),
+
+    GET_TICKETS("get_event_tickets"),
+
+    GET_ROLES("get_roles"),
+    SET_ROLE_FOR_USER("set_user_role"),
+    REMOVE_ROLE("remove_role"),
+    GET_WHO_HAS_THIS_ROLE("get_users_who_has_this_role"),
+    UPDATE_ROLE("update_role"),
+    CREATE_ROLE("create_admin_role"),
     GET_USER("get_user");
 
 

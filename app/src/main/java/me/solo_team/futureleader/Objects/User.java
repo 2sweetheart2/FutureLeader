@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,17 +26,19 @@ public class User {
     public FieldsStuff fieldsStuff;
     public String mobileToken;
 
+    public Permission permission;
 
 
     public User(JSONObject payload) {
-        try{
+        try {
             this.firstName = payload.getString("first_name");
             this.lastName = payload.getString("last_name");
             this.achievementsIds = payload.getString("achievement_ids");
             this.adminStatus = payload.getInt("admin_status");
             try {
                 this.age = payload.getInt("age");
-            }catch (Exception ignored){}
+            } catch (Exception ignored) {
+            }
             JSONObject field_stuff = payload.getJSONObject("fields_stuff");
             this.addFields(field_stuff.getString("fields"));
             this.fieldsStuff = new FieldsStuff(this.fields, this.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
@@ -47,6 +48,7 @@ public class User {
             if(!payload.isNull("token"))
                 this.token = payload.getString("token");
             this.currency = payload.getInt("currency");
+            permission = new Permission(payload.getJSONObject("permission"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -72,18 +74,6 @@ public class User {
 
     public LinkedHashMap<String, String> enums;
 
-    public List<Achievement> getAchivements() {
-        List<Achievement> ls = new ArrayList<>();
-//        for (int i = 0; i < achievementsFields.length(); i++) {
-//            try {
-//                Achievement achievement = new Achievement();
-//                achievement.coins = achievementsFields.getJSONObject(i).getInt("coins");
-//            } catch (JSONException | IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-        return ls;
-    }
 
     public String getFields() {
         StringBuilder text = new StringBuilder();
@@ -98,8 +88,9 @@ public class User {
         return text.toString().substring(0, text.toString().length() - 1);
     }
 
-    public String toChatMemder(){
-        return "{\"first_name\":\""+firstName+"\",\"last_name\":\""+lastName+"\",\"profile_picture\":\""+profilePictureLink+"\",\"id\":\""+id+"\"}";
+    public String toChatMemder() {
+        return "{\"first_name\":\"" + firstName + "\",\"last_name\":\"" + lastName + "\",\"profile_picture\":\"" + profilePictureLink + "\",\"id\":\"" + id + "\"}";
     }
+
 
 }

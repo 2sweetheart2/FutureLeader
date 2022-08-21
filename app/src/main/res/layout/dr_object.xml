@@ -17,7 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="@id/guideline23"
         app:layout_constraintDimensionRatio="1:1"
-        android:src="@drawable/hyui"
         />
 
     <TextView

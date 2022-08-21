@@ -111,7 +111,7 @@ public class Utils {
         String fileName = getFileName(uri,context);
         if(fileName.split("\\.").length==0)
             return null;
-        return fileName.split("\\.")[1];
+        return fileName.substring( fileName.lastIndexOf(".")+1);
     }
 
     public static class getVideo {

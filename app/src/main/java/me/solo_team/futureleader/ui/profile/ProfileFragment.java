@@ -66,7 +66,7 @@ public class ProfileFragment extends Fragment {
 
         name.setText(Constants.currentUser.firstName + " " + Constants.currentUser.lastName);
         description.setText(Constants.currentUser.status);
-        Constants.cache.addPhoto(Constants.currentUser.profilePictureLink, true, picture, this);
+        Constants.cache.addPhoto(Constants.currentUser.profilePictureLink, picture, this);
 
         picture.requestLayout();
         updateGrid(grid);
@@ -95,7 +95,7 @@ public class ProfileFragment extends Fragment {
                 for (String s : Constants.currentUser.achievementsIds.split(",")) {
                     ids.add(Integer.parseInt(s));
                 }
-                API.getAchivement(new ApiListener() {
+                API.getAchievements(new ApiListener() {
                     Dialog d;
 
                     @Override
@@ -123,7 +123,7 @@ public class ProfileFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                }, new CustomString("ids", Constants.currentUser.achievementsIds), new CustomString("token", Constants.user.token));
+                }, new CustomString("token", Constants.user.token));
 
 
             }
@@ -184,7 +184,7 @@ public class ProfileFragment extends Fragment {
                         try {
                             d.dismiss();
                             Constants.currentUser.profilePictureLink = json.getString("url");
-                            Constants.cache.addPhoto(json.getString("url"), true, picture, ProfileFragment.this);
+                            Constants.cache.addPhoto(json.getString("url"), picture, ProfileFragment.this);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

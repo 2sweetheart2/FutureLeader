@@ -89,7 +89,7 @@ public class CreateSurveysObject extends AppCompatActivity {
         if (imageUrl != null) {
             ImageView imageView = new ImageView(CreateSurveysObject.this);
             imageView.setLayoutParams(lp);
-            Constants.cache.addPhoto(imageUrl, true, imageView, this);
+            Constants.cache.addPhoto(imageUrl, imageView, this);
             list.addView(imageView);
         }
     }
@@ -111,7 +111,7 @@ public class CreateSurveysObject extends AppCompatActivity {
         if (imageUrl != null) {
             ImageView imageView = new ImageView(CreateSurveysObject.this);
             imageView.setLayoutParams(lp);
-            Constants.cache.addPhoto(imageUrl, true, imageView, this);
+            Constants.cache.addPhoto(imageUrl, imageView, this);
             list.addView(imageView);
         }
     }

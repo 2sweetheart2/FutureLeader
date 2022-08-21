@@ -60,8 +60,7 @@ public class FullScrennPhotoFragment extends Fragment {
         onTouch = v -> {mode = !mode;touch.onTouch(mode);};
         image = new Utils.ScalingImage(requireContext(),null,onTouch);
         scaleListener = image.scaleListener;
-        Constants.cache.addPhoto(url,
-                true, image, this);
+        Constants.cache.addPhoto(url, image, this);
         requireActivity().addContentView(image, root.findViewById(R.id.my_image).getLayoutParams());
 
         return root;

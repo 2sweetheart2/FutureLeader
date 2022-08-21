@@ -18,8 +18,7 @@ public class OnlyImage extends Her {
         setTitle(getIntent().getStringExtra("title"));
         String link = getIntent().getStringExtra("link");
         Utils.ScalingImage image = new Utils.ScalingImage(getBaseContext());
-        Constants.cache.addPhoto(link,
-                true,image,this);
+        Constants.cache.addPhoto(link,image,this);
         addContentView(image, findViewById(R.id.only_image_view).getLayoutParams());
     }
 }

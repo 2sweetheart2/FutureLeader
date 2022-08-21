@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.material.imageview.ShapeableImageView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,8 +24,10 @@ import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.SelectMembers;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.Ideas;
 
 public class GetOldShopRequest extends Her {
 
@@ -53,8 +57,13 @@ public class GetOldShopRequest extends Her {
                 get(data.getIntExtra("user_id",-1));
             }
             else
-                finish();
+                if(resultCode==-500)
+                    Utils.ShowSnackBar.show(GetOldShopRequest.this,"Отказано в доступе!",list);
+                else
+                    finish();
         }
+
+
     }
 
     public void get(int user_id){
@@ -96,7 +105,7 @@ public class GetOldShopRequest extends Her {
             GetShopRequests.AdminShopRequest adminShopRequest = requests.get(i);
             View view = getLayoutInflater().inflate(R.layout.obj_shop, null);
             view.findViewById(R.id.obj_shop_added).setVisibility(View.GONE);
-            Constants.cache.addPhoto(adminShopRequest.item.photo, "GOSR" + i, view.findViewById(R.id.obj_shop_photo), this);
+            Constants.cache.addPhoto(adminShopRequest.item.photo,view.findViewById(R.id.obj_shop_photo), this);
             ((TextView) view.findViewById(R.id.obj_shop_name)).setText(adminShopRequest.item.name);
             ((TextView) view.findViewById(R.id.obj_shop_cost)).setText("");
             String stat;

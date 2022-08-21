@@ -27,6 +27,11 @@ public class SubmitIdea extends Her {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!Constants.user.permission.can_set_ideas_status)
+        {
+            setResult(-500);
+            finish();
+        }
         String labelT = getIntent().getStringExtra("label");
         int idT = getIntent().getIntExtra("id", -1);
         String textT = getIntent().getStringExtra("text");
@@ -38,7 +43,7 @@ public class SubmitIdea extends Her {
         setContentView(R.layout.admin_view_idea);
 
         ((TextView) findViewById(R.id.admin_view_idea_name)).setText("название: "+labelT);
-        Constants.cache.addPhoto(logoT, true, findViewById(R.id.admin_view_idea_user_logo), this);
+        Constants.cache.addPhoto(logoT, findViewById(R.id.admin_view_idea_user_logo), this);
         ((TextView) findViewById(R.id.admin_view_idea_user_name)).setText(nameU);
         ((TextView) findViewById(R.id.admin_view_idea_text)).setText("описание: "+textT);
         checkBox = findViewById(R.id.admin_view_idea_status);

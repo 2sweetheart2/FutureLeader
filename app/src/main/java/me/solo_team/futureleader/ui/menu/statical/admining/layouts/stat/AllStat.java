@@ -32,7 +32,10 @@ public class AllStat extends Her {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Статистика");
-
+        if(!Constants.user.permission.can_get_stat){
+            setResult(-500);
+            finish();
+        }
         setContentView(R.layout.all_stat);
         API.getAllStat(new ApiListener() {
             Dialog d;

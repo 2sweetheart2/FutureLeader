@@ -15,7 +15,8 @@ import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.MenuGrid;
 import me.solo_team.futureleader.ui.menu.statical.Founder.ContactLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
-import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.Layout;
+import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Layout;
+import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Meropriyatia;
 
 public class ProgramsLayout extends Her {
 
@@ -41,7 +42,7 @@ public class ProgramsLayout extends Her {
             int row = i / 2;
             ImageView v = grid.addImageElement(null, false);
             views.add(v);
-            Constants.cache.addPhoto(urls.get(i),true,v,this);
+            Constants.cache.addPhoto(urls.get(i),v,this);
 
 
         }

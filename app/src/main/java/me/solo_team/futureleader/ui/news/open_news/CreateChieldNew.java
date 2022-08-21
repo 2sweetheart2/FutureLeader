@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -40,6 +41,7 @@ import me.solo_team.futureleader.MediaAudioAdapters.VideoAdapter.VideoView;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.ui.AddVideo;
 import me.solo_team.futureleader.ui.menu.statical.Media.AddMusic;
 import me.solo_team.futureleader.ui.menu.statical.Media.SearchMusic;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
@@ -104,9 +106,17 @@ public class CreateChieldNew extends Her {
                         obj.setIcon(R.drawable.resize_300x0);
                         obj.setPositiveButton("существующих", (dialog, which) -> getAudio(true));
                         obj.setNegativeButton("добавить новый аудио файл", (dialog, which) -> getAudio(false));
-                        obj.setCancelable(false);
                         obj.show();
-
+                        break;
+                    case 3:
+                        list.removeAllViews();
+                        list.removeAllViews();
+                        AlertDialog.Builder obj2 = new AlertDialog.Builder(CreateChieldNew.this);
+                        obj2.setTitle("видео");
+                        obj2.setMessage("добавить видео из библиотеки?");
+                        obj2.setIcon(R.drawable.resize_300x0);
+                        obj2.setPositiveButton("да", (dialog, which) -> getVideo());
+                        obj2.show();
                 }
             }
 
@@ -123,8 +133,15 @@ public class CreateChieldNew extends Her {
                 if (((TextView) v).getText() == null) return;
                 if (((TextView) v).getText().length() == 0) return;
                 try {
-                    o.put("type", "text");
-                    o.put("value", ((TextView) v).getText().toString());
+                    if(videoUrl!=null){
+                        o.put("type","video");
+                        o.put("value",videoUrl);
+                        o.put("extras",videoName);
+                    }
+                    else {
+                        o.put("type", "text");
+                        o.put("value", ((TextView) v).getText().toString());
+                    }
                     Constants.newsCache.curentNew.getJSONArray("objects").put(o);
                     Constants.newsCache.updObjects();
                 } catch (JSONException e) {
@@ -158,18 +175,23 @@ public class CreateChieldNew extends Her {
         });
     }
 
+    private void getVideo(){
+        Intent intent = new Intent(CreateChieldNew.this, AddVideo.class);
+        startActivityIfNeeded(intent,101);
+    }
+
     private void getAudio(boolean state){
+        Intent intent;
         if(state){
-            Intent intent = new Intent(CreateChieldNew.this, SearchMusic.class);
+            intent = new Intent(CreateChieldNew.this, SearchMusic.class);
             intent.putExtra("needOne",true);
             intent.putExtra("needFav",false);
-            startActivityIfNeeded(intent,100);
         }
         else {
-            Intent intent = new Intent(CreateChieldNew.this, AddMusic.class);
+            intent = new Intent(CreateChieldNew.this, AddMusic.class);
             intent.putExtra("rrr",true);
-            startActivityIfNeeded(intent,100);
         }
+        startActivityIfNeeded(intent,100);
     }
 
 
@@ -243,7 +265,7 @@ public class CreateChieldNew extends Her {
                     @Override
                     public void onSuccess(JSONObject json) throws JSONException {
                         url = json.getString("url");
-                        Constants.cache.addPhoto(json.getString("url"),true,imageView,CreateChieldNew.this);
+                        Constants.cache.addPhoto(json.getString("url"),imageView,CreateChieldNew.this);
                     }
                 }, bitmap, new CustomString("token", Constants.user.token));
                 //picture.setImageBitmap(image);
@@ -259,13 +281,23 @@ public class CreateChieldNew extends Her {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Constants.cache.addPhoto(audio.urlPhoto, true, v.findViewById(R.id.obj_music_image), this);
+            Constants.cache.addPhoto(audio.urlPhoto, v.findViewById(R.id.obj_music_image), this);
             ((TextView) v.findViewById(R.id.obj_music_name)).setText(audio.name);
             ((TextView) v.findViewById(R.id.obj_music_author)).setText(audio.author);
             v.findViewById(R.id.obj_music_fav).setVisibility(View.GONE);
             list.addView(v);
         }
+        if(requestCode==101 && resultCode==1){
+            TextView textView = new TextView(CreateChieldNew.this);
+            textView.setText("Имя видео файла: "+data.getStringExtra("name"));
+            textView.setTextColor(Color.BLACK);
+            list.addView(textView);
+            videoName = data.getStringExtra("name");
+            videoUrl = data.getStringExtra("url");
+        }
 
     }
+    String videoName;
+    String videoUrl = null;
     Audio audio = null;
 }

@@ -32,6 +32,7 @@ import me.solo_team.futureleader.Objects.ChatMember;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.profile.AddFieldLayout;
 import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
@@ -44,6 +45,10 @@ public class LoginStat extends Her {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Журнал входов");
+        if(!Constants.user.permission.can_get_log_log){
+            setResult(-500);
+            finish();
+        }
         setContentView(R.layout.stat);
         list = findViewById(R.id.list);
         button = findViewById(R.id.btn);
@@ -89,6 +94,11 @@ public class LoginStat extends Her {
             ((TextView)view.findViewById(R.id.unverifi_name)).setText(member.chatMember.getFullName());
             ((TextView)view.findViewById(R.id.unverifi_phone)).setText(member.dateTime.toString(true));
             view.setOnClickListener(v -> {
+                if(!Constants.user.permission.can_get_user)
+                {
+                    Utils.ShowSnackBar.show(LoginStat.this,"отказано в доступе!",list);
+                    return;
+                }
                 API.getUser(new ApiListener() {
                     Dialog d;
                     @Override

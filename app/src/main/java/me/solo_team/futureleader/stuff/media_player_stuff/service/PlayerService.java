@@ -145,6 +145,12 @@ public class PlayerService extends Service {
                      refreshState(currentState,exoPlayer.getCurrentPosition());
                      break;
                  }
+                 case "die":{
+                     onStop();
+                     unregisterReceiver(becomingNoisyReceiver);
+                     stopSelf();
+                     break;
+                 }
              }
          }
 

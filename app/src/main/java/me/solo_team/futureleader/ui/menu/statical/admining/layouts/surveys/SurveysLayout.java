@@ -85,8 +85,9 @@ public class SurveysLayout extends Her {
                     Intent intent = new Intent(SurveysLayout.this, SelectMembers.class);
                     intent.putExtra("showStatistic", true);
                     intent.putExtra("needStuff", false);
+                    intent.putExtra("needShowSurveysStat",true);
                     intent.putExtra("id", String.valueOf(s.id));
-                    startActivity(intent);
+                    startActivityIfNeeded(intent, 101);
                 });
             list.addView(v);
         }
@@ -104,6 +105,10 @@ public class SurveysLayout extends Her {
             menu.add(0, 1, 0, "")
                 .setIcon(R.drawable.plus)
                 .setOnMenuItemClickListener(item -> {
+                    if(!Constants.user.permission.can_create_surveys){
+                        Utils.ShowSnackBar.show(SurveysLayout.this,"отказано в доступе!",list);
+                        return false;
+                    }
                     startActivityForResult(new Intent(SurveysLayout.this, CreateSurveys.class), 100);
                     return true;
                 })
@@ -118,6 +123,8 @@ public class SurveysLayout extends Her {
             if (requestCode == 100)
                 Utils.ShowSnackBar.show(SurveysLayout.this, "Опрос успешно создан!", list);
         }
+        if (resultCode == -500)
+            Utils.ShowSnackBar.show(SurveysLayout.this, "Отказано в доступе!", list);
     }
 
     @Override

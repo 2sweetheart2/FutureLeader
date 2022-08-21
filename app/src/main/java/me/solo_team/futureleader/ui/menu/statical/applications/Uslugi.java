@@ -74,7 +74,7 @@ public class Uslugi extends Her {
 
     private View createView(Usluga usluga) {
         View view = getLayoutInflater().inflate(R.layout.usluga, null);
-        Constants.cache.addPhoto(usluga.image, true, view.findViewById(R.id.usluga_photo), this);
+        Constants.cache.addPhoto(usluga.image, view.findViewById(R.id.usluga_photo), this);
         ((TextView) view.findViewById(R.id.usluga_name)).setText(usluga.name);
         ((TextView) view.findViewById(R.id.usluga_description)).setText(usluga.description);
         return view;

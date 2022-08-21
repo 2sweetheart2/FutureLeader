@@ -35,6 +35,7 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.ui.WebViewsContent.WebView;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.news.AlertDialogForDeleteField;
 
@@ -128,17 +129,13 @@ public class EditNews extends Her {
             }
 
         });
-        logo.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (!checkPerm(getApplicationContext())) return false;
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                //Тип получаемых объектов - image:
-                photoPickerIntent.setType("image/*");
-                //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
-                startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
-                return true;
-            }
+        logo.setOnClickListener(v -> {
+            if (!checkPerm(getApplicationContext())) return;
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            //Тип получаемых объектов - image:
+            photoPickerIntent.setType("image/*");
+            //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
+            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
         });
     }
 
@@ -208,7 +205,7 @@ public class EditNews extends Her {
                     lp2.setMargins(0, 5, 0, 5);
                     ImageView imageView = new ImageView(getApplicationContext(), null);
                     imageView.setLayoutParams(lp2);
-                    Constants.cache.addPhoto(o.getString("value"), true, imageView, EditNews.this);
+                    Constants.cache.addPhoto(o.getString("value"), imageView, EditNews.this);
                     int finalI1 = i;
                     imageView.setOnLongClickListener(v -> {
                         AlertDialogForDeleteField al = new AlertDialogForDeleteField((result, view) -> {
@@ -226,12 +223,38 @@ public class EditNews extends Her {
                     lp3.setMargins(0, 5, 0, 5);
                     Audio meow = new Audio (new JSONObject(o.getString("value")),EditNews.this);
                     View v = getLayoutInflater().inflate(R.layout.obj_music,null);
-                    Constants.cache.addPhoto(meow.urlPhoto, true, v.findViewById(R.id.obj_music_image), this);
+                    Constants.cache.addPhoto(meow.urlPhoto, v.findViewById(R.id.obj_music_image), this);
                     ((TextView) v.findViewById(R.id.obj_music_name)).setText(meow.name);
                     ((TextView) v.findViewById(R.id.obj_music_author)).setText(meow.author);
                     v.findViewById(R.id.obj_music_fav).setVisibility(View.GONE);
+                    int finalI2 = i;
+                    v.setOnLongClickListener(v1 -> {
+                        AlertDialogForDeleteField al = new AlertDialogForDeleteField((result, view) -> {
+                            if (!result) return;
+                            Constants.newsCache.curentNew.getJSONArray("objects").remove(view);
+                            drawObject(Constants.newsCache.curentNew.getJSONArray("objects"));
+                        }, finalI2);
+                        al.show(getSupportFragmentManager(), null);
+                        return true;
+                    });
                     runOnUiThread(() -> list.addView(v));
                     break;
+                case "video":
+                    LinearLayout.LayoutParams lp4 = new LinearLayout.LayoutParams(200, 200);
+                    lp4.setMargins(0, 5, 0, 5);
+                    View view = getLayoutInflater().inflate(R.layout.obj_video,null);
+                    ((TextView)view.findViewById(R.id.obj_video_name)).setText(o.getString("extras"));
+                    int finalI3 = i;
+                    view.setOnLongClickListener(v1 -> {
+                        AlertDialogForDeleteField al = new AlertDialogForDeleteField((result, view2) -> {
+                            if (!result) return;
+                            Constants.newsCache.curentNew.getJSONArray("objects").remove(view2);
+                            drawObject(Constants.newsCache.curentNew.getJSONArray("objects"));
+                        }, finalI3);
+                        al.show(getSupportFragmentManager(), null);
+                        return true;
+                    });
+                    runOnUiThread(() -> list.addView(view));
             }
         }
     }
@@ -258,7 +281,7 @@ public class EditNews extends Her {
                     @Override
                     public void onSuccess(JSONObject json) throws JSONException {
                         Constants.newsCache.curentNew.put("photo", json.getString("url"));
-                        Constants.cache.addPhoto(json.getString("url"), true, logo, EditNews.this);
+                        Constants.cache.addPhoto(json.getString("url"), logo, EditNews.this);
                     }
                 }, bitmap, new CustomString("token", Constants.user.token));
             } catch (IOException e) {

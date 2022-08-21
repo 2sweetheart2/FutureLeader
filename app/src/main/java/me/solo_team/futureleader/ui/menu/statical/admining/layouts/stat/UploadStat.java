@@ -42,6 +42,11 @@ public class UploadStat extends Her {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Журнал добавления файлов");
+        if(!Constants.user.permission.can_get_file_log)
+        {
+            setResult(-500);
+            finish();
+        }
         setContentView(R.layout.stat);
         list = findViewById(R.id.list);
         button = findViewById(R.id.btn);

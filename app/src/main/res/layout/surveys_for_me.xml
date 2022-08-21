@@ -7,6 +7,7 @@
     tools:context=".ui.menu.horizontal_menu.surveys.fragments.SurveysForMe">
 
     <LinearLayout
+        android:layout_marginTop="15dp"
         android:id="@+id/surveys_for_me_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -24,18 +24,20 @@ import me.solo_team.futureleader.Objects.ChatMember;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.dialogs.ChatInfodialog;
+import me.solo_team.futureleader.dialogs.MemberAdapter;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.SelectMembers;
 
 public class SurveusForUsers extends AppCompatActivity {
-    ChatInfodialog.MemberAdapter adapter;
-
+    MemberAdapter adapter;
+    ListView listView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.only_list);
         Button button = findViewById(R.id.custom_btn);
         button.setText("указать пользователей");
-        adapter = new ChatInfodialog.MemberAdapter(SurveusForUsers.this, this, -1);
+        adapter = new MemberAdapter(SurveusForUsers.this, this, -1);
         Drawable wrappedDrawable = DrawableCompat.wrap(getDrawable(R.drawable.trash));
         DrawableCompat.setTint(wrappedDrawable, Color.BLACK);
         adapter.setCustomImageForUtilBtn(wrappedDrawable);
@@ -51,7 +53,8 @@ public class SurveusForUsers extends AppCompatActivity {
             intent.putExtra("removeSelf", true);
             startActivityIfNeeded(intent, 101);
         });
-        ((ListView)findViewById(R.id.list_view)).setAdapter(adapter);
+        listView = findViewById(R.id.list_view);
+        listView.setAdapter(adapter);
 
     }
     List<ChatMember> selectedusers = new ArrayList<>();
@@ -88,6 +91,9 @@ public class SurveusForUsers extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101) {
+            if(resultCode==-500){
+                Utils.ShowSnackBar.show(SurveusForUsers.this,"отказано в доступе!",listView);
+            }
             String[] users = data.getStringArrayExtra("users");
             selectedusers.clear();
             for (String s : users) {
@@ -99,5 +105,6 @@ public class SurveusForUsers extends AppCompatActivity {
             }
             addIntoAdapter();
         }
+
     }
 }

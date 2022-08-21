@@ -16,16 +16,15 @@
         android:id="@+id/member_photo"
         />
 
-    <ImageView
+    <TextView
         android:id="@+id/member_owner"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/star"
-        app:layout_constraintTop_toTopOf="@id/member_photo"
-        app:layout_constraintLeft_toLeftOf="@id/member_photo"
-        app:layout_constraintRight_toRightOf="@id/member_photo"
-        />
+        android:text="администратор"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:layout_width="0dp"

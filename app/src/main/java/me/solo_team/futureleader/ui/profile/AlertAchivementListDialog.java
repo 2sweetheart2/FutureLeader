@@ -42,12 +42,7 @@ public class AlertAchivementListDialog extends AppCompatDialogFragment {
             JSONArray ach = Constants.user.achievements;
             for (int i = 0; i < ach.length(); i++) {
                 JSONObject a = ach.getJSONObject(i);
-                Achievement achievement = new Achievement();
-                achievement.coins = a.getInt("coins");
-                achievement.id = a.getInt("id");
-                achievement.image_url = a.getString("image_url");
-                achievement.name = a.getString("name");
-                achievement.description = a.getString("description");
+                Achievement achievement = new Achievement(a,false);
                 achs.add(achievement);
             }
         } catch (JSONException e) {
@@ -91,7 +86,7 @@ public class AlertAchivementListDialog extends AppCompatDialogFragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             String image = achievements.get(position).image_url;
             String name = achievements.get(position).name;
-            Constants.cache.addPhoto(image, true, holder.image, fragmentActivity);
+            Constants.cache.addPhoto(image, holder.image, fragmentActivity);
             holder.name.setText(name);
         }
 

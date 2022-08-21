@@ -19,17 +19,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import io.socket.client.Ack;
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
-import me.solo_team.futureleader.API.websocket.WebScoketClient;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.ChatMember;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.dialogs.ChatInfodialog;
+import me.solo_team.futureleader.dialogs.MemberAdapter;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.SelectMembers;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
@@ -40,7 +37,7 @@ public class CreateChat extends Her {
     EditText title;
     FloatingActionButton btn;
     Button add;
-    ChatInfodialog.MemberAdapter adapter;
+    MemberAdapter adapter;
     CheckBox privat;
 
     @Override
@@ -54,7 +51,7 @@ public class CreateChat extends Her {
         btn = findViewById(R.id.complete);
         privat = findViewById(R.id.create_chat_private);
         setTitle("Создание чата");
-        adapter = new ChatInfodialog.MemberAdapter(getApplicationContext(), this,-1);
+        adapter = new MemberAdapter(getApplicationContext(), this, -1);
 
         Drawable wrappedDrawable = DrawableCompat.wrap(getDrawable(R.drawable.trash));
         DrawableCompat.setTint(wrappedDrawable, Color.BLACK);
@@ -68,7 +65,8 @@ public class CreateChat extends Her {
         intent.putExtra("needStuff", false);
         intent.putExtra("checker", true);
         intent.putExtra("removeSelf", true);
-        add.setOnClickListener(v -> startActivityForResult(intent, 100));
+        intent.putExtra("forChat", true);
+        add.setOnClickListener(v -> startActivityIfNeeded(intent, 100));
         listView.setAdapter(adapter);
 
         privat.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -162,6 +160,8 @@ public class CreateChat extends Her {
                 addIntoAdapter();
             }
         }
+        if (resultCode == -500)
+            Utils.ShowSnackBar.show(CreateChat.this, "Отказано в доступе!", listView);
     }
 
     private void addIntoAdapter() {

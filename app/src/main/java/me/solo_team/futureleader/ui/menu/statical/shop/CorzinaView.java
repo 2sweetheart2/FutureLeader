@@ -53,15 +53,15 @@ public class CorzinaView extends Her {
             ((TextView) view.findViewById(R.id.obj_shop_cost)).setText("Стоимость: " + item.cost + " FBL");
             ((TextView) view.findViewById(R.id.obj_shop_count)).setText("Осталось: " + item.count);
             ((TextView) view.findViewById(R.id.obj_shop_description)).setText(item.description);
-            Constants.cache.addPhoto(item.photo, true, view.findViewById(R.id.obj_shop_photo), this);
+            Constants.cache.addPhoto(item.photo, view.findViewById(R.id.obj_shop_photo), this);
             ImageView plus = view.findViewById(R.id.obj_shop_added);
             plus.setVisibility(View.GONE);
             list.addView(view);
             allCost+=item.cost;
         }
 
-
-        orderTerxt.setText("Итог: "+allCost+" FBL\nОстаток: "+(Constants.user.currency-allCost)+" FBL");
+        int cur = Constants.user.currency;
+        orderTerxt.setText("Итог: "+allCost+" FBL\nОстаток: "+(cur-allCost)+" FBL");
         orderComplete.setOnClickListener(v -> {
             System.out.println(ids);
             for(String id : ids){
@@ -74,6 +74,7 @@ public class CorzinaView extends Her {
                     Constants.shopChache.corzina.clear();
                     d.dismiss();
                     System.out.println("END");
+                    setResult(1);
                     CorzinaView.this.finish();
                 });
             }).start();

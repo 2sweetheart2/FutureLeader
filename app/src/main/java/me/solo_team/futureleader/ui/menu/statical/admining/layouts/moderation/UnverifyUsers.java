@@ -34,6 +34,10 @@ public class UnverifyUsers extends Her {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("подтверждение пользователей");
+        if(!Constants.user.permission.can_get_unverified_users){
+            setResult(-500);
+            finish();
+        }
         setContentView(R.layout.only_linearlayout);
         list = findViewById(R.id.list);
         API.getUnverifiedUsers(new ApiListener() {
@@ -103,6 +107,9 @@ public class UnverifyUsers extends Her {
             if(resultCode==-1){
                 assert data != null;
                 Utils.ShowSnackBar.show(UnverifyUsers.this,data.getStringExtra("message"),list);
+            }
+            if(resultCode==-500){
+                Utils.ShowSnackBar.show(UnverifyUsers.this,"отказано в доступе!",list);
             }
         }
     }

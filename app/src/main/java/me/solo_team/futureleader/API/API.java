@@ -76,15 +76,8 @@ public class API {
         HTTPS.u(Methods.UPD_PROFILE_PICTURE, Objects.requireNonNull(createJsonObj(params)), photo, listener);
     }
 
-    public static void updateFields(ApiListener listener, CustomString... fields) {
-        HTTPS.sendPost(Methods.UPD_FIELD, Objects.requireNonNull(createJsonObj(fields)), listener);
-    }
     public static void updateFields(ApiListener listener, List<CustomString> fields) {
         HTTPS.sendPost(Methods.UPD_FIELD, Objects.requireNonNull(createJsonObj(fields)), listener);
-    }
-
-    public static void getAchivement(ApiListener listener, CustomString... ids) {
-        HTTPS.sendPost(Methods.GET_ACHIEVEMENT, Objects.requireNonNull(createJsonObj(ids)), listener);
     }
 
     public static void getUsers(ApiListener listener, CustomString... params) {
@@ -99,9 +92,6 @@ public class API {
         HTTPS.sendPost(Methods.GET_NEW, Objects.requireNonNull(createJsonObj(params)), listener);
     }
 
-    public static void addNew(ApiListener listener, CustomString... params) {
-        HTTPS.sendPost(Methods.ADD_NEW, Objects.requireNonNull(createJsonObj(params)), listener);
-    }
 
     public static void addNew(ApiListener listener, JSONObject params) {
         HTTPS.sendPost(Methods.ADD_NEW, params, listener);
@@ -120,9 +110,6 @@ public class API {
         HTTPS.sendPost(Methods.GET_IDEAS, Objects.requireNonNull(createJsonObj(params)), listener);
     }
 
-    public static void sendVideo(ApiListener listener, File video, CustomString... params) {
-        HTTPS.sendVideoFile(Methods.SEND_VIDEO, createJsonObj(params), video, listener);
-    }
 
     public static void getEventsDate(ApiListener listener, CustomString...params){
         HTTPS.sendPost(Methods.GET_EVENTS_DATE,createJsonObj(params),listener);
@@ -255,5 +242,49 @@ public class API {
     }
     public static void searchMusicByName(ApiListener listener, CustomString... params){
         HTTPS.sendPost(Methods.SEARCH_by_name, createJsonObj(params), listener);
+    }
+    public static void addVideoFile(ApiListener listener, byte[] bytes, String name, CustomString...params){
+        HTTPS.sendAudio(Methods.ADD_VIDEO_FILE,createJsonObj(params),bytes,name,listener);
+    }
+    public static void addVideo(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.ADD_VIDEO,createJsonObj(params),listener);
+    }
+
+    public static void getAchievements(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.GET_ACHIEVEMENTS,createJsonObj(params),listener);
+    }
+    public static void addUserAchievement(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.ADD_ACHIEVEMENT_USER,createJsonObj(params),listener);
+    }
+    public static void removeAchievement(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.REMOVE_ACHIEVEMENT,createJsonObj(params),listener);
+    }
+    public static void createAchievement(ApiListener listener,JSONObject params){
+        HTTPS.sendPost(Methods.CREATE_ACHIEVEMENT,params,listener);
+    }
+
+    public static void getUsersRole(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.GET_ROLES,createJsonObj(params),listener);
+    }
+
+    public static void setUserRole(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.SET_ROLE_FOR_USER,createJsonObj(params),listener);
+    }
+
+    public static void removeRole(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.REMOVE_ROLE,createJsonObj(params),listener);
+    }
+    public static void updateRole(ApiListener listener,CustomString... params){
+        HTTPS.sendPost(Methods.UPDATE_ROLE,createJsonObj(params),listener);
+    }
+    public static void createRole(ApiListener listener,List<CustomString> params){
+        HTTPS.sendPost(Methods.CREATE_ROLE,createJsonObj(params),listener);
+    }
+    public static void getWhoHasThisRole(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.GET_WHO_HAS_THIS_ROLE,createJsonObj(params),listener);
+    }
+
+    public static void getTickets(ApiListener listener, CustomString...params) {
+        HTTPS.sendPost(Methods.GET_TICKETS,createJsonObj(params),listener);
     }
 }

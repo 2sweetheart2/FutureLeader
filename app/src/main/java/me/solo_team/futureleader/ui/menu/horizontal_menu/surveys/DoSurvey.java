@@ -102,7 +102,7 @@ public class DoSurvey extends Her implements View.OnClickListener {
                         if (s.image != null) {
                             ImageView imageView = new ImageView(DoSurvey.this);
                             imageView.setLayoutParams(lp);
-                            Constants.cache.addPhoto(s.image, true, imageView, this);
+                            Constants.cache.addPhoto(s.image, imageView, this);
                             linearLayout.addView(imageView);
                         }
                         list.addView(linearLayout);
@@ -126,7 +126,7 @@ public class DoSurvey extends Her implements View.OnClickListener {
                         if (s.image != null) {
                             ImageView imageView = new ImageView(DoSurvey.this);
                             imageView.setLayoutParams(lp);
-                            Constants.cache.addPhoto(s.image, true, imageView, this);
+                            Constants.cache.addPhoto(s.image, imageView, this);
                             linearLayout.addView(imageView);
                         }
                         list.addView(linearLayout);
@@ -153,7 +153,7 @@ public class DoSurvey extends Her implements View.OnClickListener {
                         if (s.image != null) {
                             ImageView imageView = new ImageView(DoSurvey.this);
                             imageView.setLayoutParams(lp);
-                            Constants.cache.addPhoto(s.image, true, imageView, this);
+                            Constants.cache.addPhoto(s.image, imageView, this);
                             linearLayout.addView(imageView);
                         }
                         list.addView(linearLayout);
@@ -175,7 +175,7 @@ public class DoSurvey extends Her implements View.OnClickListener {
                         if (s.image != null) {
                             ImageView imageView = new ImageView(DoSurvey.this);
                             imageView.setLayoutParams(lp);
-                            Constants.cache.addPhoto(s.image, true, imageView, this);
+                            Constants.cache.addPhoto(s.image, imageView, this);
                             linearLayout.addView(imageView);
                         }
                         list.addView(linearLayout);
@@ -260,7 +260,7 @@ public class DoSurvey extends Her implements View.OnClickListener {
                 if (currentSurveys.fields.get(index).image != null) {
                     ImageView imageView = new ImageView(DoSurvey.this);
                     imageView.setLayoutParams(lp);
-                    Constants.cache.addPhoto(currentSurveys.fields.get(index).image, true, imageView, this);
+                    Constants.cache.addPhoto(currentSurveys.fields.get(index).image, imageView, this);
                     linearLayout.addView(imageView);
                 }
                 currentTextObject = editText;
@@ -288,7 +288,7 @@ public class DoSurvey extends Her implements View.OnClickListener {
                 if (currentSurveys.fields.get(index).image != null) {
                     ImageView imageView = new ImageView(DoSurvey.this);
                     imageView.setLayoutParams(lp1);
-                    Constants.cache.addPhoto(currentSurveys.fields.get(index).image, true, imageView, this);
+                    Constants.cache.addPhoto(currentSurveys.fields.get(index).image, imageView, this);
                     linearLayout1.addView(imageView);
                 }
                 list.addView(linearLayout1);
@@ -344,6 +344,10 @@ public class DoSurvey extends Her implements View.OnClickListener {
                         obj.setTitle("Удалить опрос?");
                         obj.setIcon(R.drawable.resize_300x0);
                         obj.setPositiveButton("да", (dialog, which) -> {
+                            if(!Constants.user.permission.can_delete_survey){
+                                Utils.ShowSnackBar.show(DoSurvey.this,"отказано в доступе!",list);
+                                return;
+                            }
                             API.deleteSurvey(new ApiListener() {
                                 Dialog d;
 

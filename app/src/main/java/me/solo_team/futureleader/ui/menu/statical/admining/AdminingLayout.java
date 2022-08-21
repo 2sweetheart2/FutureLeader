@@ -1,16 +1,12 @@
 package me.solo_team.futureleader.ui.menu.statical.admining;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +14,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.gameifecation.AchievementsLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.GetShopRequests;
-import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.ModerationRequest;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.UnverifyUsers;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.AllStat;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.LoginStat;
@@ -27,18 +24,17 @@ import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.UploadSt
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.Ideas;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.SurveysLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.surveys.SurveysStatistic;
-import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.StructurLayout;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.StatusOfUsers;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.users.UsersLayout;
 
 public class AdminingLayout extends AppCompatActivity {
-    private final String[] mGroupsArray = new String[]{"Пользователи", "Контент", "Геймификация", "Опросы и ОС", "Модерация", "Статистика", "Интеграция"};
-
-    private final String[] govno1 = new String[]{"Список пользователей", "Структура подразделения", "Статусы пользователей"};
-    private final String[] govno2 = new String[]{};
-    private final String[] govno3 = new String[]{"Достижения", "Открытки", "Журнал отправленных открыток", "Валютный банк", "Отчет по активностям"};
+    private final String[] mGroupsArray = new String[]{"Пользователи",  "Геймификация", "Опросы и ОС", "Модерация", "Статистика", "Интеграция"};
+    ExpandableListView expandableListView;
+    private final String[] govno1 = new String[]{"Список пользователей",  "Статусы пользователей"};
+    private final String[] govno3 = new String[]{"Достижения",  "Валютный банк"};
     private final String[] govno4 = new String[]{"Опросы", "Сессии опросов", "Идеи"};
-    private final String[] govno5 = new String[]{"Запросы на модерацию", "Подтверждение регистрации пользователей","заявки в магазине"};
-    private final String[] govno6 = new String[]{"соси хуй а не итеграцию"};
+    private final String[] govno5 = new String[]{"Подтверждение регистрации пользователей","заявки в магазине"};
+    private final String[] govno6 = new String[]{"интеграций не будет, ибо не с чем интегрировать"};
     private final String[] govno7 = new String[]{"Статистика", "Журнал добавления файлов", "Журнал авторизаций"};
 
     @Override
@@ -74,7 +70,6 @@ public class AdminingLayout extends AppCompatActivity {
         // создаем коллекцию элементов для первой группы
         // заполняем список атрибутов для каждого элемента
         сhildDataList.add(addCollection(govno1));
-        сhildDataList.add(addCollection(govno2));
         сhildDataList.add(addCollection(govno3));
         сhildDataList.add(addCollection(govno4));
         сhildDataList.add(addCollection(govno5));
@@ -92,39 +87,42 @@ public class AdminingLayout extends AppCompatActivity {
                 groupTo, сhildDataList, android.R.layout.simple_list_item_1,
                 childFrom, childTo);
 
-        ExpandableListView expandableListView = findViewById(R.id.expListView);
+        expandableListView = findViewById(R.id.expListView);
         expandableListView.setAdapter(adapter);
 
 
         HashMap<Integer,HashMap<Integer,Class>> classes = new HashMap<>();
         HashMap<Integer,Class> m = new HashMap<>();
         m.put(0, UsersLayout.class);
-        m.put(1, StructurLayout.class);
+        m.put(1, StatusOfUsers.class);
         classes.put(0,m);
 
         HashMap<Integer,Class> surveys = new HashMap<>();
         surveys.put(0, SurveysLayout.class);
         surveys.put(1, SurveysStatistic.class);
         surveys.put(2, Ideas.class);
-        classes.put(3,surveys);
+        classes.put(2,surveys);
 
         HashMap<Integer, Class> moderarion = new HashMap<>();
-        moderarion.put(0, ModerationRequest.class);
-        moderarion.put(1, UnverifyUsers.class);
-        moderarion.put(2, GetShopRequests.class);
-        classes.put(4,moderarion);
+        moderarion.put(0, UnverifyUsers.class);
+        moderarion.put(1, GetShopRequests.class);
+        classes.put(3,moderarion);
 
         HashMap<Integer, Class> stat = new HashMap<>();
         stat.put(0, AllStat.class);
         stat.put(1, UploadStat.class);
         stat.put(2, LoginStat.class);
-        classes.put(5,stat);
+        classes.put(4,stat);
+
+        HashMap<Integer, Class> gameifectaion = new HashMap<>();
+        gameifectaion.put(0, AchievementsLayout.class);
+        classes.put(1,gameifectaion);
 
 
 
         expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             System.out.println(groupPosition+" "+childPosition);
-            startActivity(new Intent(AdminingLayout.this,classes.get(groupPosition).get(childPosition)));
+            startActivityIfNeeded(new Intent(AdminingLayout.this,classes.get(groupPosition).get(childPosition)),100);
             return true;
         });
     }
@@ -143,5 +141,12 @@ public class AdminingLayout extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==-500)
+            Utils.ShowSnackBar.show(AdminingLayout.this,"отказано в доступе!",expandableListView);
     }
 }

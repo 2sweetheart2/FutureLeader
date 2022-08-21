@@ -1,5 +1,6 @@
 package me.solo_team.futureleader.ui.news.open_news;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,28 +27,31 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
+import io.socket.client.Ack;
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
+import me.solo_team.futureleader.API.websocket.WebScoketClient;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.dialogs.SaveOrSeePhoto;
 import me.solo_team.futureleader.stuff.FullScreenPhoto;
 import me.solo_team.futureleader.stuff.Utils;
-import me.solo_team.futureleader.dialogs.SaveOrSeePhoto;
-import me.solo_team.futureleader.ui.WebViewsContent.WebView;
+import me.solo_team.futureleader.ui.VideoView;
 import me.solo_team.futureleader.ui.menu.statical.Media.MusicPlayer;
-import me.solo_team.futureleader.ui.menu.statical.Media.PopularMusic;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 
 public class OpenNewsFragment extends Her {
     String news;
     JSONObject oldJson;
-
+    View root;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_open);
+        root = findViewById(R.id.news_open);
+        ((LinearLayout) findViewById(R.id.news_open_list)).removeAllViews();
         setTitle(getIntent().getStringExtra("tag"));
         //TODO: нужно сделать +1 к просмотру в API
         API.getNew(new ApiListener() {
@@ -70,16 +74,18 @@ public class OpenNewsFragment extends Her {
                            new_.put("objects", pareseStringToJSAray(objects_));
                            JSONArray objects = new_.getJSONArray("objects");
                            Constants.newsCache.curentNew = new_;
-                           oldJson = new_;
+                           oldJson = Constants.newsCache.curentNew;
                            runOnUiThread(() -> {
                                try {
-                                   d.dismiss();
                                    ((TextView) findViewById(R.id.news_open_title)).setText(new_.getString("name"));
+                                   draw(objects);
                                } catch (JSONException e) {
                                    e.printStackTrace();
                                }
                            });
-                           draw(objects);
+                           d.dismiss();
+
+
 
 
                        }
@@ -102,10 +108,36 @@ public class OpenNewsFragment extends Her {
     }
 
     private void draw(JSONArray objects) throws JSONException {
-        runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).removeAllViews());
+        ((LinearLayout) findViewById(R.id.news_open_list)).removeAllViews();
 
         for (int i = 0; i < objects.length(); i++) {
             JSONObject o = new JSONObject(objects.getString(i));
+            ((TextView) findViewById(R.id.news_view_likes)).setText(Constants.newsCache.curentNew.getString("likes"));
+            ((TextView) findViewById(R.id.news_view_count)).setText(Constants.newsCache.curentNew.getString("views_count"));
+            Intent intent2 = new Intent(OpenNewsFragment.this,CheckUsers.class);
+            findViewById(R.id.huina).setOnClickListener(v -> {
+                if (!Constants.user.permission.can_view_new_views)
+                    return;
+                intent2.putExtra("liked",false);
+                startActivity(intent2);
+            });
+            findViewById(R.id.huina2).setOnClickListener(v -> {
+                if (!Constants.user.permission.can_view_new_views)
+                {
+                    setLiked();
+                    return;
+                }
+                AlertDialog.Builder obj = new AlertDialog.Builder(OpenNewsFragment.this);
+                obj.setTitle("выбор действия");
+                obj.setIcon(R.drawable.resize_300x0);
+                obj.setPositiveButton("лайкнуть", (dialog, which) -> setLiked());
+                obj.setNegativeButton("просмотреть статистику", (dialog1, which) -> {
+                    intent2.putExtra("liked",true);
+                    startActivity(intent2);
+                });
+                obj.show();
+
+            });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             lp.setMargins(0, 2, 0, 2);
             System.out.println(o);
@@ -115,7 +147,7 @@ public class OpenNewsFragment extends Her {
                     textView.setTextColor(Color.BLACK);
                     textView.setLayoutParams(lp);
                     textView.setText(o.getString("value"));
-                    runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(textView));
+                    ((LinearLayout) findViewById(R.id.news_open_list)).addView(textView);
                     break;
                 case "photo":
                     List<String> params = Arrays.asList(o.getString("extras").split(","));
@@ -125,16 +157,16 @@ public class OpenNewsFragment extends Her {
                     if (params.contains("full_screen_v2")) {
                         lp.height = (int) (size.y / 1.5);
                         imageView.setLayoutParams(lp);
-                        Constants.cache.addPhoto(o.getString("value"), true, imageView, OpenNewsFragment.this);
-                        runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView));
+                        Constants.cache.addPhoto(o.getString("value"), imageView, OpenNewsFragment.this);
+                        ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView);
                         break;
                     }
                     lp.height = (int) (size.y / 1.5);
                     lp.gravity = Gravity.CENTER_HORIZONTAL;
                     imageView.setLayoutParams(lp);
 
-                    Constants.cache.addPhoto(o.getString("value"), true, imageView, OpenNewsFragment.this);
-                    runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView));
+                    Constants.cache.addPhoto(o.getString("value"), imageView, OpenNewsFragment.this);
+                    ((LinearLayout) findViewById(R.id.news_open_list)).addView(imageView);
                     if (params.contains("full_screen")) {
                         System.out.println("FULL SCREEN");
                         int finalI = i;
@@ -190,12 +222,12 @@ public class OpenNewsFragment extends Her {
                     textView1.setMovementMethod(LinkMovementMethod.getInstance());
                     textView1.setHighlightColor(Color.TRANSPARENT);
                     textView1.setLayoutParams(lp);
-                    runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(textView1));
+                    ((LinearLayout) findViewById(R.id.news_open_list)).addView(textView1);
                     break;
                 case "audio":
                     Audio audio = new Audio(new JSONObject(o.getString("value")),OpenNewsFragment.this);
-                    View v = getLayoutInflater().inflate(R.layout.obj_music,null);
-                    Constants.cache.addPhoto(audio.urlPhoto, true, v.findViewById(R.id.obj_music_image), this);
+                    View v = getLayoutInflater().inflate(R.layout.obj_music, null);
+                    Constants.cache.addPhoto(audio.urlPhoto, v.findViewById(R.id.obj_music_image), this);
                     ((TextView) v.findViewById(R.id.obj_music_name)).setText(audio.name);
                     ((TextView) v.findViewById(R.id.obj_music_author)).setText(audio.author);
                     v.findViewById(R.id.obj_music_fav).setVisibility(View.GONE);
@@ -204,10 +236,64 @@ public class OpenNewsFragment extends Her {
                         Constants.audioCache.curAudio = audio;
                         startActivity(intent);
                     });
-                    runOnUiThread(() -> ((LinearLayout) findViewById(R.id.news_open_list)).addView(v));
+                    ((LinearLayout) findViewById(R.id.news_open_list)).addView(v);
+                    break;
+                case "video":
+                    View view = getLayoutInflater().inflate(R.layout.obj_video, null);
+                    ((TextView) view.findViewById(R.id.obj_video_name)).setText(o.getString("extras"));
+                    view.setOnClickListener(v12 -> {
+                        Intent intent = new Intent(OpenNewsFragment.this, VideoView.class);
+                        try {
+                            intent.putExtra("url", o.getString("value"));
+                            runOnUiThread(() -> startActivity(intent));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    ((LinearLayout) findViewById(R.id.news_open_list)).addView(view);
+                    break;
+
             }
         }
     }
+
+    public void setLiked(){
+        JSONObject jsonInput = new JSONObject();
+        try {
+            jsonInput.put("id", Constants.newsCache.curentNew.getInt("id"));
+            jsonInput.put("token", Constants.user.token);
+            jsonInput.put("mobile_token",Constants.user.mobileToken);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        WebScoketClient.mSocket.emit("like_new", jsonInput, emitterCallback);
+    }
+
+    public Ack emitterCallback = args -> {
+        JSONObject o = (JSONObject) args[0];
+        try {
+            boolean stat = o.getJSONObject("response").getBoolean("succes");
+            System.out.println("EMIT: "+ stat);
+            if(!stat)
+                Utils.ShowSnackBar.show(OpenNewsFragment.this,"уже лайкнуто!",root);
+            else {
+                Utils.ShowSnackBar.show(OpenNewsFragment.this, "лайк поставлен!", root);
+                System.out.println(Constants.newsCache.curentNew);
+                Constants.newsCache.curentNew.put("likes",Integer.parseInt(Constants.newsCache.curentNew.getString("likes")+1));
+                System.out.println(Constants.newsCache.curentNew);
+                runOnUiThread(()->{
+                    try {
+                        ((TextView) findViewById(R.id.news_view_likes)).setText(Constants.newsCache.curentNew.getString("likes"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    };
+
 
     private JSONArray pareseStringToJSAray(String s) throws JSONException {
         return new JSONArray(s);

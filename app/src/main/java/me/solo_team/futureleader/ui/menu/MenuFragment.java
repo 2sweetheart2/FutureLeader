@@ -45,7 +45,7 @@ public class MenuFragment extends Fragment {
         grid.addElement(null, "магазин", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), ShopView.class)));
         grid.addElement(null, "именниники", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), DrView.class)));
         grid.addElement(null, "медиа", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), PopularMusic.class)));
-        if(Constants.user.adminStatus!=0) grid.addElement(null,"администрирование","16",true)
+        if(Constants.user.permission.can_view_admin_panel) grid.addElement(null,"администрирование","16",true)
                 .setOnClickListener(v -> startActivity(new Intent(requireContext(), AdminingLayout.class)));
 
         ConstraintLayout cn = root.findViewById(R.id.menu_header);

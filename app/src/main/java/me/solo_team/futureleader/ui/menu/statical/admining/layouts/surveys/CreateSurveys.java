@@ -155,7 +155,7 @@ public class CreateSurveys extends Her {
                 }
                 if (o.has("image")) {
                     ImageView imageView = new ImageView(CreateSurveys.this);
-                    Constants.cache.addPhoto(o.getString("image"), true, imageView, this);
+                    Constants.cache.addPhoto(o.getString("image"), imageView, this);
                     imageView.setLayoutParams(lp);
                     linearLayout.addView(imageView);
                 }
@@ -225,7 +225,7 @@ public class CreateSurveys extends Her {
     private void renderMembers(){
         for(ChatMember chatMember : selectedusers){
             View view = getLayoutInflater().inflate(R.layout.member,null);
-            Constants.cache.addPhoto(chatMember.profilePicture,true,((ImageView)view.findViewById(R.id.member_photo)),this);
+            Constants.cache.addPhoto(chatMember.profilePicture,((ImageView)view.findViewById(R.id.member_photo)),this);
             ((TextView)view.findViewById(R.id.member_name)).setText(chatMember.firstName+" "+chatMember.lastName);
             ImageButton imageButton = view.findViewById(R.id.member_btn);
             Drawable wrappedDrawable = DrawableCompat.wrap(getDrawable(R.drawable.trash));

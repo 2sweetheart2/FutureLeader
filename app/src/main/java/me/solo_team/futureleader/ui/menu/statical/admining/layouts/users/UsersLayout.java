@@ -48,6 +48,10 @@ public class UsersLayout extends Her {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admining_users_layout);
         setTitle("Пользователи");
+        if(!Constants.user.permission.can_get_users){
+            setResult(-500);
+            finish();
+        }
         usersList = findViewById(R.id.layout_with_users);
         searchUser = findViewById(R.id.adminig_users_serach);
         noResult = findViewById(R.id.layout_with_users_no_result);
@@ -189,7 +193,7 @@ public class UsersLayout extends Her {
             ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: " + o.getString("email"));
             ((TextView) constraintLayout.findViewById(R.id.admining_user_content_division)).setText(division);
             ((TextView) constraintLayout.findViewById(R.id.admining_user_content_post)).setText(post);
-            Constants.cache.addPhoto(o.getString("profile_picture"), true, constraintLayout.findViewById(R.id.admining_user_content_logo), this);
+            Constants.cache.addPhoto(o.getString("profile_picture"), constraintLayout.findViewById(R.id.admining_user_content_logo), this);
             runOnUiThread(() -> usersList.addView(constraintLayout));
             constraintLayout.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ViewProfile.class);

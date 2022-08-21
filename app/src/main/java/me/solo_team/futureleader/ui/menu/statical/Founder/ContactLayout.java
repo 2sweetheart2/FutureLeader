@@ -29,9 +29,9 @@ public class ContactLayout extends AppCompatActivity {
                 "https://future-leaders.ru/resuorces/others/c-zYqjYNapfNFe6UP06NEY2X9lKt-mkBgt9XeWKLiV5lHwwQnX49XmJRJl3bek6E0xrjRJIwy4YyGeJP687wiA.png",
                 "https://future-leaders.ru/resuorces/others/cADo7gjVkXdXh_chRmCigAYzz6iYnneDiJhdrqRlebePmE4g8qb2VAHMIJKYnpyzfn4JZtn00MGc9fzDcZggPw.png",
                 "https://future-leaders.ru/resuorces/others/U6GvkkrKYEQcRSTGZCdG9J0V4woA5PmRlxDB89iuIvJizLLFHOe1zRKJHu8L7XCz7RcGFPebEVuuC2MwWUx-sA.png"        );
-        Constants.cache.addPhoto(urls.get(0),true,contact1,this);
-        Constants.cache.addPhoto(urls.get(1),true,contact2,this);
-        Constants.cache.addPhoto(urls.get(2),true,contact3,this);
+        Constants.cache.addPhoto(urls.get(0),contact1,this);
+        Constants.cache.addPhoto(urls.get(1),contact2,this);
+        Constants.cache.addPhoto(urls.get(2),contact3,this);
         contact1.setOnClickListener(v -> {
             Intent intent = new Intent(this, WebView.class);
             intent.putExtra("url","https://vk.com/sheykin1980");

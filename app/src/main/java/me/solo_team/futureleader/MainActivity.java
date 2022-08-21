@@ -5,14 +5,12 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,14 +28,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.LinkedHashMap;
 
 import io.socket.emitter.Emitter;
 import me.solo_team.futureleader.API.websocket.WebScoketClient;
 import me.solo_team.futureleader.Objects.Chat;
 import me.solo_team.futureleader.Objects.Message;
-import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.stuff.media_player_stuff.service.PlayerService;
 import me.solo_team.futureleader.ui.menu.MenuFragment;
 import me.solo_team.futureleader.ui.news.NewsFragment;
@@ -62,9 +58,7 @@ public class MainActivity extends AppCompatActivity {
         WebScoketClient.mSocket.on("new_message", onMessageNew);
         WebScoketClient.mSocket.on("chat_title_update",onChatTitleChange);
 
-        // КРЧ ТУТ НИЧЕГО НЕ ТРОГАЕМ, ЭТО ОСНОВНОЕ ОКНО В КОТОРОМ У НАС ВСЁ: НАЖНЯЯ ПАНЕЛЬ И ОСТАЛЬНЫЕ ФРАГМЕНТЫ
         super.onCreate(savedInstanceState);
-        // метод для опрeделения ширины экрана
 
 
         computeWindowSizeClasses();
@@ -79,11 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         id = navView.getSelectedItemId();
-        findViewById(R.id.floatingActionButton).setOnClickListener(v -> {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent, 1);
-        });
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put("город", "city");
         map.put("день рождения", "birthday");
@@ -101,28 +90,12 @@ public class MainActivity extends AppCompatActivity {
         reCreate();
     }
 
-    private static final String VIDEO_DIRECTORY = "/demonuts";
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                Log.d("what", "gale");
-                if (data != null) {
-                    Uri contentURI = data.getData();
-                    File file = Utils.getVideo.getVideoFromUri(contentURI, MainActivity.this);
-                }
-            }
-        }
-    }
-
     NewsFragment newsFragment = new NewsFragment();
     MenuFragment menuFragment = new MenuFragment();
     ProfileFragment profileFragment = new ProfileFragment();
 
 
+    @SuppressLint("NonConstantResourceId")
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             item -> {
                 Fragment selected = null;
@@ -153,10 +126,10 @@ public class MainActivity extends AppCompatActivity {
      * (а условия на то, что этот + может быть только в меню новости)
      * (ты не думай что я такой умный, я просто скопировал всё из инета, заебался искать на самом деле)
      */
-    @SuppressLint("ResourceType")
+    @SuppressLint({"ResourceType", "NonConstantResourceId"})
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (Constants.user.adminStatus != 0 && navView.getSelectedItemId() == R.id.navigation_news) {
+        if (Constants.user.permission.can_add_new && navView.getSelectedItemId() == R.id.navigation_news) {
             if (menu.size() == 0)
                 menu.add(0, 1, 0, "")
                         .setIcon(R.drawable.plus)
@@ -260,9 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
     });
 
-    public Emitter.Listener onChatTitleChange = args -> MainActivity.this.runOnUiThread(()->{
-        System.out.println("onChatTitleChange: "+args[0]);
-    });
+    public Emitter.Listener onChatTitleChange = args -> MainActivity.this.runOnUiThread(() -> System.out.println("onChatTitleChange: " + args[0]));
 
     @Override
     protected void onDestroy() {
@@ -271,12 +242,15 @@ public class MainActivity extends AppCompatActivity {
         WebScoketClient.mSocket.off("chat_invite", onChatInvite);
         WebScoketClient.mSocket.off("chat_title_update",onChatTitleChange);
         //WebScoketClient.mSocket.off("chat_removed", OnChatRemoved);
+        System.out.println("DESTROY");
         playerServiceBinder = null;
         if (mediaController != null) {
             mediaController.unregisterCallback(callback);
+            mediaController.getTransportControls().sendCustomAction("die",new Bundle());
             mediaController = null;
         }
         unbindService(serviceConnection);
+        finish();
     }
 
 }

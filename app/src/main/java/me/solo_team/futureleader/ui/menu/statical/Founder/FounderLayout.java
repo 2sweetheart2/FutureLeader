@@ -42,7 +42,7 @@ public class FounderLayout extends AppCompatActivity {
 
 
             ImageView v = (ImageView) grid.addImageElement(null,onAllColumn);
-            Constants.cache.addPhoto(urls.get(i),false,v,this);
+            Constants.cache.addPhoto(urls.get(i),v,this);
             views.add(v);
 
         }

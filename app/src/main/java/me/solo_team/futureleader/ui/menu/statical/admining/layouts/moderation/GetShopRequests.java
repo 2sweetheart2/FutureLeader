@@ -38,6 +38,10 @@ public class GetShopRequests extends Her {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("заявки магизне");
+        if (!Constants.user.permission.can_view_shop_request) {
+            setResult(-500);
+            finish();
+        }
         setContentView(R.layout.only_linearlayout);
         list = findViewById(R.id.list);
         API.getShopRequests(new ApiListener() {
@@ -77,7 +81,7 @@ public class GetShopRequests extends Her {
             AdminShopRequest adminShopRequest = requests.get(i);
             View view = getLayoutInflater().inflate(R.layout.obj_shop, null);
             view.findViewById(R.id.obj_shop_added).setVisibility(View.GONE);
-            Constants.cache.addPhoto(adminShopRequest.item.photo, "GSR" + i, view.findViewById(R.id.obj_shop_photo), this);
+            Constants.cache.addPhoto(adminShopRequest.item.photo, view.findViewById(R.id.obj_shop_photo), this);
             ((TextView) view.findViewById(R.id.obj_shop_name)).setText(adminShopRequest.item.name);
             ((TextView) view.findViewById(R.id.obj_shop_cost)).setText("");
             ((TextView) view.findViewById(R.id.obj_shop_count)).setText("  остаток: " + adminShopRequest.item.count);
@@ -96,6 +100,10 @@ public class GetShopRequests extends Her {
     }
 
     public void req(boolean stat, int sell_id, int userId) {
+        if (!Constants.user.permission.can_set_shop_request) {
+            Utils.ShowSnackBar.show(GetShopRequests.this, "отказано в доступе!", list);
+            return;
+        }
         API.setShopRequests(new ApiListener() {
                                 Dialog d;
 
@@ -112,16 +120,15 @@ public class GetShopRequests extends Her {
 
                                 @Override
                                 public void onSuccess(JSONObject json) throws JSONException {
-                                    runOnUiThread(() -> {
                                         for (AdminShopRequest adminShopRequest : requests) {
                                             if (adminShopRequest.item.id == sell_id && adminShopRequest.chatMember.userId == userId) {
                                                 requests.remove(adminShopRequest);
                                                 runOnUiThread(() -> render());
+                                                break;
                                             }
                                         }
-                                    });
-                                    Utils.ShowSnackBar.show(GetShopRequests.this, "готово!", list);
-                                    d.dismiss();
+                                        Utils.ShowSnackBar.show(GetShopRequests.this, "готово!", list);
+                                        d.dismiss();
                                 }
                             },
                 new CustomString("sell_id", String.valueOf(sell_id)),

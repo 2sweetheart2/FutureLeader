@@ -77,7 +77,7 @@ public class SearchMusic extends Her {
         list.removeAllViews();
         for (Audio audio : r) {
             View v = getLayoutInflater().inflate(R.layout.obj_music, null);
-            Constants.cache.addPhoto(audio.urlPhoto, true, v.findViewById(R.id.obj_music_image), this);
+            Constants.cache.addPhoto(audio.urlPhoto, v.findViewById(R.id.obj_music_image), this);
             ((TextView) v.findViewById(R.id.obj_music_name)).setText(audio.name);
             ((TextView) v.findViewById(R.id.obj_music_author)).setText(audio.author);
             if (needFav) {

@@ -2,7 +2,6 @@ package me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -17,7 +16,7 @@ import me.solo_team.futureleader.ui.menu.MenuGrid;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.news.open_news.OpenNewsFragment;
 
-public class Layout extends Her {
+public class UsersProjects extends Her {
     List<ImageView> views = new ArrayList<>();
 
     @Override
@@ -26,8 +25,8 @@ public class Layout extends Her {
         setContentView(R.layout.founder_layout);
         MenuGrid grid = new MenuGrid(findViewById(R.id.back__), this, getWindowManager());
         List<String> urls = Arrays.asList(
-                "https://future-leaders.ru/resuorces/others/wv2vhjWEV9V30YEf1IO_ailL1ruWgii_DewdH4brYhsmZ1Q7__M1JBl8JRBeFWc6b65ckp44GYgAT7IVE_gMvQ.png",
-                "https://future-leaders.ru/resuorces/others/EnZXGZoaxKmdsAqH28FqVkXlv4pRLRtTMl-Hhj9Ia-RTxatkMJXj2ErBkYpjkilyhCK2o-LEMphQ8-qt7ceQmQ.png",
+                "https://future-leaders.ru/resuorces/others/wvvr9t3drtyKvTRWlRduWgpn6T1r_SK9sfCYgtrTdXMOsNktPCfUF7rZO4lKMxxHLdDqHTcz3_b49vpYjBndIw.png",
+                "https://future-leaders.ru/resuorces/others/GGh5dMMCgktDiELbDEl5om1Bis-4Tkr04V156G0d0R4ujf9Ou8yiPl0LkKK9T5PpEupLhl8RyXlbaWTMo6E-Jw.png",
                 "https://future-leaders.ru/resuorces/others/JCFwcMnMhfzavY7lZ_T8BSEJhR6qWwfj1WNvjI2ofDNbcJNqwaDYKvZ3Zmv6juHMfJSrDmgtyEXzqsOnZGFOyg.png"
         );
         for (int i = 0; i < urls.size(); i++) {
@@ -39,10 +38,16 @@ public class Layout extends Her {
             if(i==2) onAllColumn = true;
             ImageView v = grid.addImageElement(null, onAllColumn);
             views.add(v);
-            Constants.cache.addPhoto(urls.get(i), true, v, this);
+            Constants.cache.addPhoto(urls.get(i), v, this);
         }
         setTitle("Будущие Лидеры");
         views.get(0).setOnClickListener(v -> {
+            Intent intent = new Intent(this, OpenNewsFragment.class);
+            intent.putExtra("tag","Лидерская зимняя серия игра \"Что? Где? Когда?\"");
+            intent.putExtra("id",-4);
+            startActivity(intent);
+        });
+        views.get(1).setOnClickListener(v -> {
             Intent intent = new Intent(this, OpenNewsFragment.class);
             intent.putExtra("tag","О проекте");
             intent.putExtra("id",-3);

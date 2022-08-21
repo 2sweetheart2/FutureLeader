@@ -25,7 +25,8 @@
         tools:ignore="AllowBackup">
         <activity
             android:name=".ui.menu.horizontal_menu.messanger.CurrentChatView2"
-            android:theme="@style/Theme.FutureLeader.NoActionBar"/>
+            android:theme="@style/Theme.FutureLeader.NoActionBar"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".API.websocket.SocketService"
@@ -34,10 +35,12 @@
             android:process=":myservice"
             tools:ignore="ExportedService" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login_or_register.LoginOrRegisterLayout"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,22 +48,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.news.open_news.OpenNewsFragment" />
-        <activity android:name=".ui.menu.statical.Founder.FounderLayout" />
-        <activity android:name=".ui.menu.statical.Founder.ContactLayout" />
+        <activity android:name=".ui.news.open_news.OpenNewsFragment"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.Founder.FounderLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.Founder.ContactLayout"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.WebViewsContent.WebView"
             android:label="Web"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".ui.menu.statical.admining.AdminingLayout" />
-        <activity android:name=".ui.menu.statical.admining.layouts.users.UsersLayout" />
-        <activity android:name=".ui.menu.statical.programs.ProgramsLayout" />
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Layout" />
-        <activity android:name=".ui.profile.EditFieldsLayout" />
-        <activity android:name=".ui.profile.AddFieldLayout" />
-        <activity android:name=".ui.menu.statical.admining.layouts.users.StructurLayout" />
-        <activity android:name=".ui.news.open_news.EditNews" />
-        <activity android:name=".ui.news.open_news.CreateChieldNew" />
+        <activity android:name=".ui.menu.statical.admining.AdminingLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.users.UsersLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.programs.ProgramsLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Layout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.profile.EditFieldsLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.profile.AddFieldLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.users.StructurLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.news.open_news.EditNews"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.news.open_news.CreateChieldNew"
+            android:screenOrientation="portrait" />
 
         <service android:name=".FireBaseSendings"
             tools:ignore="ExportedService">
@@ -73,34 +88,48 @@
         <activity
             android:name=".MediaAudioAdapters.VideoAdapter.VideoView"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".ui.profile.view_prof.ViewProfile" />
-        <activity android:name=".ui.menu.horizontal_menu.calendar.Calendar" />
-        <activity android:name=".ui.menu.horizontal_menu.idea.Idea" />
-        <activity android:name=".ui.menu.horizontal_menu.idea.Showidea" />
+        <activity android:name=".ui.profile.view_prof.ViewProfile"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.horizontal_menu.calendar.Calendar"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.horizontal_menu.idea.Idea"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.horizontal_menu.idea.Showidea"
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.menu.horizontal_menu.idea.CreateIdea"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             />
         <activity android:name=".ui.menu.horizontal_menu.calendar.AddEvent"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             />
-        <activity android:name=".ui.menu.horizontal_menu.calendar.EventCheck" />
-        <activity android:name=".ui.menu.horizontal_menu.calendar.ViewEvent" />
-        <activity android:name=".ui.menu.horizontal_menu.surveys.SurveysView" />
+        <activity android:name=".ui.menu.horizontal_menu.calendar.EventCheck"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.horizontal_menu.calendar.ViewEvent"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.horizontal_menu.surveys.SurveysView"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.menu.horizontal_menu.surveys.DoSurvey"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".ui.menu.statical.dr.DrView" />
+        <activity android:name=".ui.menu.statical.dr.DrView"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".stuff.FullScreenPhoto"
             android:theme="@style/Theme.FutureLeader.ViewPhoto" />
-        <activity android:name=".ui.menu.statical.Media.PopularMusic" />
-        <activity android:name=".ui.menu.statical.Media.AddMusic" />
+        <activity android:name=".ui.menu.statical.Media.PopularMusic"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.Media.AddMusic"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.menu.statical.Media.MusicPlayer"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <service
@@ -118,37 +147,80 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.menu.statical.shop.ShopView" />
-        <activity android:name=".ui.menu.statical.shop.CorzinaView" />
+        <activity android:name=".ui.menu.statical.shop.ShopView"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.shop.CorzinaView"
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.menu.horizontal_menu.messanger.ChatsView"
+            android:screenOrientation="portrait"
             android:label=""/>
-        <activity android:name=".ui.menu.horizontal_menu.messanger.CreateChat"/>
-        <activity android:name=".ui.SelectMembers"/>
-        <activity android:name=".ui.menu.statical.applications.YourApplications"/>
-        <activity android:name=".ui.menu.statical.applications.ApplicationsView"/>
-        <activity android:name=".ui.menu.statical.applications.Uslugi"/>
-        <activity android:name=".ui.menu.statical.applications.ViewUsluga"/>
-        <activity android:name=".ui.DateTimePicker"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysLayout"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveys"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveysObject"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveusForUsers"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysStatistic"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.Ideas"/>
+        <activity android:name=".ui.menu.horizontal_menu.messanger.CreateChat"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.SelectMembers"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.applications.YourApplications"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.applications.ApplicationsView"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.applications.Uslugi"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.applications.ViewUsluga"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.DateTimePicker"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveys"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveysObject"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveusForUsers"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysStatistic"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.surveys.Ideas"
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.menu.statical.admining.layouts.surveys.SubmitIdea"
-
+            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
             />
-        <activity android:name=".ui.menu.statical.admining.layouts.moderation.UnverifyUsers"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.moderation.UnverifyUsers"
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.menu.statical.admining.layouts.moderation.VerifiUser"
+            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
             />
-        <activity android:name=".ui.menu.statical.admining.layouts.stat.UploadStat"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.stat.LoginStat"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.stat.AllStat"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.moderation.GetShopRequests"/>
-        <activity android:name=".ui.menu.statical.admining.layouts.moderation.GetOldShopRequest"/>
-        <activity android:name=".ui.menu.statical.Media.SearchMusic"/>
+        <activity android:name=".ui.menu.statical.admining.layouts.stat.UploadStat"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.stat.LoginStat"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.stat.AllStat"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.moderation.GetShopRequests"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.moderation.GetOldShopRequest"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.Media.SearchMusic"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.AddVideo"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.VideoView"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
+        <activity android:name=".ui.menu.statical.admining.layouts.gameifecation.AchievementsLayout"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.gameifecation.CereateAchievement"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.news.open_news.CheckUsers"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.menu.statical.admining.layouts.gameifecation.ChangeRole"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.menu.statical.admining.layouts.users.StatusOfUsers"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Meropriyatia"
+            android:screenOrientation="portrait"
+/>
     </application>
 
 </manifest>

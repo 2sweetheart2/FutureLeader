@@ -97,9 +97,18 @@ public class EventCheck extends Her {
                 public void onClick(View v) {
                     Intent intent = new Intent(EventCheck.this, ViewEvent.class);
                     intent.putExtra("payload",event.payload.toString());
-                    startActivity(intent);
+                    startActivityIfNeeded(intent,100);
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100){
+            if(resultCode==1)
+                Utils.ShowSnackBar.show(EventCheck.this,"вы записались на это событие!",list);
         }
     }
 }

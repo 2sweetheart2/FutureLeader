@@ -19,9 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
@@ -84,11 +81,9 @@ public class NewsFragment extends Fragment {
     private void createClick() throws JSONException {
         for (int i = news.length()-1; i >= getLastIndex(); i--) {
             JSONObject o = news.getJSONObject(i);
-            News new_ = new News(
-                    o.getInt("id"),
-                    o.getString("photo"),
-                    o.getString("title"));
-            requireActivity().runOnUiThread(() -> addElement(new_.photoUrl, new_.title).setOnClickListener(v -> {
+            News new_ = new News(o);
+            int finalI = i;
+            requireActivity().runOnUiThread(() -> addElement(new_, finalI).setOnClickListener(view -> {
                 Intent intent = new Intent(requireContext(), OpenNewsFragment.class);
                 intent.putExtra("tag", new_.title);
                 intent.putExtra("id", new_.id);
@@ -109,11 +104,11 @@ public class NewsFragment extends Fragment {
         }
     }
 
-    private View addElement(String uri, String name) {
+    private View addElement(News new_, int i) {
         ConstraintLayout row = (ConstraintLayout) inflater.inflate(R.layout.news_news, container, false);
         ConstraintLayout cn = row.findViewById(R.id.news_obj);
-        Constants.cache.addPhoto(uri, true, (ImageView) cn.getChildAt(1), this);
-        ((TextView) cn.getChildAt(2)).setText(name);
+        Constants.cache.addPhoto(new_.photoUrl, (ImageView) cn.getChildAt(1), this);
+        ((TextView) cn.getChildAt(2)).setText(new_.title);
         switch (MainActivity.wightwindowSizeClass) {
             case COMPACT:
                 ((TextView) cn.getChildAt(2)).setTextSize(12f);
@@ -125,6 +120,8 @@ public class NewsFragment extends Fragment {
                 ((TextView) cn.getChildAt(2)).setTextSize(20);
                 break;
         }
+        ((TextView) row.findViewById(R.id.news_view_countt)).setText(String.valueOf(new_.viewCount));
+        ((TextView) row.findViewById(R.id.news_view_likess)).setText(String.valueOf(new_.likes));
         nw.addView(row);
         return row;
     }

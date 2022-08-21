@@ -1,13 +1,13 @@
 package me.solo_team.futureleader.ui.menu.statical.Media;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.socket.client.Ack;
@@ -91,8 +89,31 @@ public class PopularMusic extends Her {
                       },
                 new CustomString("token", Constants.user.token)
         );
+        findViewById(R.id.pop_music).getViewTreeObserver().addOnGlobalLayoutListener(
+                () -> {
+                    Rect r = new Rect();
+                    findViewById(R.id.pop_music).getWindowVisibleDisplayFrame(r);
+                    int screenHeight = findViewById(R.id.pop_music).getRootView().getHeight();
+                    int keypadHeight = screenHeight - r.bottom;
+                    if (keypadHeight > screenHeight * 0.15) {
+                        if (!isKeyboardShowing) {
+                            isKeyboardShowing = true;
+                            onKeyboardVisibilityChanged(true);
+                        }
+                    } else {
+                        if (isKeyboardShowing) {
+                            isKeyboardShowing = false;
+                            onKeyboardVisibilityChanged(false);
+                        }
+                    }
+                });
+    }
 
+    boolean isKeyboardShowing = false;
 
+    void onKeyboardVisibilityChanged(boolean opened) {
+        if (!opened && currentSearch.length() != 0)
+            getMusicByName();
     }
 
     private final TextWatcher textChenger = new TextWatcher() {
@@ -112,8 +133,47 @@ public class PopularMusic extends Her {
             currentSearch = searchPopMusic.getText().toString();
             update();
         }
+
     };
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == 66 && currentSearch.length() != 0)
+            getMusicByName();
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void getMusicByName() {
+        API.searchMusicByName(new ApiListener() {
+            Dialog d;
+
+            @Override
+            public void onError(JSONObject json) throws JSONException {
+                d.dismiss();
+                runOnUiThread(() -> {
+                    searchPopMusic.setText("");
+                    currentSearch = "";
+                    update();
+                });
+            }
+
+            @Override
+            public void inProcess() {
+                d = openWaiter(PopularMusic.this);
+            }
+
+            @Override
+            public void onSuccess(JSONObject json) throws JSONException {
+                JSONArray ar = json.getJSONArray("audios");
+                Constants.audioCache.seaechedAudios.clear();
+                for (int i = 0; i < ar.length(); i++) {
+                    Constants.audioCache.seaechedAudios.add(new Audio(ar.getJSONObject(i), PopularMusic.this));
+                }
+                d.dismiss();
+                runOnUiThread(() -> update());
+            }
+        }, new CustomString("token", Constants.user.token), new CustomString("name", currentSearch));
+    }
 
     private void update() {
         musicList.removeAllViews();
@@ -122,7 +182,12 @@ public class PopularMusic extends Her {
             popMusicText.setVisibility(View.GONE);
             yourMusicList.setVisibility(View.GONE);
             yourMusic.setVisibility(View.GONE);
+            popMusicsViews.clear();
+            youMusicsViews.clear();
+            addSearchMusic();
         } else {
+            Constants.audioCache.seaechedAudios.clear();
+            searchMusicsViews.clear();
             yourMusicList.setVisibility(View.VISIBLE);
             yourMusic.setVisibility(View.VISIBLE);
             addYourMusic();
@@ -132,27 +197,51 @@ public class PopularMusic extends Her {
 
     }
 
-    public HashMap<Audio,View> youMusicsViews = new HashMap<>();
-    public HashMap<Audio,View> popMusicsViews = new HashMap<>();
+    private void addSearchMusic() {
+        for (Audio audio : Constants.audioCache.seaechedAudios) {
+            View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
+            ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
+            ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
+            Constants.cache.addPhoto(audio.urlPhoto, ((ImageView) view.findViewById(R.id.obj_music_image)), this);
+            Constants.audioCache.popMusicsViews.add(view);
+            if (Constants.audioCache.checkHas(audio))
+                ((ImageView) view.findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
+            view.setOnClickListener(v -> {
+                Constants.audioCache.curAudio = null;
+                Constants.audioCache.setCurrentAudio(2, audio);
+                Intent intent = new Intent(PopularMusic.this, MusicPlayer.class);
+                startActivity(intent);
+            });
+            view.findViewById(R.id.obj_music_fav).setOnClickListener(v -> {
+                sendMessage(audio.id);
+            });
+            musicList.addView(view);
+            searchMusicsViews.put(audio, view);
+        }
+    }
+
+    public HashMap<Audio, View> youMusicsViews = new HashMap<>();
+    public HashMap<Audio, View> popMusicsViews = new HashMap<>();
+    public HashMap<Audio, View> searchMusicsViews = new HashMap<>();
 
     private void addYourMusic() {
-            for(Audio audio : Constants.audioCache.yourMusics){
-                View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
-                ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
-                ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
-                ((ImageView) view.findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
-                Constants.cache.addPhoto(audio.urlPhoto,false,((ImageView)view.findViewById(R.id.obj_music_image)),this);
-                Constants.audioCache.yourMusicsViews.add(view);
-                view.setOnClickListener(v -> {
-                    Constants.audioCache.setCurrentAudio(0,audio);
-                    Constants.audioCache.curAudio = null;
-                    Intent intent = new Intent(PopularMusic.this,MusicPlayer.class);
-                    startActivity(intent);
-                });
-                view.findViewById(R.id.obj_music_fav).setOnClickListener(v -> {
-                    sendMessage(audio.id);
-                });
-                yourMusicList.addView(view);
+        for (Audio audio : Constants.audioCache.yourMusics) {
+            View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
+            ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
+            ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
+            ((ImageView) view.findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
+            Constants.cache.addPhoto(audio.urlPhoto, ((ImageView) view.findViewById(R.id.obj_music_image)), this);
+            Constants.audioCache.yourMusicsViews.add(view);
+            view.setOnClickListener(v -> {
+                Constants.audioCache.setCurrentAudio(0, audio);
+                Constants.audioCache.curAudio = null;
+                Intent intent = new Intent(PopularMusic.this, MusicPlayer.class);
+                startActivity(intent);
+            });
+            view.findViewById(R.id.obj_music_fav).setOnClickListener(v -> {
+                sendMessage(audio.id);
+            });
+            yourMusicList.addView(view);
                 youMusicsViews.put(audio,view);
             }
     }
@@ -174,61 +263,93 @@ public class PopularMusic extends Her {
     public Ack emitterCallback = args -> {
         try {
             JSONObject o = ((JSONObject) args[0]).getJSONObject("response");
-            for(Map.Entry<Audio,View > entry : youMusicsViews.entrySet()){
-                if(entry.getKey().id==o.getInt("audio_id")){
-                    runOnUiThread(()->{
-                        try {
-                            if(o.getBoolean("add"))
-                                ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
-                            else
-                                ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    return;
+            if (currentSearch.length() == 0) {
+                for (Map.Entry<Audio, View> entry : youMusicsViews.entrySet()) {
+                    if (entry.getKey().id == o.getInt("audio_id")) {
+                        runOnUiThread(() -> {
+                            try {
+                                if (o.getBoolean("add"))
+                                    ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
+                                else
+                                    ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        break;
+                    }
                 }
-            }
-            for(Map.Entry<Audio,View > entry : popMusicsViews.entrySet()){
-                if(entry.getKey().id==o.getInt("audio_id")){
-                    runOnUiThread(()->{
-                        try {
-                            if(o.getBoolean("add"))
-                                ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
-                            else
-                                ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    return;
+                for (Map.Entry<Audio, View> entry : popMusicsViews.entrySet()) {
+                    if (entry.getKey().id == o.getInt("audio_id")) {
+                        runOnUiThread(() -> {
+                            try {
+                                if (o.getBoolean("add"))
+                                    ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
+                                else
+                                    ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        break;
+                    }
                 }
-            }
+            } else
+                for (Map.Entry<Audio, View> entry : searchMusicsViews.entrySet()) {
+                    if (entry.getKey().id == o.getInt("audio_id")) {
+                        runOnUiThread(() -> {
+                            try {
+                                if (o.getBoolean("add"))
+                                    ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
+                                else
+                                    ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        removeLike(entry.getKey(),o.getBoolean("add"));
+                        break;
+                    }
+                }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     };
 
+    public void removeLike(Audio a, boolean liked) {
+        if (!liked) {
+            for (Audio audio : Constants.audioCache.yourMusics) {
+                if (audio.id == a.id) {
+                    Constants.audioCache.yourMusics.remove(audio);
+                    audio.liked = false;
+                }
+            }
+        } else {
+            a.liked = true;
+            Constants.audioCache.yourMusics.add(a);
+        }
+    }
+
 
     private void addPopMusicViews() {
-            for(Audio audio : Constants.audioCache.popMusics){
-                View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
-                ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
-                ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
-                Constants.cache.addPhoto(audio.urlPhoto,false,((ImageView)view.findViewById(R.id.obj_music_image)),this);
-                Constants.audioCache.popMusicsViews.add(view);
-                if(audio.liked)
-                    ((ImageView)view.findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
-                view.setOnClickListener(v -> {
-                    Constants.audioCache.curAudio = null;
-                    Constants.audioCache.setCurrentAudio(1,audio);
-                    Intent intent = new Intent(PopularMusic.this,MusicPlayer.class);
-                    startActivity(intent);
-                });
-                view.findViewById(R.id.obj_music_fav).setOnClickListener(v -> {
-                    sendMessage(audio.id);
-                });
-                musicList.addView(view);
+        for (Audio audio : Constants.audioCache.popMusics) {
+            View view = getLayoutInflater().inflate(R.layout.obj_music, null, false);
+            ((TextView) view.findViewById(R.id.obj_music_author)).setText(audio.author);
+            ((TextView) view.findViewById(R.id.obj_music_name)).setText(audio.name);
+            Constants.cache.addPhoto(audio.urlPhoto, ((ImageView) view.findViewById(R.id.obj_music_image)), this);
+            Constants.audioCache.popMusicsViews.add(view);
+            if (Constants.audioCache.checkHas(audio))
+                ((ImageView) view.findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
+            view.setOnClickListener(v -> {
+                Constants.audioCache.curAudio = null;
+                Constants.audioCache.setCurrentAudio(1, audio);
+                Intent intent = new Intent(PopularMusic.this, MusicPlayer.class);
+                startActivity(intent);
+            });
+            view.findViewById(R.id.obj_music_fav).setOnClickListener(v -> {
+                sendMessage(audio.id);
+            });
+            musicList.addView(view);
                 popMusicsViews.put(audio,view);
             }
     }

@@ -29,6 +29,7 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.calendar.Calendar;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.idea.Idea;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.messanger.ChatsView;
@@ -45,7 +46,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
         this.inflater = fragment.getLayoutInflater();
         this.fragment = fragment;
         values = Arrays.asList("календарь", "идеи", "опросы", "сообщения", "кс");
-        names = Arrays.asList("\uD83D\uDCC5", "\uD83D\uDCA1", "\uD83D\uDCE2", "\uD83D\uDCDD", "хз чё");
+        names = Arrays.asList("\uD83D\uDCC5", "\uD83D\uDCA1", "\uD83D\uDCE2", "\uD83D\uDCDD", "кс");
     }
 
 
@@ -118,6 +119,10 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                 break;
             case 3:
                 click = v -> fragment.startActivity(new Intent(fragment.requireContext(), ChatsView.class));
+                break;
+            case 4:
+                Utils.ShowSnackBar.show(fragment.requireContext(),"Времено не доступно!",fragment.requireView());
+
         }
         holder.nameView.setText(values.get(position));
         if (click != null)

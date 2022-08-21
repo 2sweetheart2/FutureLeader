@@ -52,7 +52,7 @@ public class RecycleAchivementsAdapter extends RecyclerView.Adapter<RecycleAchiv
 //            intent.putExtra("text", text);
 //            startActivity(intent);
         });
-        Constants.cache.addPhoto(achievements.get(position).image_url,true,holder.image,fragment);
+        Constants.cache.addPhoto(achievements.get(position).image_url,holder.image,fragment);
     }
 
 
