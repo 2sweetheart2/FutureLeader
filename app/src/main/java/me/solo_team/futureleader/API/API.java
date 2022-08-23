@@ -138,8 +138,8 @@ public class API {
     public static void getMusics(ApiListener listener, CustomString...params){
         HTTPS.sendPost(Methods.GET_MUSICS,createJsonObj(params),listener);
     }
-    public static void addMusic(ApiListener listener, byte[] bytes, String name, CustomString...params){
-        HTTPS.sendAudio(Methods.ADD_MUSIC,createJsonObj(params),bytes,name,listener);
+    public static void addMusic(ApiListener listener, CustomString...params){
+        HTTPS.sendPost(Methods.ADD_MUSIC,createJsonObj(params),listener);
     }
     public static void getShop(ApiListener listener, CustomString...params){
         HTTPS.sendPost(Methods.GET_SHOP,createJsonObj(params),listener);
@@ -286,5 +286,25 @@ public class API {
 
     public static void getTickets(ApiListener listener, CustomString...params) {
         HTTPS.sendPost(Methods.GET_TICKETS,createJsonObj(params),listener);
+    }
+
+    public static void addAudioFile(ApiListener listener, byte[] bytes, String name, CustomString...params){
+        HTTPS.sendAudio(Methods.ADD_AUDIO_FILE,createJsonObj(params),bytes,name,listener);
+    }
+
+    public static void sendResetPasswordRequest(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.SEND_RESET_PASSWORD,createJsonObj(params),listener);
+    }
+
+    public static void resetPassword(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.RESET_PASSWORD,createJsonObj(params),listener);
+    }
+
+    public static void resendVerification(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.RESEND_VERIFICATION,createJsonObj(params),listener);
+    }
+
+    public static void getVersion(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.GET_VERSION,createJsonObj(params),listener);
     }
 }

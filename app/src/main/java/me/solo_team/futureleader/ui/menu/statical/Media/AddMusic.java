@@ -53,7 +53,7 @@ public class AddMusic extends Her {
     Uri currentAudioUri = null;
     String currentPhotoUrl = null;
 
-    View root;
+    View root;    String audioUrl = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class AddMusic extends Her {
             Utils.ShowSnackBar.show(AddMusic.this, "автор не должен быть пустым!", v);
             return;
         }
-        if (currentAudioUri == null) {
+        if (audioUrl == null && audioUrl.length()==0) {
             Utils.ShowSnackBar.show(AddMusic.this, "аудио файл не выбран!", v);
             return;
         }
@@ -118,8 +118,7 @@ public class AddMusic extends Her {
                              finish();
                          }
                      },
-                bytes,
-                Utils.getFileName(currentAudioUri, AddMusic.this),
+                new CustomString("audio",audioUrl),
                 new CustomString("token", Constants.user.token),
                 new CustomString("name", decodeString(name.getText().toString())),
                 new CustomString("author", decodeString(author.getText().toString())),
@@ -157,8 +156,10 @@ public class AddMusic extends Her {
         //intent_upload.setType("audio/*"); // For All Audio Files
         intent_upload.setType("audio/mpeg"); // For only MP3 Files
         intent_upload.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent_upload, REQ_CODE_PICK_SOUNDFILE);
+        startActivityIfNeeded(intent_upload, REQ_CODE_PICK_SOUNDFILE);
     }
+
+
 
 
     @Override
@@ -177,9 +178,36 @@ public class AddMusic extends Her {
                     Utils.ShowSnackBar.show(AddMusic.this, "что-то с вашим файлом песни не так:/", root);
                     return;
                 }
+                if(!Utils.getFileFormat(audioFileUri,AddMusic.this).equals("mp3")){
+                    Utils.ShowSnackBar.show(AddMusic.this,"формат файла должен быть MP3",selectAudio);
+                    return;
+                }
                 currentAudioUri = audioFileUri;
-                info.setText("имя файла: " + Utils.getFileName(audioFileUri, AddMusic.this));
-                System.out.println(audioFileUri.toString());
+
+                API.addAudioFile(new ApiListener() {
+                    Dialog d;
+                    @Override
+                    public void onError(JSONObject json) throws JSONException {
+                        d.dismiss();
+                        createNotification(send,json.getString("message"));
+                    }
+
+                    @Override
+                    public void inProcess() {
+                        d = openWaiter(AddMusic.this);
+                    }
+
+                    @Override
+                    public void onSuccess(JSONObject json) throws JSONException {
+                        audioUrl = json.getString("url");
+                        d.dismiss();
+                        runOnUiThread(()->{
+                            info.setText("имя файла: " + Utils.getFileName(audioFileUri, AddMusic.this));
+                        });
+                        Utils.ShowSnackBar.show(AddMusic.this,"файл получен!",send);
+                    }
+                },bytes,
+                        Utils.getFileName(currentAudioUri, AddMusic.this),new CustomString("token",Constants.user.token));
 
 
             }

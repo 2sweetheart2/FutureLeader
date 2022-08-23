@@ -33,6 +33,7 @@ import me.solo_team.futureleader.stuff.Utils;
 
 public class Constants {
     // TODO: ТУТ ВСЕ КОНСТАНТЫ И НЕ ТОЛЬКО
+    public static CSettings settings;
     public static User user;
     public static User currentUser;
     public static NewsCache newsCache = new NewsCache();
@@ -152,7 +153,7 @@ public class Constants {
                 pos = 0;
             else
                 pos++;
-            if(currentPlayList.size()==pos)
+            if(currentPlayList.size()<=pos)
                 pos=0;
             return currentPlayList.get(pos);
         }
@@ -321,7 +322,7 @@ public class Constants {
                         bitmap = Utils.getRoundedCornerBitmap(bitmap, 25);
                         UIDcache.put(url, bitmap);
                         Bitmap finalBitmap = bitmap;
-                        activity.runOnUiThread(() -> imageView.setImageBitmap(finalBitmap));
+                            activity.runOnUiThread(() -> imageView.setImageBitmap(finalBitmap));
                     });
                 }
             } catch (Exception ignored) {
@@ -329,6 +330,35 @@ public class Constants {
         }
 
         public void addPhoto(String url, ImageView imageView, Fragment fragment) {
+            try {
+                if(url==null){
+                    if(fragment.getActivity()!=null)
+                        fragment.getActivity().runOnUiThread(() -> imageView.setImageResource(R.drawable.resize_300x0));
+                    return;
+                }
+                if (UIDcache.containsKey(url)) {
+                    if(fragment.getActivity()!=null)
+                        fragment.getActivity().runOnUiThread(() -> imageView.setImageBitmap(UIDcache.get(url)));
+                } else {
+                    Utils.getBitmapFromURL(url, bitmap -> {
+                        if (bitmap == null)
+                        {
+                            if(fragment.getActivity()!=null)
+                                fragment.getActivity().runOnUiThread(() -> imageView.setImageResource(R.drawable.resize_300x0));
+                            return;
+                        }
+                        bitmap = Utils.getRoundedCornerBitmap(bitmap, 25);
+                        UIDcache.put(url, bitmap);
+                        Bitmap finalBitmap = bitmap;
+                        if(fragment.getActivity()!=null)
+                            fragment.getActivity().runOnUiThread(() -> imageView.setImageBitmap(finalBitmap));
+                    });
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        public void addPhoto(String url, ImageView imageView,boolean needResize, Fragment fragment) {
             try {
                 if(url==null){
                     fragment.getActivity().runOnUiThread(() -> imageView.setImageResource(R.drawable.resize_300x0));
@@ -343,7 +373,8 @@ public class Constants {
                             fragment.getActivity().runOnUiThread(() -> imageView.setImageResource(R.drawable.resize_300x0));
                             return;
                         }
-                        bitmap = Utils.getRoundedCornerBitmap(bitmap, 25);
+                        if(needResize)
+                            bitmap = Utils.getRoundedCornerBitmap(bitmap, 25);
                         UIDcache.put(url, bitmap);
                         Bitmap finalBitmap = bitmap;
                         fragment.getActivity().runOnUiThread(() -> imageView.setImageBitmap(finalBitmap));

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -34,13 +35,15 @@ import me.solo_team.futureleader.API.websocket.WebScoketClient;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
-import me.solo_team.futureleader.dialogs.SaveOrSeePhoto;
 import me.solo_team.futureleader.stuff.FullScreenPhoto;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.VideoView;
 import me.solo_team.futureleader.ui.menu.statical.Media.MusicPlayer;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.LoginStat;
+import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
 public class OpenNewsFragment extends Her {
     String news;
@@ -53,7 +56,6 @@ public class OpenNewsFragment extends Her {
         root = findViewById(R.id.news_open);
         ((LinearLayout) findViewById(R.id.news_open_list)).removeAllViews();
         setTitle(getIntent().getStringExtra("tag"));
-        //TODO: нужно сделать +1 к просмотру в API
         API.getNew(new ApiListener() {
                        Dialog d;
 
@@ -71,7 +73,12 @@ public class OpenNewsFragment extends Her {
                        public void onSuccess(JSONObject json) throws JSONException {
                            JSONObject new_ = json.getJSONObject("new");
                            String objects_ = new_.getString("objects");
-                           new_.put("objects", pareseStringToJSAray(objects_));
+                           try {
+                               new_.put("objects", pareseStringToJSAray(objects_));
+                           }catch (JSONException e){
+                               d.dismiss();
+                               finish();
+                           }
                            JSONArray objects = new_.getJSONArray("objects");
                            Constants.newsCache.curentNew = new_;
                            oldJson = Constants.newsCache.curentNew;
@@ -80,6 +87,7 @@ public class OpenNewsFragment extends Her {
                                    ((TextView) findViewById(R.id.news_open_title)).setText(new_.getString("name"));
                                    draw(objects);
                                } catch (JSONException e) {
+
                                    e.printStackTrace();
                                }
                            });
@@ -147,6 +155,14 @@ public class OpenNewsFragment extends Her {
                     textView.setTextColor(Color.BLACK);
                     textView.setLayoutParams(lp);
                     textView.setText(o.getString("value"));
+                    if(o.has("extras"))
+                    {
+                        String[] params = o.getString("extras").split("\\|");
+                        for(String param : params){
+                            if(param.equals("bold"))
+                                textView.setTypeface(null,Typeface.BOLD);
+                        }
+                    }
                     ((LinearLayout) findViewById(R.id.news_open_list)).addView(textView);
                     break;
                 case "photo":
@@ -171,30 +187,17 @@ public class OpenNewsFragment extends Her {
                         System.out.println("FULL SCREEN");
                         int finalI = i;
                         imageView.setOnClickListener(v -> {
-                            SaveOrSeePhoto saveOrSeePhoto = new SaveOrSeePhoto(result -> {
-                                if(result){
                                     Intent intent = new Intent(OpenNewsFragment.this, FullScreenPhoto.class);
                                     try {
                                         intent.putExtra("url", o.getString("value"));
-                                        intent.putExtra("name",getIntent().getStringExtra("tag")+"-"+ finalI+".jpg");
+                                        String name = getIntent().getStringExtra("tag");
+                                        if (getIntent().getStringExtra("tag").startsWith("#"))
+                                            name = getIntent().getStringExtra("tag").substring(1);
+                                        intent.putExtra("name", name + "-" + finalI + ".png");
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                     startActivity(intent);
-                                }
-                                else{
-                                    try {
-                                        Utils.getBitmapFromURL(o.getString("value"),bitmap -> {
-                                            if(bitmap==null)
-                                                return;
-                                            Utils.saveImage(bitmap,getIntent().getStringExtra("tag")+"-"+ finalI+".jpg");
-                                        });
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                            saveOrSeePhoto.show(getSupportFragmentManager(),null);
 
                         });
                     }
@@ -252,7 +255,44 @@ public class OpenNewsFragment extends Her {
                     });
                     ((LinearLayout) findViewById(R.id.news_open_list)).addView(view);
                     break;
+                case "user":
+                    View view1 = getLayoutInflater().inflate(R.layout.obj_chat_member,null);
+                    ((TextView) view1.findViewById(R.id.chat_member_name)).setText(o.getString("value"));
+                    Constants.cache.addPhoto(o.getString("extras"),view1.findViewById(R.id.chat_member_image),this);
+                    if(Constants.user.permission.can_get_user)
+                        view1.setOnClickListener(v1 -> {
+                            try {
+                                API.getUser(new ApiListener() {
+                                    Dialog d;
+                                    @Override
+                                    public void onError(JSONObject json) throws JSONException {
+                                        d.dismiss();
+                                        createNotification(v1,json.getString("message"));
+                                    }
 
+                                    @Override
+                                    public void inProcess() {
+                                        d = openWaiter(OpenNewsFragment.this);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(JSONObject json) throws JSONException {
+                                        User user = new User(json.getJSONObject("user"));
+                                        d.dismiss();
+                                        runOnUiThread(()->{
+                                            Constants.currentUser = user;
+                                            Intent intent = new Intent(OpenNewsFragment.this, ViewProfile.class);
+                                            intent.putExtra("removeSelf",false);
+                                            startActivity(intent);
+                                        });
+                                    }
+                                },new CustomString("token",Constants.user.token),new CustomString("id",o.getString("id")));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    ((LinearLayout) findViewById(R.id.news_open_list)).addView(view1);
+                    break;
             }
         }
     }

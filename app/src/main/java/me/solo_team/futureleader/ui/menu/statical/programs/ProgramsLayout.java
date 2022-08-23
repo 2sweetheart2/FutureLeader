@@ -15,8 +15,13 @@ import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.menu.MenuGrid;
 import me.solo_team.futureleader.ui.menu.statical.Founder.ContactLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
+import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.DvizSmelyz.DvizLayout;
+import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.Liceum.LiceumLayout;
+import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.SchoolFutureLeaders;
 import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Layout;
 import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Meropriyatia;
+import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.pazl.PazlLayout;
+import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.users_projects.UsersProjects;
 
 public class ProgramsLayout extends Her {
 
@@ -51,10 +56,23 @@ public class ProgramsLayout extends Her {
             startActivity(intent);
         });
         views.get(1).setOnClickListener(v ->{
-
+            Intent intent = new Intent(this, UsersProjects.class);
+            startActivity(intent);
         });
         views.get(2).setOnClickListener(v ->{
-            Intent intent = new Intent(this, ContactLayout.class);
+            Intent intent = new Intent(this, PazlLayout.class);
+            startActivity(intent);
+        });
+        views.get(3).setOnClickListener(v ->{
+            Intent intent = new Intent(this, SchoolFutureLeaders.class);
+            startActivity(intent);
+        });
+        views.get(4).setOnClickListener(v ->{
+            Intent intent = new Intent(this, DvizLayout.class);
+            startActivity(intent);
+        });
+        views.get(5).setOnClickListener(v ->{
+            Intent intent = new Intent(this, LiceumLayout.class);
             startActivity(intent);
         });
         setTitle("Программы");

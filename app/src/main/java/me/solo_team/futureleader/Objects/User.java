@@ -33,6 +33,8 @@ public class User {
         try {
             this.firstName = payload.getString("first_name");
             this.lastName = payload.getString("last_name");
+            this.profilePictureLink = payload.getString("profile_picture");
+
             this.achievementsIds = payload.getString("achievement_ids");
             this.adminStatus = payload.getInt("admin_status");
             try {
@@ -43,7 +45,6 @@ public class User {
             this.addFields(field_stuff.getString("fields"));
             this.fieldsStuff = new FieldsStuff(this.fields, this.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
             this.id = payload.getInt("id");
-            this.profilePictureLink = payload.getString("profile_picture");
             this.status = payload.getString("status");
             if(!payload.isNull("token"))
                 this.token = payload.getString("token");

@@ -61,7 +61,7 @@ public class VideoView extends AppCompatActivity {
         });
             // sets the media controller to the videoView
         videoView.setMediaController(mediaController);
-
+        videoView.start();
         // starts the video
     }
 

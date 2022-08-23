@@ -1,6 +1,7 @@
-package me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout;
+package me.solo_team.futureleader.ui.menu.statical.programs;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -16,7 +17,8 @@ import me.solo_team.futureleader.ui.menu.MenuGrid;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.news.open_news.OpenNewsFragment;
 
-public class UsersProjects extends Her {
+public class Endayment extends Her {
+
     List<ImageView> views = new ArrayList<>();
 
     @Override
@@ -25,34 +27,32 @@ public class UsersProjects extends Her {
         setContentView(R.layout.founder_layout);
         MenuGrid grid = new MenuGrid(findViewById(R.id.back__), this, getWindowManager());
         List<String> urls = Arrays.asList(
-                "https://future-leaders.ru/resuorces/others/wvvr9t3drtyKvTRWlRduWgpn6T1r_SK9sfCYgtrTdXMOsNktPCfUF7rZO4lKMxxHLdDqHTcz3_b49vpYjBndIw.png",
-                "https://future-leaders.ru/resuorces/others/GGh5dMMCgktDiELbDEl5om1Bis-4Tkr04V156G0d0R4ujf9Ou8yiPl0LkKK9T5PpEupLhl8RyXlbaWTMo6E-Jw.png",
-                "https://future-leaders.ru/resuorces/others/JCFwcMnMhfzavY7lZ_T8BSEJhR6qWwfj1WNvjI2ofDNbcJNqwaDYKvZ3Zmv6juHMfJSrDmgtyEXzqsOnZGFOyg.png"
+                "https://future-leaders.ru/resuorces/others/agpVqploowRT4NSyCp8epnNNaMEbCcRYjYOr1bxym8e-LBMOV3oMHdaWffz4hdvmbeCUZlaQ2DRwZ3ArTBrNnA.png",
+                "https://future-leaders.ru/resuorces/others/tAWH8ZNIY4oCseGCMbh1bnQgsBTFHh1Cu568OV2kaWBp_uQtIme-0kQwQHDHOUIhK8fGhREP_SXHyZPfaPs1RQ.png",
+                "https://future-leaders.ru/resuorces/others/95v58OnoGq_hbsD8WvUU-bwuUJqG3x3tyrJyTkJUXSkj7ltmn-CkiT0nlyhlYws33eRZ56zk1ZWDblFh9T5ehA.png"
         );
         for (int i = 0; i < urls.size(); i++) {
-            int column = 0;
-            if (i % 2 != 0)
-                column = 1;
-            int row = i / 2;
-            boolean onAllColumn = false;
-            if(i==2) onAllColumn = true;
-            ImageView v = grid.addImageElement(null, onAllColumn);
+            ImageView v = grid.addImageElement(null, false);
             views.add(v);
             Constants.cache.addPhoto(urls.get(i), v, this);
         }
-        setTitle("Будущие Лидеры");
         views.get(0).setOnClickListener(v -> {
             Intent intent = new Intent(this, OpenNewsFragment.class);
-            intent.putExtra("tag","Лидерская зимняя серия игра \"Что? Где? Когда?\"");
-            intent.putExtra("id",-4);
+            intent.putExtra("tag", "Узнать подробнее");
+            intent.putExtra("id", -79);
             startActivity(intent);
         });
         views.get(1).setOnClickListener(v -> {
             Intent intent = new Intent(this, OpenNewsFragment.class);
-            intent.putExtra("tag","О проекте");
-            intent.putExtra("id",-3);
+            intent.putExtra("tag", "Свой вклад уже внесли");
+            intent.putExtra("id", -80);
             startActivity(intent);
         });
+        views.get(2).setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://russianleaders.org/endowment"));
+            startActivity(intent);
+        });
+        setTitle("Эндаумент");
     }
-
 }

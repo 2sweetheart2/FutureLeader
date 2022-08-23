@@ -98,6 +98,7 @@ public class HTTPS {
                 try {
                     HttpURLConnection con = (HttpsURLConnection) new URL(URL + method.label).openConnection();
                     con.setConnectTimeout(5000);
+                    con.setReadTimeout(5000);
                     con.setRequestMethod("POST");
                     con.setRequestProperty("Content-Type", "application/json; utf-8");
                     con.setRequestProperty("Accept", "application/json");

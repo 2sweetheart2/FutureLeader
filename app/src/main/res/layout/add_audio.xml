@@ -97,6 +97,7 @@
         android:layout_margin="15dp"
         android:backgroundTint="@color/secondary"
         android:elevation="10dp"
+        app:borderWidth="0dp"
         android:src="@drawable/plus"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/add_audio_photo" />

@@ -127,7 +127,7 @@ public class UnverifyUsers extends Her {
                 first_name = payload.getString("first_name");
                 last_name = payload.getString("last_name");
                 date = new Date(payload.getString("birth"));
-                phone = payload.getString("mobile_phone");
+                phone = payload.getString("phone");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

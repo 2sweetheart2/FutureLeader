@@ -40,6 +40,7 @@ public class VerifiUser extends Her {
         setTitle(getIntent().getStringExtra("name"));
         phone = getIntent().getStringExtra("phone");
         email = getIntent().getStringExtra("email");
+        System.out.println(phone);
         Date date = new Date(getIntent().getStringExtra("date"));
         setContentView(R.layout.admin_vefiri_user);
         ((TextView) findViewById(R.id.verifi_date)).setText("дата рождения: "+date.toVisibleStr());
@@ -56,6 +57,10 @@ public class VerifiUser extends Her {
     public void send(){
         if(phoneE.getText().length()==0){
             Utils.ShowSnackBar.show(VerifiUser.this,"номер телефона не омэет быть пустой!",phoneE,"восстановить?",v -> {phoneE.setText(phone);});
+            return;
+        }
+        if (phoneE.getText().toString().length() != 12 || phoneE.getText().toString().indexOf("+") != 0 || !phoneE.getText().toString().startsWith("+7")) {
+            Utils.ShowSnackBar.show(getApplicationContext(), "Номер телефона введен некоректно\nПример: +79112220000", phoneE);
             return;
         }
         if(division.getText().length()==0){

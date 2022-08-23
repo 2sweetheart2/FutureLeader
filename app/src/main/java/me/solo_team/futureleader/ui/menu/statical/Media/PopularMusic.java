@@ -30,6 +30,7 @@ import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.API.websocket.WebScoketClient;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.MainActivity;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
@@ -268,10 +269,17 @@ public class PopularMusic extends Her {
                     if (entry.getKey().id == o.getInt("audio_id")) {
                         runOnUiThread(() -> {
                             try {
-                                if (o.getBoolean("add"))
+                                if (o.getBoolean("add")) {
                                     ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_true);
-                                else
+                                    Constants.audioCache.yourMusics.add(entry.getKey());
+                                }
+                                else {
                                     ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
+                                    if(Constants.audioCache.getCurrentAudio().equals(entry.getKey())){
+                                        MainActivity.mediaController.getTransportControls().skipToNext();
+                                    }
+                                    Constants.audioCache.yourMusics.remove(entry.getKey());
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

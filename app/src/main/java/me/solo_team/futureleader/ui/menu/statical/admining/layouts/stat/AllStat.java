@@ -81,14 +81,14 @@ public class AllStat extends Her {
         new Thread(()->{
             try {
                 runOnUiThread(() -> {
-                    mPieChart.addPieSlice(new PieModel("зарегестрированы",all , Color.GRAY));
+                    mPieChart.addPieSlice(new PieModel("зарегестрированы",all-week , Color.GRAY));
                     mPieChart.addPieSlice(new PieModel("не зарегестрированны", reg, Color.RED));
                     mPieChart.addPieSlice(new PieModel("онлайн", week, getColor(R.color.secondary)));
                     mPieChart.startAnimation();
                 });
                 Thread.sleep(2000);
                 runOnUiThread(() ->{
-                    mPieChart2.addPieSlice(new PieModel("зарегестрированы", all, Color.GRAY));
+                    mPieChart2.addPieSlice(new PieModel("зарегестрированы", all-month, Color.GRAY));
                     mPieChart2.addPieSlice(new PieModel("не зарегестрированны", reg, Color.RED));
                     mPieChart2.addPieSlice(new PieModel("онлайн", month, getColor(R.color.secondary)));
                     mPieChart2.startAnimation();});

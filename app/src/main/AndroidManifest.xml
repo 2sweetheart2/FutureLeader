@@ -18,7 +18,7 @@
         android:icon="@drawable/resize_300x0"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/resize_300x0"
         android:supportsRtl="true"
         android:theme="@style/Theme.FutureLeader"
         android:windowSoftInputMode="adjustResize"
@@ -221,6 +221,70 @@
         <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Meropriyatia"
             android:screenOrientation="portrait"
 />
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Contacts"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.users_projects.UsersProjects"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.users_projects.flip.FlipLayout"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.SocSeti"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.MeropRiytia"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.SchoolFutureLeaders"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.piter"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.PazlLayout"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.stroy.Stroy"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.programing.Programing"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.prof.Prof"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.Sochi"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.DvizSmelyz.DvizLayout"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.LiceumLayout"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.Blagoveshensk"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.Moscov"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.Endayment"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FondCommands"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.PartnersC"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Mer"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Partners"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.login_or_register.RegisterLayout"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.login_or_register.ResetPasswordLayout"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.profile.UserSettings"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ResetPassword"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="https"
+                    android:host="future-leaders.ru"
+                    android:pathPrefix="/reset_password" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

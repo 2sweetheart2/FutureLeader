@@ -4,120 +4,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/register_layout"
-    >
+    android:id="@+id/register_layout">
 
-    <WebView
-        android:id="@+id/webvuiew_login_or_register_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:elevation="10dp"
+        android:id="@+id/huina"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/guideline16"
         app:layout_constraintRight_toRightOf="@id/guideline17"
         android:background="@drawable/gray_gradient_with_corners"
-        android:paddingTop="400dp"
-        android:paddingBottom="30dp"
-        android:paddingLeft="10dp"
+        android:paddingTop="30dp"
         android:paddingRight="10dp"
-        >
+        android:paddingLeft="10dp"
+        android:paddingBottom="15dp">
 
-        <EditText
-            android:id="@+id/edit_number"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Введите номер телефона..."
-            android:inputType="text"
-            android:tag="values"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/edit_email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:backgroundTint="@color/secondary"
-            android:layout_marginBottom="400dp"
-            tools:ignore="Autofill,HardcodedText" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/divider"
+            tools:ignore="HardcodedText,Autofill"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edit_email"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Введите почту..."
-            android:inputType="text"
-            android:tag="values"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/edit_login"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:backgroundTint="@color/secondary"
-            android:layout_marginBottom="350dp"
-            tools:ignore="Autofill,HardcodedText" />
+            <EditText
+                android:id="@+id/reg_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="имя..."
+                android:inputType="text"
+                android:maxLines="1"
+                 />
 
-        <EditText
-            android:id="@+id/edit_login"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Введите логин..."
-            android:inputType="text"
-            android:tag="values"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/edit_create_password"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:backgroundTint="@color/secondary"
-            android:layout_marginBottom="300dp"
-            tools:ignore="Autofill,HardcodedText" />
-
-        <EditText
-            android:id="@+id/edit_create_password"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Придумайте пароль..."
-            android:inputType="text"
-            android:tag="values"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/edit_repeat_password"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:backgroundTint="@color/secondary"
-            android:layout_marginBottom="250dp"
-            tools:ignore="Autofill,HardcodedText" />
-
-        <EditText
-            android:id="@+id/edit_repeat_password"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Повторите пароль..."
-            android:inputType="text"
-            android:tag="values"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/button_entrance"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:backgroundTint="@color/secondary"
-            android:layout_marginBottom="200dp"
-            tools:ignore="Autofill,HardcodedText" />
-        <Button
-            android:id="@+id/button_entrance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Войти"
-            android:elevation="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:backgroundTint="@color/secondary"
-            />
+            <EditText
+                android:id="@+id/reg_last_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="фамилия..."
+                android:inputType="text"
+                android:maxLines="1"
+                 />
+            <EditText
+                android:id="@+id/reg_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="email..."
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                />
+            <EditText
+                android:id="@+id/reg_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="номер телефона..."
+                android:inputType="phone"
+                android:maxLines="1"
+                 />
+            <EditText
+                android:id="@+id/reg_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="пароль..."
+                android:inputType="textPassword"
+                android:maxLines="1"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="день рождения: ВЫБРАТЬ"
+                android:id="@+id/reg_burthday"
+                />
+            <com.romainpiel.shimmer.ShimmerButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/reg_complete"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:text="зарегестрироваться"
+                android:backgroundTint="@color/secondary"
+                app:reflectionColor="@color/common_google_signin_btn_text_light_disabled"
+                />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline

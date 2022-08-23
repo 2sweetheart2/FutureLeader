@@ -45,7 +45,7 @@ import me.solo_team.futureleader.ui.menu.statical.Media.MusicPlayer;
 
 public class PlayerService extends Service {
     private final int NOTIFICATION_ID = 404;
-    private final String NOTIFICATION_DEFAULT_CHANNEL_ID = "default_channel";
+    private final String NOTIFICATION_DEFAULT_CHANNEL_ID = "медиа контроллер";
 
     private final MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
 

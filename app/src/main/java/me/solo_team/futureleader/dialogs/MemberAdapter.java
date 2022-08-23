@@ -63,10 +63,10 @@ public class MemberAdapter extends ArrayAdapter<ChatMember> {
                 ((ImageButton) v.findViewById(R.id.member_btn)).setImageDrawable(customUtilBtn);
             if (!needCustomButton)
                 v.findViewById(R.id.member_btn).setVisibility(View.GONE);
-            if (onViewClickListener != null)
-                ((ImageButton) v.findViewById(R.id.member_btn)).setOnClickListener(onViewClickListener);
+            if (clicks != null)
+                ((ImageButton) v.findViewById(R.id.member_btn)).setOnClickListener((View.OnClickListener) v12 -> clicks.click(member));
             else
-                ((ImageButton) v.findViewById(R.id.member_btn)).setOnClickListener(v1 -> {
+                ((ImageView) v.findViewById(R.id.member_photo)).setOnClickListener(v1 -> {
                     if (!Constants.user.permission.can_get_user) {
                         Utils.ShowSnackBar.show(activity.getApplicationContext(), "отказано в доступе!", v);
                         return;

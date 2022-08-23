@@ -14,11 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.Founder.FounderLayout;
 import me.solo_team.futureleader.ui.menu.statical.Media.PopularMusic;
 import me.solo_team.futureleader.ui.menu.statical.admining.AdminingLayout;
 import me.solo_team.futureleader.ui.menu.statical.applications.ApplicationsView;
 import me.solo_team.futureleader.ui.menu.statical.dr.DrView;
+import me.solo_team.futureleader.ui.menu.statical.programs.Endayment;
+import me.solo_team.futureleader.ui.menu.statical.programs.FondCommands;
 import me.solo_team.futureleader.ui.menu.statical.programs.ProgramsLayout;
 import me.solo_team.futureleader.ui.menu.statical.shop.ShopView;
 
@@ -45,12 +48,16 @@ public class MenuFragment extends Fragment {
         grid.addElement(null, "магазин", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), ShopView.class)));
         grid.addElement(null, "именниники", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), DrView.class)));
         grid.addElement(null, "медиа", "16", false).setOnClickListener(v -> startActivity(new Intent(requireContext(), PopularMusic.class)));
-        if(Constants.user.permission.can_view_admin_panel) grid.addElement(null,"администрирование","16",true)
-                .setOnClickListener(v -> startActivity(new Intent(requireContext(), AdminingLayout.class)));
+        if (Constants.user.permission.can_view_admin_panel)
+            grid.addElement(null, "администрирование", "16", true)
+                    .setOnClickListener(v -> startActivity(new Intent(requireContext(), AdminingLayout.class)));
 
         ConstraintLayout cn = root.findViewById(R.id.menu_header);
         cn.getChildAt(0).setOnClickListener(v -> startActivity(new Intent(requireContext(), FounderLayout.class)));
         cn.getChildAt(2).setOnClickListener(v -> startActivity(new Intent(requireContext(), ProgramsLayout.class)));
+        cn.getChildAt(4).setOnClickListener(v -> Utils.ShowSnackBar.show(requireContext(), "страница не доступна!", v));
+        cn.getChildAt(6).setOnClickListener(v -> startActivity(new Intent(requireContext(), Endayment.class)));
+        cn.getChildAt(8).setOnClickListener(v -> startActivity(new Intent(requireContext(), FondCommands.class)));
         return root;
     }
 

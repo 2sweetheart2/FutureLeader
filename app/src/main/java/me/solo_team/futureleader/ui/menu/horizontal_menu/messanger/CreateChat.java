@@ -66,6 +66,8 @@ public class CreateChat extends Her {
         intent.putExtra("checker", true);
         intent.putExtra("removeSelf", true);
         intent.putExtra("forChat", true);
+        intent.putExtra("isChatMember", true);
+        intent.putExtra("needShowSurveyStat", false);
         add.setOnClickListener(v -> startActivityIfNeeded(intent, 100));
         listView.setAdapter(adapter);
 

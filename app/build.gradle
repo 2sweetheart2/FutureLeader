@@ -12,7 +12,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -32,13 +32,13 @@ dependencies {
 // https://mavenlibs.com/maven/dependency/com.bluelinelabs/logansquare
 // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
     //noinspection GradleCompatible
-    compile 'com.github.blackfizz:eazegraph:1.2.2@aar'
-    compile 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.github.blackfizz:eazegraph:1.2.2@aar'
+    implementation 'com.nineoldandroids:library:2.4.0'
 
     implementation 'com.google.firebase:firebase-messaging'
 
     implementation platform('com.google.firebase:firebase-bom:30.1.0')
-
+    implementation 'com.romainpiel.shimmer:library:1.4.0@aar'
     implementation 'com.android.support:support-v4:23.4.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.appcompat:appcompat:1.4.1'

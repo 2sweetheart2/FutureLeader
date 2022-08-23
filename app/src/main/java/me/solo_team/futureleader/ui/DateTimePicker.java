@@ -2,6 +2,7 @@ package me.solo_team.futureleader.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,32 +26,32 @@ public class DateTimePicker extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.datetime_picker);
+        getSupportActionBar().hide();
         TextView timePicker = findViewById(R.id.date_time_btn);
-        timePicker.setOnClickListener(v -> {
-            SelectTimeDialog selectTimeDialog = new SelectTimeDialog(time -> {
-                timeT = time;
-                timePicker.setText("время: " + time.toStr());
+        boolean needTime = getIntent().getBooleanExtra("needTime",true);
+        if(needTime) {
+            timePicker.setOnClickListener(v -> {
+                SelectTimeDialog selectTimeDialog = new SelectTimeDialog(time -> {
+                    timeT = time;
+                    timePicker.setText("время: " + time.toStr());
+                });
+                selectTimeDialog.show(getSupportFragmentManager(), null);
             });
-            selectTimeDialog.show(getSupportFragmentManager(), null);
-        });
+        }
+        else
+            timePicker.setVisibility(View.GONE);
         findViewById(R.id.date_time_set).setOnClickListener(view -> {
 
             DatePicker datePicker = findViewById(R.id.date_picker);
 
-            if(timeT==null){
+            if(timeT==null && needTime){
                 Utils.ShowSnackBar.show(DateTimePicker.this,"Время не выбрано!",view);
                 return;
             }
-            Calendar calendar = new GregorianCalendar(datePicker.getYear(),
-                    datePicker.getMonth(),
-                    datePicker.getDayOfMonth(),
-                    timeT.hour,
-                    timeT.minute);
-
-            long time = calendar.getTimeInMillis();
             Intent data = new Intent();
             data.putExtra("date", (new Date(datePicker.getDayOfMonth(), datePicker.getMonth(), datePicker.getYear())).toStr());
-            data.putExtra("time", timeT.toStr());
+            if(needTime)
+                data.putExtra("time", timeT.toStr());
             setResult(1, data);
             finish();
         });

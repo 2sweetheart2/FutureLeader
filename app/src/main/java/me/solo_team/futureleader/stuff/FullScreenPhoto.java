@@ -5,30 +5,31 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
 import me.solo_team.futureleader.R;
@@ -56,7 +57,7 @@ public class FullScreenPhoto extends AppCompatActivity {
             @Override
             public void onTouch(boolean mode) {
                 FullScreenPhoto.this.mode = mode;
-                if(!mode)
+                if (!mode)
                     supportInvalidateOptionsMenu();
                 else
                     supportInvalidateOptionsMenu();
@@ -64,6 +65,30 @@ public class FullScreenPhoto extends AppCompatActivity {
         };
 
 
+    }
+
+    public void share_bitMap_to_Apps(Bitmap bitmap) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+
+        i.setType("image/*");
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    /*compress(Bitmap.CompressFormat.PNG, 100, stream);
+    byte[] bytes = stream.toByteArray();*/
+
+        i.putExtra(Intent.EXTRA_STREAM, getImageUri(this, bitmap));
+        try {
+            startActivity(Intent.createChooser(i, "Поделиться фото"));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, name, null);
+        return Uri.parse(path);
     }
 
     @Override
@@ -91,20 +116,28 @@ public class FullScreenPhoto extends AppCompatActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
+    public static Bitmap getBitmapFromView(View view) {
+        // Define a bitmap with the same size as the view
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        // Bind a canvas to it
+        Canvas canvas = new Canvas(returnedBitmap);
+        // Get the view's background
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null)
+            // has background drawable, then draw it on the canvas
+            bgDrawable.draw(canvas);
+        else
+            // does not have background drawable, then draw white background on the canvas
+            canvas.drawColor(Color.WHITE);
+        // draw the view on the canvas
+        view.draw(canvas);
+        // return the bitmap
+        return returnedBitmap;
+    }
+
 
     private void save(Bitmap icon) {
-        File file = Utils.saveImage(icon, name);
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-        Uri newUri = Uri.parse(Objects.requireNonNull(file.toURI()).toString());
-        System.out.println("LOAD PATH: " + newUri);
-
-        Intent share = new Intent(Intent.ACTION_SEND);
-
-        share.putExtra(Intent.EXTRA_STREAM, newUri);
-        share.setType("image/jpeg");
-
-        startActivity(Intent.createChooser(share, "Share Image"));
+        share_bitMap_to_Apps(icon);
     }
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;

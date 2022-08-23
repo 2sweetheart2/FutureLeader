@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.AttributeSet;
@@ -43,13 +44,17 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
 import java.time.LocalDate;
@@ -156,27 +161,41 @@ public class Utils {
         return values;
     }
 
-    public static File saveImage(Bitmap bitmap, String fileName) {
-        String root = Environment.getExternalStorageDirectory().getPath();
-        File myDir = new File(root + "/future_leaders_contents/photos");
-        myDir.mkdirs();
-        File file = new File(myDir, fileName);
-        System.out.println("SAVE: "+file);
-        if (file.exists())
-            file.delete();
+    public static File saveImage(Bitmap bitmap, String fileName, Context context) {
+        context.getFileStreamPath(fileName).deleteOnExit();
         try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            FileOutputStream out = context.openFileOutput(fileName,Context.MODE_APPEND);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
             out.close();
-            System.out.println("ROOT: "+root);
-            System.out.println(myDir.getPath());
-            return file;
+            return context.getFileStreamPath(fileName);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+
+    public static Uri saveFile(Context context, Bitmap b, String picName){
+        FileOutputStream fos;
+        try {
+            fos = context.openFileOutput(picName, Context.MODE_PRIVATE);
+            b.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            return Uri.fromFile(context.getFileStreamPath(picName));
+        }
+        catch (FileNotFoundException e) {
+            System.out.println( "file not found");
+            e.printStackTrace();
+            return null;
+        }
+        catch (IOException e) {
+            System.out.println( "io exception");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 //
 //
 //        File myDir = new File("/sdcard/saved_images");

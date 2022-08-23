@@ -33,15 +33,18 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.MediaAudioAdapters.VideoAdapter.VideoView;
 import me.solo_team.futureleader.Objects.Audio;
+import me.solo_team.futureleader.Objects.ChatMember;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.AddVideo;
+import me.solo_team.futureleader.ui.SelectMembers;
 import me.solo_team.futureleader.ui.menu.statical.Media.AddMusic;
 import me.solo_team.futureleader.ui.menu.statical.Media.SearchMusic;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
@@ -50,7 +53,7 @@ public class CreateChieldNew extends Her {
     LinearLayout list;
     String url;
     ImageView imageView;
-
+    String textUrl;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +66,7 @@ public class CreateChieldNew extends Her {
         Spinner spinner = findViewById(R.id.edit_new_list_obj_selector);
 
         MyCustomAdapter adapter = new MyCustomAdapter(this,
-                R.layout.spinner_text, new String[]{"Текст", "Изображение","аудио","видео"});
+                R.layout.spinner_text, new String[]{"Текст","текст-ссылка", "Изображение","аудио","видео","юзер"});
         spinner.setAdapter(adapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -78,7 +81,7 @@ public class CreateChieldNew extends Her {
                         editText.setLayoutParams(lp);
                         list.addView(editText);
                         break;
-                    case 1:
+                    case 2:
                         list.removeAllViews();
                         ImageView imageView = new ImageView(getApplicationContext());
                         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(200, 200);
@@ -98,7 +101,7 @@ public class CreateChieldNew extends Her {
                             startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
                         });
                         break;
-                    case 2:
+                    case 3:
                         list.removeAllViews();
                         AlertDialog.Builder obj = new AlertDialog.Builder(CreateChieldNew.this);
                         obj.setTitle("аудио");
@@ -108,7 +111,7 @@ public class CreateChieldNew extends Her {
                         obj.setNegativeButton("добавить новый аудио файл", (dialog, which) -> getAudio(false));
                         obj.show();
                         break;
-                    case 3:
+                    case 4:
                         list.removeAllViews();
                         list.removeAllViews();
                         AlertDialog.Builder obj2 = new AlertDialog.Builder(CreateChieldNew.this);
@@ -117,6 +120,25 @@ public class CreateChieldNew extends Her {
                         obj2.setIcon(R.drawable.resize_300x0);
                         obj2.setPositiveButton("да", (dialog, which) -> getVideo());
                         obj2.show();
+                        break;
+                    case 1:
+                        list.removeAllViews();
+                        EditText editText1 = new EditText(getApplicationContext());
+                        LinearLayout.LayoutParams lp5 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        lp5.setMargins(0, 5, 0, 5);
+                        editText1.setLayoutParams(lp5);
+                        editText1.setHint("ссылка...");
+                        list.addView(editText1);
+                        break;
+                    case 5:
+                        list.removeAllViews();
+                        Intent intent = new Intent(CreateChieldNew.this, SelectMembers.class);
+                        intent.putExtra("needStuff", false);
+                        intent.putExtra("checker", false);
+                        intent.putExtra("removeSelf", false);
+                        intent.putExtra("selectOne",true);
+                        intent.putExtra("title","Заявки пользователей");
+                        startActivityIfNeeded(intent, 100);
                 }
             }
 
@@ -133,14 +155,18 @@ public class CreateChieldNew extends Her {
                 if (((TextView) v).getText() == null) return;
                 if (((TextView) v).getText().length() == 0) return;
                 try {
-                    if(videoUrl!=null){
-                        o.put("type","video");
-                        o.put("value",videoUrl);
-                        o.put("extras",videoName);
-                    }
-                    else {
-                        o.put("type", "text");
+                    if(((TextView)v).getHint().toString().equals("ссылка...")){
+                        o.put("type", "text_link");
                         o.put("value", ((TextView) v).getText().toString());
+                    }else {
+                        if (videoUrl != null) {
+                            o.put("type", "video");
+                            o.put("value", videoUrl);
+                            o.put("extras", videoName);
+                        } else {
+                            o.put("type", "text");
+                            o.put("value", ((TextView) v).getText().toString());
+                        }
                     }
                     Constants.newsCache.curentNew.getJSONArray("objects").put(o);
                     Constants.newsCache.updObjects();
@@ -163,8 +189,16 @@ public class CreateChieldNew extends Her {
                 try {
                     if (audio == null)
                         return;
-                    o.put("type","audio");
-                    o.put("value",audio.toString());
+                    if(selectedUser!=null){
+                        o.put("type","user");
+                        o.put("value",selectedUser.getFullName());
+                        o.put("id",String.valueOf(selectedUser.userId));
+                        o.put("extras",selectedUser.profilePicture);
+                    }
+                    else {
+                        o.put("type", "audio");
+                        o.put("value", audio.toString());
+                    }
                     Constants.newsCache.curentNew.getJSONArray("objects").put(o);
                     Constants.newsCache.updObjects();
                 } catch (JSONException e) {
@@ -295,8 +329,20 @@ public class CreateChieldNew extends Her {
             videoName = data.getStringExtra("name");
             videoUrl = data.getStringExtra("url");
         }
+        if(requestCode==100 && resultCode==100){
+            try {
+                selectedUser = new ChatMember(new JSONObject(data.getStringArrayExtra("users")[0]));
+                View view1 = getLayoutInflater().inflate(R.layout.obj_chat_member,null);
+                ((TextView) view1.findViewById(R.id.chat_member_name)).setText(selectedUser.getFullName());
+                Constants.cache.addPhoto(selectedUser.profilePicture,view1.findViewById(R.id.chat_member_image),this);
+                list.addView(view1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
+    ChatMember selectedUser;
     String videoName;
     String videoUrl = null;
     Audio audio = null;

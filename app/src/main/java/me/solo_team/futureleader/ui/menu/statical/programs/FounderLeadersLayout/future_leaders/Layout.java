@@ -52,6 +52,10 @@ public class Layout extends Her {
             Intent intent = new Intent(this, Meropriyatia.class);
             startActivity(intent);
         });
+        views.get(2).setOnClickListener(v -> {
+            Intent intent = new Intent(this,Contacts.class);
+            startActivity(intent);
+        });
     }
 
 }

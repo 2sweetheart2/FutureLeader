@@ -121,8 +121,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                 click = v -> fragment.startActivity(new Intent(fragment.requireContext(), ChatsView.class));
                 break;
             case 4:
-                Utils.ShowSnackBar.show(fragment.requireContext(),"Времено не доступно!",fragment.requireView());
-
+                click = v -> Utils.ShowSnackBar.show(fragment.requireContext(),"Времено не доступно!",fragment.requireView());
+                break;
         }
         holder.nameView.setText(values.get(position));
         if (click != null)

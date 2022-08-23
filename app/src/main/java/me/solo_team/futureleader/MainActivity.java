@@ -39,6 +39,7 @@ import me.solo_team.futureleader.ui.menu.MenuFragment;
 import me.solo_team.futureleader.ui.news.NewsFragment;
 import me.solo_team.futureleader.ui.news.open_news.EditNews;
 import me.solo_team.futureleader.ui.profile.ProfileFragment;
+import me.solo_team.futureleader.ui.profile.UserSettings;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navView;
@@ -148,7 +149,21 @@ public class MainActivity extends AppCompatActivity {
                             return true;
                         })
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        } else menu.removeItem(1);
+        } else {
+            menu.removeItem(1);
+            if (navView.getSelectedItemId() == R.id.navigation_profile) {
+                menu.add(0, 2, 0, "")
+                        .setIcon(R.drawable.settings)
+                        .setOnMenuItemClickListener(item -> {
+                            Intent intent = new Intent(this, UserSettings.class);
+                            startActivity(intent);
+                            return true;
+                        })
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            }
+            else
+                menu.removeItem(2);
+        }
         switch (navView.getSelectedItemId()) {
             case R.id.navigation_news:
                 setTitle("Новости");

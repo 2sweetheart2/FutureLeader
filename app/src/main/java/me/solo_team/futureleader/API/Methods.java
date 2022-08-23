@@ -25,6 +25,7 @@ public enum Methods {
     GET_IDEAS("get_ideas"),
     CREATE_IDEA("create_idea"),
     SEND_VIDEO("send_video"),
+    RESEND_VERIFICATION("resend_verification"),
 
     ADD_EVENT("add_event"),
     GET_EVENTS_DATE("get_events_date"),
@@ -34,10 +35,13 @@ public enum Methods {
 
     GET_MUSICS("get_musics"),
     ADD_MUSIC("add_audio"),
+    ADD_AUDIO_FILE("add_adudio_file"),
     ADD_MUSIC_PHOTO("add_music_photo"),
 
     GET_SURVEYS("get_surveys"),
     ADD_ANSWERS("add_survey_answers"),
+
+    GET_VERSION("get_version"),
 
     GET_SHOP("get_shop"),
     ADD_SHOP_REQUEST("add_shop_request"),
@@ -95,7 +99,11 @@ public enum Methods {
     GET_WHO_HAS_THIS_ROLE("get_users_who_has_this_role"),
     UPDATE_ROLE("update_role"),
     CREATE_ROLE("create_admin_role"),
-    GET_USER("get_user");
+    GET_USER("get_user"),
+
+    SEND_RESET_PASSWORD("send_reset_password_link"),
+    RESET_PASSWORD("reset_password"),
+    ;
 
 
     public String label;

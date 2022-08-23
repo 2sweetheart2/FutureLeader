@@ -380,7 +380,11 @@ public class SelectMembers extends AppCompatActivity {
 
                 ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout, null);
                 ((TextView) constraintLayout.findViewById(R.id.admining_user_content_name)).setText(user.firstName + " " + user.lastName);
-                ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: " + o.getString("email"));
+                if(o.has("email"))
+                    ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("email: " + o.getString("email"));
+
+                else
+                    ((TextView) constraintLayout.findViewById(R.id.admining_user_content_email)).setText("");
 
                 TextView div = constraintLayout.findViewById(R.id.admining_user_content_division);
                 TextView pot = constraintLayout.findViewById(R.id.admining_user_content_post);
