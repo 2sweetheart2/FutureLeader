@@ -29,6 +29,8 @@ import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import me.solo_team.futureleader.FireBaseSendings;
+
 /**
  * реквесты на сервер
  *
@@ -55,7 +57,11 @@ public class HTTPS {
 
 
     public static void getMobileToken(GetToken callback) {
-        FirebaseMessaging.getInstance().getToken()
+        FirebaseMessaging fbm = FirebaseMessaging.getInstance();
+        fbm.getToken().addOnFailureListener(command -> {
+            System.out.println("FALI: "+command.getMessage());
+        });
+        fbm.getToken()
                 .addOnCompleteListener(task -> {
                     try {
                         if (!task.isSuccessful()) {
@@ -98,7 +104,7 @@ public class HTTPS {
                 try {
                     HttpURLConnection con = (HttpsURLConnection) new URL(URL + method.label).openConnection();
                     con.setConnectTimeout(5000);
-                    con.setReadTimeout(5000);
+                    con.setReadTimeout(10000);
                     con.setRequestMethod("POST");
                     con.setRequestProperty("Content-Type", "application/json; utf-8");
                     con.setRequestProperty("Accept", "application/json");

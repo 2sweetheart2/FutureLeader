@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/achivement_list"
+
+    <TextView
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="отпустите, чтоб обновить новости"
+        android:gravity="center"
+        android:padding="45dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

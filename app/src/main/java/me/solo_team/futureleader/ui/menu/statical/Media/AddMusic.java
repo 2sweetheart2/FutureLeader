@@ -144,7 +144,7 @@ public class AddMusic extends Her {
         //Тип получаемых объектов - image:
         photoPickerIntent.setType("image/*");
         //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
-        startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1002);
+        startActivityForResult(Intent.createChooser(photoPickerIntent, "Выберите изображение"), 1002);
     }
 
 

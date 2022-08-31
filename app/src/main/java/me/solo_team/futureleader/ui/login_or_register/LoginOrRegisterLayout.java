@@ -1,12 +1,15 @@
 package me.solo_team.futureleader.ui.login_or_register;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,9 +20,12 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.romainpiel.shimmer.Shimmer;
 
@@ -63,13 +69,82 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
             startActivity(intent, null);
         }
 
+        enter();
+
+
+    }
+
+    public void setError(String message) {
+        OldVersion oldVersion = new OldVersion(this, this);
+        oldVersion.setText(message);
+        oldVersion.show(getSupportFragmentManager(), null);
+    }
+
+    public void setBlocked() {
+        OldVersion oldVersion = new OldVersion(this, this);
+        oldVersion.show(getSupportFragmentManager(), null);
+    }
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Utils.ShowSnackBar.show(this, "уведомления разрешены!", huina);
+                } else {
+                    Utils.ShowSnackBar.show(this, "увы, но уведомления показываться не будут!", huina);
+                }
+            });
+
+    private void askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= 33) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                    PackageManager.PERMISSION_GRANTED) {
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    public void enter() {
+        Constants.settings = new CSettings(LoginOrRegisterLayout.this);
+        setContentView(R.layout.login_or_register_layout);
+        imageView = findViewById(R.id.logo);
+        imageView.setVisibility(View.GONE);
+        aSwitch = findViewById(R.id.login_or_register_swith);
+
+        if (getIntent().hasExtra("notif"))
+            Utils.ShowSnackBar.show(this, getIntent().getStringExtra("notif"), aSwitch);
+
+        webView = findViewById(R.id.webvuiew_login_or_register_layout);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new MyWebViewClient());
+        webView.loadUrl("file:///android_asset/index.html");
+
+        huina = findViewById(R.id.huina);
+
+
+        aSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                webView.setVisibility(View.VISIBLE);
+            else
+                webView.setVisibility(View.GONE);
+            Constants.settings.saveStartChecker(isChecked);
+        });
+        aSwitch.setChecked(Constants.settings.getStartChecker());
+        askNotificationPermission();
         API.getVersion(new ApiListener() {
             Dialog d;
 
             @Override
             public void onError(JSONObject json) throws JSONException {
                 d.dismiss();
-                runOnUiThread(()->setBlocked());
+                runOnUiThread(() -> {
+                    try {
+                        setError(json.getString("message"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
 
             @Override
@@ -81,58 +156,27 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
             public void onSuccess(JSONObject json) throws JSONException {
                 d.dismiss();
                 if (!BuildConfig.VERSION_NAME.equals(json.getString("version")))
-                    runOnUiThread(()->setBlocked());
+                    runOnUiThread(() -> setBlocked());
                 else
-                    runOnUiThread(()->enter());
+                    runOnUiThread(() -> {
+
+                        if (Constants.settings.getStartScreen()) {
+                            imageView.setVisibility(View.VISIBLE);
+                            mFadeInAnimation = AnimationUtils.loadAnimation(LoginOrRegisterLayout.this, R.anim.fadein);
+                            mFadeOutAnimation = AnimationUtils.loadAnimation(LoginOrRegisterLayout.this, R.anim.fadeout);
+                            FadeInAnimatio2 = AnimationUtils.loadAnimation(LoginOrRegisterLayout.this, R.anim.fadein);
+                            mFadeInAnimation.setAnimationListener(animationFadeInListener);
+                            mFadeOutAnimation.setAnimationListener(animationFadeOutListener);
+                            imageView.startAnimation(mFadeInAnimation);
+                        } else {
+                            webView.setAlpha(1);
+                            findViewById(R.id.huina).setAlpha(1);
+                            check();
+                        }
+                    });
             }
         });
 
-
-    }
-
-    public void setBlocked() {
-        OldVersion oldVersion = new OldVersion(this);
-        oldVersion.show(getSupportFragmentManager(), null);
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    public void enter() {
-        Constants.settings = new CSettings(LoginOrRegisterLayout.this);
-        setContentView(R.layout.login_or_register_layout);
-        aSwitch = findViewById(R.id.login_or_register_swith);
-
-        if (getIntent().hasExtra("notif"))
-            Utils.ShowSnackBar.show(this, getIntent().getStringExtra("notif"), aSwitch);
-
-        webView = findViewById(R.id.webvuiew_login_or_register_layout);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new MyWebViewClient());
-        webView.loadUrl("file:///android_asset/index.html");
-        huina = findViewById(R.id.huina);
-        imageView = findViewById(R.id.logo);
-
-        aSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked)
-                webView.setVisibility(View.VISIBLE);
-            else
-                webView.setVisibility(View.GONE);
-            Constants.settings.saveStartChecker(isChecked);
-        });
-        aSwitch.setChecked(Constants.settings.getStartChecker());
-
-        if (Constants.settings.getStartScreen()) {
-            mFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
-            mFadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.fadeout);
-            FadeInAnimatio2 = AnimationUtils.loadAnimation(this, R.anim.fadein);
-            mFadeInAnimation.setAnimationListener(animationFadeInListener);
-            mFadeOutAnimation.setAnimationListener(animationFadeOutListener);
-            imageView.startAnimation(mFadeInAnimation);
-        } else {
-            webView.setAlpha(1);
-            findViewById(R.id.huina).setAlpha(1);
-            imageView.setAlpha(0);
-            check();
-        }
     }
 
     public void check() {
@@ -201,10 +245,11 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
                               user.mobileToken = token;
                               Constants.user = user;
                               d.dismiss();
-                              startActivity(new Intent(LoginOrRegisterLayout.this, MainActivity.class));
                               if (!bySave)
                                   Constants.settings.saveUserInfo(password, login);
                               finish();
+                              startActivity(new Intent(LoginOrRegisterLayout.this, MainActivity.class));
+
                           }
                       },
                 new CustomString("email", login),

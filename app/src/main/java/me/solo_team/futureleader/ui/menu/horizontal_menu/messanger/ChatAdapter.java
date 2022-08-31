@@ -6,12 +6,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.solo_team.futureleader.Constants;
@@ -33,6 +36,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
     }
 
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, ViewGroup parent) {
@@ -47,23 +51,30 @@ public class ChatAdapter extends ArrayAdapter<Message> {
                 v = vi.inflate(R.layout.obj_message, null);
 
 
-        if (message != null) {
-
-            if (!privateChat)
-                ((TextView) v.findViewById(R.id.obj_message_sender_name)).setText(message.author.firstName + " " + message.author.lastName);
+        if (!privateChat)
+            ((TextView) v.findViewById(R.id.obj_message_sender_name)).setText(message.author.firstName + " " + message.author.lastName);
+        else
+            v.findViewById(R.id.obj_message_sender_name).setVisibility(View.GONE);
+        TextView text = v.findViewById(R.id.obj_message_text);
+        text.setText(message.text);
+        text.setMaxWidth(width);
+        v.findViewById(R.id.obj_message_image).setVisibility(View.GONE);
+        text.setOnLongClickListener(v1 -> {
+            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("message", text.getText().toString());
+            clipboard.setPrimaryClip(clip);
+            Utils.ShowSnackBar.show(context,"Текст скопирован!",v1);
+            return true;
+        });
+        if(messageWithAnimation.contains(message)){
+            Animation animation;
+            if(message.authorId==Constants.user.id){
+                animation = AnimationUtils.loadAnimation(context, R.anim.right_to_left);
+            }
             else
-                v.findViewById(R.id.obj_message_sender_name).setVisibility(View.GONE);
-            TextView text = v.findViewById(R.id.obj_message_text);
-            text.setText(message.text);
-            text.setMaxWidth(width);
-            v.findViewById(R.id.obj_message_image).setVisibility(View.GONE);
-            v.setOnLongClickListener(v1 -> {
-                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("message", text.getText().toString());
-                clipboard.setPrimaryClip(clip);
-                Utils.ShowSnackBar.show(context,"Текст скопирован!",v1);
-                return true;
-            });
+                animation = AnimationUtils.loadAnimation(context,R.anim.left_ro_right);
+            v.startAnimation(animation);
+            messageWithAnimation.remove(message);
         }
 
         return v;
@@ -71,16 +82,30 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
     int count = 0;
 
+
     @Override
     public void add(@Nullable Message object) {
         super.add(object);
         count++;
     }
 
+    private List<Message> messageWithAnimation = new ArrayList<>();
+
+    public void addWithAnimation(Message message){
+        messageWithAnimation.add(message);
+        add(message);
+    }
+
     @Override
     public void addAll(Message... items) {
         super.addAll(items);
         count+=items.length;
+    }
+
+    @Override
+    public void insert(@Nullable Message object, int index) {
+        super.insert(object, index);
+        count++;
     }
 
     @Override

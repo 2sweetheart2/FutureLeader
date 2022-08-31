@@ -25,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -339,6 +341,8 @@ public class SelectMembers extends AppCompatActivity {
             if(o.getInt("id")==Constants.user.id && !showStat && removeSelf)
                 continue;
             lastIndex = i + 1;
+            System.out.println(o);
+
             if(showStat){
                 ChatMember member = new ChatMember(o);
                 ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.admining_user_content_layout, null);
@@ -417,12 +421,21 @@ public class SelectMembers extends AppCompatActivity {
                             startActivity(intent);
                         });
                     if (selectOne) {
-                        constraintLayout.setOnClickListener(v -> {
-                            Intent data = new Intent();
-                            data.putExtra("user_id", user.id);
-                            setResult(1, data);
-                            finish();
-                        });
+                        if(getIntent().getBooleanExtra("needUserObject",false))
+                            constraintLayout.setOnClickListener(v -> {
+                                Intent data = new Intent();
+                                data.putExtra("user",user.toChatMemder());
+                                setResult(1,data);
+                                finish();
+                            });
+                        else {
+                            constraintLayout.setOnClickListener(v -> {
+                                Intent data = new Intent();
+                                data.putExtra("user_id", user.id);
+                                setResult(1, data);
+                                finish();
+                            });
+                        }
                     }
                 }
             }
@@ -461,7 +474,9 @@ public class SelectMembers extends AppCompatActivity {
                         usersInfo.add(user.toChatMemder());
                     }
                     String[] stockArr = new String[usersInfo.size()];
+
                     usersInfo.toArray(stockArr);
+
                     data.putExtra("users",stockArr);
                     setResult(100,data);
                     finish();

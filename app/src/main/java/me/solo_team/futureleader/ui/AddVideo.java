@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -43,13 +44,10 @@ public class AddVideo extends Her {
         editText = findViewById(R.id.add_video_name);
         textView = findViewById(R.id.add_video_file_name);
         button.setOnClickListener(v -> {
-            Intent chooseFile;
-            Intent intent;
-            chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-            chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
-            chooseFile.setType("*/*");
-            intent = Intent.createChooser(chooseFile, "Choose a file");
-            startActivityForResult(intent, 10);
+            Intent intent = new Intent();
+            intent.setType("video/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent,"Выберите видео"),10);
         });
     }
 
@@ -89,7 +87,7 @@ public class AddVideo extends Her {
                                      public void onSuccess(JSONObject json) throws JSONException {
                                          url = json.getString("url");
                                          d.dismiss();
-                                         runOnUiThread(() -> textView.setText("имя файла: " + Utils.getFileName(uri, AddVideo.this)));
+                                         runOnUiThread(() -> {textView.setText("имя файла: " + Utils.getFileName(uri, AddVideo.this));button.setVisibility(View.GONE);});
                                      }
                                  },
                         getBytesFromUri(uri), Utils.getFileName(uri, AddVideo.this), new CustomString("token", Constants.user.token)

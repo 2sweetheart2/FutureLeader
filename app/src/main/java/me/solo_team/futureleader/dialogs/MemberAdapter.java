@@ -82,7 +82,7 @@ public class MemberAdapter extends ArrayAdapter<ChatMember> {
 
                         @Override
                         public void inProcess() {
-                            d = openWaiter(activity.getApplicationContext());
+                            d = openWaiter(getContext());
                         }
 
                         @Override

@@ -6,7 +6,7 @@
     tools:context=".stuff.FullScrennPhotoFragment"
     android:layout_height="match_parent">
 
-    <ImageView
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:id="@+id/my_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

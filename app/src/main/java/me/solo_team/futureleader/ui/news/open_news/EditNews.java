@@ -11,6 +11,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,10 +39,12 @@ import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.ui.WebViewsContent.WebView;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.news.AlertDialogForDeleteField;
+import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
 public class EditNews extends Her {
 
@@ -88,6 +95,10 @@ public class EditNews extends Her {
                 error("Объектов не может быть 0", v);
                 return;
             }
+            if(!Constants.newsCache.curentNew.has("photo")){
+                error("Отсутствует обложка", v);
+                return;
+            }
             try {
                 Constants.newsCache.curentNew.put("title", tag.getText());
                 Constants.newsCache.curentNew.put("name", name.getText());
@@ -120,7 +131,9 @@ public class EditNews extends Her {
                     public void onSuccess(JSONObject json) throws JSONException {
                         d.dismiss();
                         System.out.println(json);
+                        Constants.newsCache.news.put(Constants.newsCache.curentNew);
                         Constants.newsCache.curentNew = null;
+                        setResult(1);
                         finish();
                     }
                 }, Constants.newsCache.curentNew);
@@ -135,7 +148,7 @@ public class EditNews extends Her {
             //Тип получаемых объектов - image:
             photoPickerIntent.setType("image/*");
             //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
-            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
+            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выберите изображение"), 1);
         });
     }
 
@@ -255,6 +268,90 @@ public class EditNews extends Her {
                         return true;
                     });
                     runOnUiThread(() -> list.addView(view));
+                case "text_link":
+                    String url = o.getString("value");
+                    SpannableString ss = new SpannableString(url);
+                    ClickableSpan clickableSpan = new ClickableSpan() {
+                        @Override
+                        public void onClick(View textView) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            super.updateDrawState(ds);
+                            ds.setUnderlineText(false);
+                        }
+                    };
+                    ss.setSpan(clickableSpan, 0, url.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    TextView textView1 = new TextView(getApplicationContext());
+                    textView1.setText(ss);
+                    textView1.setMovementMethod(LinkMovementMethod.getInstance());
+                    textView1.setHighlightColor(Color.TRANSPARENT);
+                    LinearLayout.LayoutParams lp5 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lp5.setMargins(0, 5, 0, 5);
+                    textView1.setLayoutParams(lp5);
+                    int finalI4 = i;
+                    textView1.setOnLongClickListener(v1 -> {
+                        AlertDialogForDeleteField al = new AlertDialogForDeleteField((result, view2) -> {
+                            if (!result) return;
+                            Constants.newsCache.curentNew.getJSONArray("objects").remove(view2);
+                            drawObject(Constants.newsCache.curentNew.getJSONArray("objects"));
+                        }, finalI4);
+                        al.show(getSupportFragmentManager(), null);
+                        return true;
+                    });
+                    runOnUiThread(() -> list.addView(textView1));
+                    break;
+                case "user":
+                    View view1 = getLayoutInflater().inflate(R.layout.obj_chat_member,null);
+                    ((TextView) view1.findViewById(R.id.chat_member_name)).setText(o.getString("value"));
+                    Constants.cache.addPhoto(o.getString("extras"),view1.findViewById(R.id.chat_member_image),this);
+                    if(Constants.user.permission.can_get_user)
+                        view1.setOnClickListener(v1 -> {
+                            try {
+                                API.getUser(new ApiListener() {
+                                    Dialog d;
+                                    @Override
+                                    public void onError(JSONObject json) throws JSONException {
+                                        d.dismiss();
+                                        createNotification(v1,json.getString("message"));
+                                    }
+
+                                    @Override
+                                    public void inProcess() {
+                                        d = openWaiter(EditNews.this);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(JSONObject json) throws JSONException {
+                                        User user = new User(json.getJSONObject("user"));
+                                        d.dismiss();
+                                        runOnUiThread(()->{
+                                            Constants.currentUser = user;
+                                            Intent intent = new Intent(EditNews.this, ViewProfile.class);
+                                            intent.putExtra("removeSelf",false);
+                                            startActivity(intent);
+                                        });
+                                    }
+                                },new CustomString("token",Constants.user.token),new CustomString("id",o.getString("id")));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    int finalI5 = i;
+                    view1.setOnLongClickListener(v1 -> {
+                        AlertDialogForDeleteField al = new AlertDialogForDeleteField((result, view2) -> {
+                            if (!result) return;
+                            Constants.newsCache.curentNew.getJSONArray("objects").remove(view2);
+                            drawObject(Constants.newsCache.curentNew.getJSONArray("objects"));
+                        }, finalI5);
+                        al.show(getSupportFragmentManager(), null);
+                        return true;
+                    });
+                    runOnUiThread(() -> list.addView(view1));
             }
         }
     }
@@ -267,7 +364,7 @@ public class EditNews extends Her {
             Uri selectedImage = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                API.uploadImage(new ApiListener() {
+                API.uploadImageNotResized(new ApiListener() {
                     @Override
                     public void onError(JSONObject json) {
                         System.out.println(json);

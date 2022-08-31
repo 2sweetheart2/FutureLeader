@@ -68,8 +68,7 @@ public class AchievementsLayout extends Her {
                                 }
                             },
                 new CustomString("token", Constants.user.token),
-                new CustomString("admin", String.valueOf(true)),
-                new CustomString("user_id", String.valueOf(Constants.user.id))
+                new CustomString("admin", String.valueOf(true))
 
         );
     }
@@ -95,6 +94,8 @@ public class AchievementsLayout extends Her {
                 obj.setPositiveButton("удалить", (dialog, which) -> Cremove(achievement.id));
                 obj.setNegativeButton("выдать участникам", (dialog, which) -> {
                     currentId = achievement.id;
+                    System.out.println(currentId);
+
                     Cadd();
                 });
                 obj.show();
@@ -206,6 +207,7 @@ public class AchievementsLayout extends Her {
                     e.printStackTrace();
                 }
             }
+            System.out.println("CURRENT ID: "+currentId);
             Utils.ShowSnackBar.show(AchievementsLayout.this, "выбрано участников: " + members.size(), list);
             AlertDialog.Builder obj = new AlertDialog.Builder(AchievementsLayout.this);
             obj.setTitle("подтвердите добавление");

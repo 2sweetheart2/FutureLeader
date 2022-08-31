@@ -73,7 +73,7 @@ public class ChatInfodialog extends AppCompatDialogFragment {
             //Тип получаемых объектов - image:
             photoPickerIntent.setType("image/*");
             //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
-            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
+            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выберите изображение"), 1);
         });
         return builder.create();
     }
@@ -104,6 +104,7 @@ public class ChatInfodialog extends AppCompatDialogFragment {
                                         @Override
                                         public void onError(JSONObject json) throws JSONException {
                                             d.dismiss();
+                                            createNotification(logo,json.getString("message"));
                                         }
 
                                         @Override
@@ -114,8 +115,9 @@ public class ChatInfodialog extends AppCompatDialogFragment {
                                         @Override
                                         public void onSuccess(JSONObject json) throws JSONException {
                                             String url = json.getString("url");
-                                            Utils.getBitmapFromURL(url, bitmap -> getActivity().runOnUiThread(() -> logo.setImageBitmap(bitmap)));
+                                            Constants.cache.addPhoto(url,logo,requireActivity());
                                             chat.photo = url;
+                                            Constants.chatsCache.getChatByPeerId(chat.peerId).photo = url;
                                             d.dismiss();
                                         }
                                     },

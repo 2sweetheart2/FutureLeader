@@ -27,7 +27,10 @@ public class API {
         try {
             JSONObject jsonObject = new JSONObject();
             for (CustomString s : params) {
-                jsonObject.put(s.name, s.value);
+                if(!s.isInt)
+                    jsonObject.put(s.name, s.value);
+                else
+                    jsonObject.put(s.name,s.valueInt);
             }
             return jsonObject;
         } catch (JSONException e) {
@@ -99,6 +102,10 @@ public class API {
 
     public static void uploadImage(ApiListener listener, Bitmap bitmap, CustomString... params) {
         HTTPS.u(Methods.UPL_IMAGE, Objects.requireNonNull(createJsonObj(params)), bitmap, listener);
+    }
+
+    public static void uploadImageNotResized(ApiListener listener, Bitmap bitmap, CustomString... params) {
+        HTTPS.u(Methods.UPL_IMAGE_NOT_RESIZED, Objects.requireNonNull(createJsonObj(params)), bitmap, listener);
     }
 
     public static void addMusicPhoto(ApiListener listener, Bitmap bitmap, CustomString... params) {
@@ -306,5 +313,12 @@ public class API {
 
     public static void getVersion(ApiListener listener,CustomString...params){
         HTTPS.sendPost(Methods.GET_VERSION,createJsonObj(params),listener);
+    }
+    public static void setStatus(ApiListener listener,CustomString...params){
+        HTTPS.sendPost(Methods.UPDATE_STATUS,createJsonObj(params),listener);
+    }
+
+    public static void getChhatHistory(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.GET_CHAT_HISTORY,createJsonObj(params),listener);
     }
 }

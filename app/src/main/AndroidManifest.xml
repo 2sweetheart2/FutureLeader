@@ -5,12 +5,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.MANAGE_MEDIA" />
     <uses-permission android:name="android.permission.MANAGE_MEDIA" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -21,9 +21,19 @@
         android:roundIcon="@drawable/resize_300x0"
         android:supportsRtl="true"
         android:theme="@style/Theme.FutureLeader"
-        android:windowSoftInputMode="adjustResize"
-        tools:ignore="AllowBackup">
+        >
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <service android:name=".FireBaseSendings"
+            android:exported="false"
+            >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
+            android:exported="true"
             android:name=".ui.menu.horizontal_menu.messanger.CurrentChatView2"
             android:theme="@style/Theme.FutureLeader.NoActionBar"
             android:screenOrientation="portrait" />
@@ -35,12 +45,16 @@
             android:process=":myservice"
             tools:ignore="ExportedService" />
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".ui.login_or_register.LoginOrRegisterLayout"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,69 +62,109 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.news.open_news.OpenNewsFragment"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.Founder.FounderLayout"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.Founder.ContactLayout"
+        <activity
+            android:name=".ui.news.open_news.OpenNewsFragment"
+            android:exported="true"
+
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.menu.statical.Founder.FounderLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.Founder.ContactLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:exported="true"
             android:name=".ui.WebViewsContent.WebView"
             android:label="Web"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".ui.menu.statical.admining.AdminingLayout"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.users.UsersLayout"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.programs.ProgramsLayout"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Layout"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.profile.EditFieldsLayout"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.profile.AddFieldLayout"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.users.StructurLayout"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.news.open_news.EditNews"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.news.open_news.CreateChieldNew"
-            android:screenOrientation="portrait" />
-
-        <service android:name=".FireBaseSendings"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <activity android:name=".ui.OnlyImage" />
         <activity
+            android:name=".ui.menu.statical.admining.AdminingLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.users.UsersLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.ProgramsLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Layout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.profile.EditFieldsLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.profile.AddFieldLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.users.StructurLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.news.open_news.EditNews"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.news.open_news.CreateChieldNew"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".ui.OnlyImage"
+            android:exported="true" />
+        <activity
+            android:exported="true"
             android:name=".MediaAudioAdapters.VideoAdapter.VideoView"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".ui.profile.view_prof.ViewProfile"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.horizontal_menu.calendar.Calendar"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.horizontal_menu.idea.Idea"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.horizontal_menu.idea.Showidea"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.horizontal_menu.idea.CreateIdea"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.menu.horizontal_menu.calendar.AddEvent"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.menu.horizontal_menu.calendar.EventCheck"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.horizontal_menu.calendar.ViewEvent"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.horizontal_menu.surveys.SurveysView"
+        <activity
+            android:name=".ui.profile.view_prof.ViewProfile"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.menu.horizontal_menu.calendar.Calendar"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.horizontal_menu.idea.Idea"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.horizontal_menu.idea.Showidea"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.horizontal_menu.idea.CreateIdea"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.horizontal_menu.calendar.AddEvent"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.horizontal_menu.calendar.EventCheck"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.horizontal_menu.calendar.ViewEvent"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.horizontal_menu.surveys.SurveysView"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:exported="true"
             android:name=".ui.menu.horizontal_menu.surveys.DoSurvey"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
@@ -118,16 +172,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".ui.menu.statical.dr.DrView"
+        <activity
+            android:name=".ui.menu.statical.dr.DrView"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".stuff.FullScreenPhoto"
             android:theme="@style/Theme.FutureLeader.ViewPhoto" />
-        <activity android:name=".ui.menu.statical.Media.PopularMusic"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.Media.AddMusic"
+        <activity
+            android:name=".ui.menu.statical.Media.PopularMusic"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.menu.statical.Media.AddMusic"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:exported="true"
             android:name=".ui.menu.statical.Media.MusicPlayer"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -141,150 +203,264 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+        <receiver android:name="androidx.media.session.MediaButtonReceiver"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.menu.statical.shop.ShopView"
+        <activity
+            android:name=".ui.menu.statical.shop.ShopView"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.shop.CorzinaView"
+        <activity
+            android:name=".ui.menu.statical.shop.CorzinaView"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.horizontal_menu.messanger.ChatsView"
+        <activity
+            android:name=".ui.menu.horizontal_menu.messanger.ChatsView"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:label=""/>
-        <activity android:name=".ui.menu.horizontal_menu.messanger.CreateChat"
+            android:label="" />
+        <activity
+            android:name=".ui.menu.horizontal_menu.messanger.CreateChat"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.SelectMembers"
+        <activity
+            android:name=".ui.SelectMembers"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.applications.YourApplications"
+        <activity
+            android:name=".ui.menu.statical.applications.YourApplications"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.applications.ApplicationsView"
+        <activity
+            android:name=".ui.menu.statical.applications.ApplicationsView"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.applications.Uslugi"
+        <activity
+            android:name=".ui.menu.statical.applications.Uslugi"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.applications.ViewUsluga"
+        <activity
+            android:name=".ui.menu.statical.applications.ViewUsluga"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.DateTimePicker"
+        <activity
+            android:name=".ui.DateTimePicker"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysLayout"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.surveys.SurveysLayout"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveys"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveys"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveysObject"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.surveys.CreateSurveysObject"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveusForUsers"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.surveys.SurveusForUsers"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SurveysStatistic"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.surveys.SurveysStatistic"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.Ideas"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.surveys.Ideas"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.surveys.SubmitIdea"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.surveys.SubmitIdea"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:hardwareAccelerated="true"
-            />
-        <activity android:name=".ui.menu.statical.admining.layouts.moderation.UnverifyUsers"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.moderation.UnverifyUsers"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.moderation.VerifiUser"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.moderation.VerifiUser"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:hardwareAccelerated="true"
-            />
-        <activity android:name=".ui.menu.statical.admining.layouts.stat.UploadStat"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.stat.UploadStat"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.stat.LoginStat"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.stat.LoginStat"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.stat.AllStat"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.stat.AllStat"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.moderation.GetShopRequests"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.moderation.GetShopRequests"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.moderation.GetOldShopRequest"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.moderation.GetOldShopRequest"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.Media.SearchMusic"
+        <activity
+            android:name=".ui.menu.statical.Media.SearchMusic"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.AddVideo"
+        <activity
+            android:name=".ui.AddVideo"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.VideoView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
-        <activity android:name=".ui.menu.statical.admining.layouts.gameifecation.AchievementsLayout"
+        <activity
+            android:name=".ui.VideoView"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.gameifecation.AchievementsLayout"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.menu.statical.admining.layouts.gameifecation.CereateAchievement"
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.gameifecation.CereateAchievement"
+            android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.news.open_news.CheckUsers"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.menu.statical.admining.layouts.gameifecation.ChangeRole"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.menu.statical.admining.layouts.users.StatusOfUsers"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Meropriyatia"
-            android:screenOrientation="portrait"
-/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Contacts"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.users_projects.UsersProjects"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.users_projects.flip.FlipLayout"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.SocSeti"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.MeropRiytia"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.SchoolFutureLeaders"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.piter"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.PazlLayout"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.stroy.Stroy"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.programing.Programing"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.prof.Prof"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.Sochi"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.DvizSmelyz.DvizLayout"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.LiceumLayout"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.Blagoveshensk"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.Moscov"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.Endayment"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FondCommands"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.PartnersC"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Mer"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.Partners"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.login_or_register.RegisterLayout"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.login_or_register.ResetPasswordLayout"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.profile.UserSettings"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ResetPassword"
-            android:screenOrientation="portrait"
-            >
+        <activity
+            android:name=".ui.news.open_news.CheckUsers"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.gameifecation.ChangeRole"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.users.StatusOfUsers"
+            android:exported="true" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Meropriyatia"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.future_leaders.Contacts"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.users_projects.UsersProjects"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.users_projects.flip.FlipLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.SocSeti"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.MeropRiytia"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.SchoolFutureLeaders"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.piter"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.PazlLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.stroy.Stroy"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.programing.Programing"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.pazl.prof.Prof"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.SchoolFutureLeaders.Sochi"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.DvizSmelyz.DvizLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.LiceumLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.Blagoveshensk"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.Liceum.Moscov"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.Endayment"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FondCommands"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.PartnersC"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.Mer"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.Partners"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.login_or_register.RegisterLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.login_or_register.ResetPasswordLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.profile.UserSettings"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ResetPassword"
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="https"
+
+                <data
+                    android:scheme="https"
                     android:host="future-leaders.ru"
                     android:pathPrefix="/reset_password" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.EditStatus"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

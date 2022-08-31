@@ -99,10 +99,26 @@ public class PlayerService extends Service {
         Context appContext = getApplicationContext();
 
         Intent activityIntent = new Intent(appContext, MusicPlayer.class);
-        mediaSession.setSessionActivity(PendingIntent.getActivity(appContext, 0, activityIntent, 0));
-
         Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON, null, appContext, MediaButtonReceiver.class);
-        mediaSession.setMediaButtonReceiver(PendingIntent.getBroadcast(appContext, 0, mediaButtonIntent, 0));
+
+        PendingIntent pendingIntent = null;
+        PendingIntent pendingIntent2 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getActivity
+                    (this, 0, activityIntent, PendingIntent.FLAG_MUTABLE);
+            pendingIntent2 = PendingIntent.getActivity
+                    (this, 0, mediaButtonIntent, PendingIntent.FLAG_MUTABLE);
+        }
+        else
+        {
+            pendingIntent = PendingIntent.getActivity
+                    (this, 0, activityIntent, PendingIntent.FLAG_ONE_SHOT);
+            pendingIntent2 = PendingIntent.getActivity
+                    (this, 0, mediaButtonIntent, PendingIntent.FLAG_ONE_SHOT);
+        }
+        mediaSession.setSessionActivity(pendingIntent);
+
+        mediaSession.setMediaButtonReceiver(pendingIntent2);
 
         exoPlayer = (SimpleExoPlayer) new ExoPlayer.Builder(getBaseContext()).build();
         exoPlayer.addListener(exoPlayerListener);

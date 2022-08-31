@@ -19,11 +19,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.Chat;
 import me.solo_team.futureleader.Objects.ChatMember;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.dialogs.MemberAdapter;
@@ -105,6 +107,7 @@ public class CreateChat extends Her {
                 Dialog d;
                 @Override
                 public void onError(JSONObject json) throws JSONException {
+                    d.dismiss();
                     createNotification(v,json.getString("message"));
                 }
 
@@ -115,10 +118,9 @@ public class CreateChat extends Her {
 
                 @Override
                 public void onSuccess(JSONObject json) throws JSONException {
-                    System.out.println(json);
                     d.dismiss();
                     finish();
-
+                    setResult(1);
                 }
             },
                     jsonInput);

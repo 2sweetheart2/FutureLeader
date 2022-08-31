@@ -29,9 +29,13 @@ import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Dr;
+import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
+import me.solo_team.futureleader.ui.menu.statical.admining.AdminingLayout;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
+import me.solo_team.futureleader.ui.news.open_news.OpenNewsFragment;
+import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
 public class DrView extends Her {
 
@@ -86,14 +90,47 @@ public class DrView extends Her {
             view.setOnClickListener(v -> {
                 currentDr = dr;
                 AlertDialog.Builder obj = new AlertDialog.Builder(DrView.this);
-                obj.setTitle("день рождения " + dr.userName);
+                obj.setTitle("выбор действия " + dr.userName);
                 obj.setIcon(R.drawable.resize_300x0);
-                obj.setPositiveButton("да", addCalendaryEvent);
-                obj.setNegativeButton("нет", null);
-                obj.setMessage("добавить этот день в календарь?");
+                obj.setPositiveButton("добавить в календарь", addCalendaryEvent);
+                obj.setNegativeButton("перейти в профиль", (dialog, which) -> {
+                    if (!Constants.user.permission.can_get_user) {
+                        Utils.ShowSnackBar.show(DrView.this, "отказано в доступе!", list);
+                        return;
+                    }
+                    try {
+                        API.getUser(new ApiListener() {
+                            Dialog d;
+
+                            @Override
+                            public void onError(JSONObject json) throws JSONException {
+                                d.dismiss();
+                                createNotification(list, json.getString("message"));
+                            }
+
+                            @Override
+                            public void inProcess() {
+                                d = openWaiter(DrView.this);
+                            }
+
+                            @Override
+                            public void onSuccess(JSONObject json) throws JSONException {
+                                User user = new User(json.getJSONObject("user"));
+                                d.dismiss();
+                                runOnUiThread(() -> {
+                                    Constants.currentUser = user;
+                                    Intent intent = new Intent(DrView.this, ViewProfile.class);
+                                    intent.putExtra("removeSelf", false);
+                                    startActivity(intent);
+                                });
+                            }
+                        }, new CustomString("token", Constants.user.token), new CustomString("id", String.valueOf(dr.userId)));
+
+
+
+                    }catch (Exception ignored){}
+                });
                 obj.show();
-
-
             });
         }
     }
@@ -101,7 +138,7 @@ public class DrView extends Her {
     private final DialogInterface.OnClickListener addCalendaryEvent = (dialog, which) -> {
         if (Build.VERSION.SDK_INT >= 14) {
             Calendar cal = Calendar.getInstance();
-            cal.set(currentDr.date.year, currentDr.date.month-1, currentDr.date.day);
+            cal.set(cal.get(Calendar.YEAR), currentDr.date.month-1, currentDr.date.day);
             LocalDate locDate = LocalDate.of(currentDr.date.year, currentDr.date.month, currentDr.date.day);
             int age = Utils.calculateAge(locDate, LocalDate.now());
             Intent intent = new Intent(Intent.ACTION_INSERT)

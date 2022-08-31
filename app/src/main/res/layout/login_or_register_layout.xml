@@ -60,7 +60,7 @@
         app:layout_constraintLeft_toLeftOf="@id/guideline14"
         app:layout_constraintRight_toRightOf="@id/guideline15"
         android:src="@drawable/resize_300x0"
-        />
+        tools:ignore="ContentDescription" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"

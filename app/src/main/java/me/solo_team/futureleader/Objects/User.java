@@ -22,7 +22,7 @@ public class User {
     public List<Field> fields = new ArrayList<>();
     public String achievementsIds;
     public int adminStatus = 0;
-    public JSONArray achievements;
+    public List<Achievement> achievements = new ArrayList<>();
     public FieldsStuff fieldsStuff;
     public String mobileToken;
 
@@ -34,6 +34,7 @@ public class User {
             this.firstName = payload.getString("first_name");
             this.lastName = payload.getString("last_name");
             this.profilePictureLink = payload.getString("profile_picture");
+            this.id = payload.getInt("id");
 
             this.achievementsIds = payload.getString("achievement_ids");
             this.adminStatus = payload.getInt("admin_status");
@@ -44,7 +45,6 @@ public class User {
             JSONObject field_stuff = payload.getJSONObject("fields_stuff");
             this.addFields(field_stuff.getString("fields"));
             this.fieldsStuff = new FieldsStuff(this.fields, this.convertToFields(field_stuff.getString("can_edit_fields")), field_stuff.getInt("max_fields_size"));
-            this.id = payload.getInt("id");
             this.status = payload.getString("status");
             if(!payload.isNull("token"))
                 this.token = payload.getString("token");

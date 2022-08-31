@@ -122,7 +122,9 @@ public class AdminingLayout extends AppCompatActivity {
 
         expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             System.out.println(groupPosition+" "+childPosition);
-            startActivityIfNeeded(new Intent(AdminingLayout.this,classes.get(groupPosition).get(childPosition)),100);
+            if(classes.containsKey(groupPosition))
+                if(classes.get(groupPosition).get(childPosition)!=null)
+                    startActivityIfNeeded(new Intent(AdminingLayout.this,classes.get(groupPosition).get(childPosition)),100);
             return true;
         });
     }

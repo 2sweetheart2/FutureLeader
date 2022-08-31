@@ -1,14 +1,7 @@
 package me.solo_team.futureleader.ui.profile.view_prof;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,12 +10,14 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,18 +25,17 @@ import java.util.List;
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Field;
-import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.profile.AddFieldLayout;
-import me.solo_team.futureleader.ui.profile.AlertAchivementListDialog;
 import me.solo_team.futureleader.ui.profile.EditFieldsLayout;
-import me.solo_team.futureleader.ui.profile.ProfileFragment;
 import me.solo_team.futureleader.ui.profile.ProfileInfoGrid;
+import me.solo_team.futureleader.ui.profile.RecycleAdapter2;
 
 public class ViewProfile extends Her {
 
@@ -91,8 +85,11 @@ public class ViewProfile extends Her {
             @Override
             public void onClick(View v) {
                 List<Integer> ids = new ArrayList<>();
-                for (String s : Constants.currentUser.achievementsIds.split(",")) {
-                    ids.add(Integer.parseInt(s));
+                if (Constants.currentUser.achievementsIds != null) {
+                    for (String s : Constants.currentUser.achievementsIds.split(",")) {
+                        if (!s.equals("null"))
+                            ids.add(Integer.parseInt(s));
+                    }
                 }
                 API.getAchievements(new ApiListener() {
                     Dialog d;
@@ -115,14 +112,28 @@ public class ViewProfile extends Her {
                     public void onSuccess(JSONObject json) {
                         try {
                             d.dismiss();
-                            Constants.currentUser.achievements = json.getJSONArray("achievements");
-                            AlertAchivementListDialog alertAchivementListDialog = new AlertAchivementListDialog();
-                            alertAchivementListDialog.show(getSupportFragmentManager(), null);
+                            JSONArray ar = json.getJSONArray("achievement");
+                            Constants.currentUser.achievements.clear();
+                            for (int i = 0; i < ar.length(); i++) {
+                                Constants.currentUser.achievements.add(new Achievement(ar.getJSONObject(i), false));
+                            }
+                            runOnUiThread(() -> {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ViewProfile.this);
+                                View view = getLayoutInflater().inflate(R.layout.profile_alert_dialog_list, null);
+                                builder.setView(view);
+                                RecyclerView recyclerView = view.findViewById(R.id.achivement_list);
+
+                                recyclerView.setLayoutManager(new LinearLayoutManager(ViewProfile.this));
+                                System.out.println("ACHIEVEMTNS SIZE: " + Constants.currentUser.achievements.size());
+                                RecycleAdapter2 adapter = new RecycleAdapter2(getSupportFragmentManager(), Constants.currentUser.achievements, ViewProfile.this);
+                                recyclerView.setAdapter(adapter);
+                                builder.show();
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                }, new CustomString("user_id", Constants.currentUser.achievementsIds), new CustomString("token", Constants.user.token));
+                }, new CustomString("user_id", String.valueOf(Constants.currentUser.id)), new CustomString("token", Constants.user.token));
 
 
             }

@@ -18,11 +18,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Chat;
 import me.solo_team.futureleader.Objects.CustomString;
+import me.solo_team.futureleader.Objects.Message;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
@@ -37,6 +40,7 @@ public class ChatsView extends Her {
         setTitle("Диалоги");
         setContentView(R.layout.chats);
         list = findViewById(R.id.chat_list);
+        Constants.chatsCache.currentChatId = -1;
 
         API.getChats(new ApiListener() {
                          Dialog d;
@@ -70,10 +74,21 @@ public class ChatsView extends Her {
         Constants.chatListeners.chatInviteCallback = () -> runOnUiThread(this::render);
     }
 
+    HashMap<Chat,View> chatViews = new HashMap<>();
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Constants.chatsCache.currentChatId = -1;
+    }
+
     @SuppressLint("SetTextI18n")
     private void render() {
         list.removeAllViews();
         for (Chat chat : Constants.chatsCache.chats) {
+            Constants.chatListeners.messageCallbacks.put(chat.peerId, message -> {
+                runOnUiThread(()->updateLastMessage(message,chat));
+            });
             @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.obj_chat, null);
             Utils.getBitmapFromURL(chat.photo, bitmap -> {
                 if (bitmap != null) {
@@ -94,8 +109,21 @@ public class ChatsView extends Her {
                 intent.putExtra("peerId",chat.peerId);
                 startActivity(intent);
             });
+            chatViews.put(chat,view);
             list.addView(view);
 
+        }
+    }
+
+    private void updateLastMessage(Message message, Chat chat) {
+        chat.lastMessage = message;
+        Constants.chatsCache.getChatByPeerId(chat.peerId).lastMessage = message;
+        if(chatViews.containsKey(chat)) {
+            TextView fromMessage = chatViews.get(chat).findViewById(R.id.obj_chat_last_message);
+            if (chat.lastMessage.authorId != Constants.user.id)
+                fromMessage.setText(chat.lastMessage.author.firstName + ": " + chat.lastMessage.text);
+            else
+                fromMessage.setText(chat.lastMessage.text);
         }
     }
 
@@ -113,7 +141,7 @@ public class ChatsView extends Her {
                 .setIcon(R.drawable.plus)
                 .setOnMenuItemClickListener(item -> {
                             Intent intent = new Intent(this, CreateChat.class);
-                            startActivity(intent);
+                            startActivityIfNeeded(intent,101);
                             return true;
                         })
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -124,5 +152,12 @@ public class ChatsView extends Her {
     protected void onDestroy() {
         super.onDestroy();
         Constants.chatListeners.chatInviteCallback = null;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==101 && resultCode==1)
+            Utils.ShowSnackBar.show(ChatsView.this,"готово!",list);
     }
 }

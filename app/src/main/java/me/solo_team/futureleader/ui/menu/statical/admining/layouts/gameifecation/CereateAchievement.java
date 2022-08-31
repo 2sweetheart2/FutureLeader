@@ -63,7 +63,7 @@ public class CereateAchievement extends Her {
             //Тип получаемых объектов - image:
             photoPickerIntent.setType("image/*");
             //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
-            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
+            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выберите изображение"), 1);
         });
     }
     String imageUrl;

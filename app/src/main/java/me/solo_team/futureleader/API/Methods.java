@@ -9,6 +9,7 @@ package me.solo_team.futureleader.API;
 public enum Methods {
     // TODO: ТУТ ТОЛЬКО ДОБАВЛЯТЬ НОВЫЕ МОТОДЫ ТАК ЖЕ КАК И ОСТАЛЬНЫЕ, НЕ БОЛЕЕ!
     REGISTER_USER("register_user"),
+    UPDATE_STATUS("update_status"),
     LOGIN_USER("login_user"),
     GET_NEWS("get_news"),
     UPD_PROFILE_PICTURE("update_profile_picture"),
@@ -21,6 +22,7 @@ public enum Methods {
     GET_NEW("get_new"),
     ADD_NEW("add_new"),
     UPL_IMAGE("upload_image"),
+    UPL_IMAGE_NOT_RESIZED("upload_image_not_resize"),
     GET_YT_LOGO("get_yt_logo"),
     GET_IDEAS("get_ideas"),
     CREATE_IDEA("create_idea"),
@@ -55,6 +57,7 @@ public enum Methods {
     CHANGE_CHAT_IMAGE("change_chat_image"),
     CREATE_CHAT("create_chat"),
     CHANGE_CHAT_TITLE("change_chat_name"),
+    GET_CHAT_HISTORY("get_chat_history"),
 
     UPPLOAD_APPLICATION("add_application"),
     ADD_DOCX_FILE("add_docx_file"),

@@ -22,9 +22,8 @@
         android:id="@+id/news_obj_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingTop="10dp"
         android:background="@drawable/gray_gradient_with_corners"
-        android:src="@drawable/gray_gradient"
+        android:paddingTop="10dp"
         app:layout_constraintBottom_toTopOf="@id/news_obj_name"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
@@ -33,7 +32,7 @@
         android:id="@+id/news_obj_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
         android:layout_marginBottom="10dp"
         android:autoSizeMaxTextSize="20sp"
         android:autoSizeMinTextSize="12sp"
@@ -43,8 +42,7 @@
         android:textColor="@color/text_color1"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/news_obj"
-        app:layout_constraintLeft_toLeftOf="@id/news_obj" />
-
+        app:layout_constraintLeft_toLeftOf="@id/news_obj_image" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,8 +68,9 @@
                 android:id="@+id/news_view_countt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="0"
                 android:layout_gravity="center_vertical"
-                />
+                tools:ignore="HardcodedText" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -87,8 +86,9 @@
                 android:id="@+id/news_view_likess"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="0"
                 android:layout_gravity="center_vertical"
-                />
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
     </LinearLayout>

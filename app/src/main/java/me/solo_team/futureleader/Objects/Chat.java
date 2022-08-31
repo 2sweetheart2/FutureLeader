@@ -28,14 +28,14 @@ public class Chat {
             ownerId = payload.getInt("owner_id");
             if(payload.has("last_message"))
                 lastMessage = new Message(payload.getJSONObject("last_message"));
-            JSONArray mem = payload.getJSONArray("members");
             name = payload.getString("title");
-            for(int i=0;i<mem.length();i++){
-                members.add(new ChatMember(mem.getJSONObject(i)));
-            }
+            JSONArray mem = payload.getJSONArray("members");
             if(payload.has("private"))
                 if(payload.getInt("private")==1)
                     chatPrivate = true;
+            for(int i=0;i<mem.length();i++){
+                members.add(new ChatMember(mem.getJSONObject(i)));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -43,5 +43,11 @@ public class Chat {
 
     public boolean isPrivate() {
         return chatPrivate;
+    }
+
+    public void addAllMembers(JSONArray jsonArray) throws JSONException {
+        for(int i=0;i<jsonArray.length();i++){
+            members.add(new ChatMember(jsonArray.getJSONObject(i)));
+        }
     }
 }

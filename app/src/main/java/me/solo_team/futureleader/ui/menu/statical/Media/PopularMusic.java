@@ -275,9 +275,10 @@ public class PopularMusic extends Her {
                                 }
                                 else {
                                     ((ImageView) entry.getValue().findViewById(R.id.obj_music_fav)).setImageResource(R.drawable.favorite_false);
-                                    if(Constants.audioCache.getCurrentAudio().equals(entry.getKey())){
-                                        MainActivity.mediaController.getTransportControls().skipToNext();
-                                    }
+                                    if(Constants.audioCache.pos!=-1)
+                                        if(Constants.audioCache.getCurrentAudio().equals(entry.getKey())){
+                                            MainActivity.mediaController.getTransportControls().skipToNext();
+                                        }
                                     Constants.audioCache.yourMusics.remove(entry.getKey());
                                 }
                             } catch (JSONException e) {

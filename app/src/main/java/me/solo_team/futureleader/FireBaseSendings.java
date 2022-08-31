@@ -1,11 +1,8 @@
 package me.solo_team.futureleader;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -15,27 +12,55 @@ import org.json.JSONObject;
 
 public class FireBaseSendings extends FirebaseMessagingService {
 
+    private static final String TAG = "FireBase";
+
     @Override
     public void onNewToken(@NonNull String token) {
-        System.out.println("TOKEN: "+token );
+        Log.d(TAG, "Refreshed token: " + token);
+        // If you want to send messages to this application instance or
+        // manage this apps subscriptions on the server side, send the
+        // FCM registration token to your app server.
+        sendRegistrationToServer(token);
+    }
+
+    private void sendRegistrationToServer(String token) {
+        // TODO: Implement this method to send token to your app server.
+        System.out.println("TOKEN: " + token);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
-        System.out.println(remoteMessage.getData());
-        if (remoteMessage.getData().size() > 0) {
-            System.out.println("Message data payload: " + remoteMessage.getData());
-            handleNow(new JSONObject(remoteMessage.getData()));
-        }
-    }
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-    // Идентификатор канала
-    private void handleNow(JSONObject data) {
-        try {
-            MyNotificationManager.getInstance(this).displayNotification(data.getString("title"),data.getString("body"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (remoteMessage.getData() != null) {
+            JSONObject o = new JSONObject(remoteMessage.getData());
+            System.out.println("DATA: "+o);
+            if (o.has("chat_id")) {
+                int chat_id = 0;
+                try {
+                    chat_id = Integer.parseInt(o.getString("chat_id"));
+                    System.out.println("FIND CHAT WITH ID: "+chat_id);
+                    System.out.println(Constants.chatsCache.currentChatId+"  "+chat_id+" "+(Constants.chatsCache.currentChatId == chat_id));
+                    if (Constants.chatsCache.currentChatId != chat_id)
+                        MyNotificationManager.getInstance(getApplicationContext()).displayNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    System.out.println(e.getMessage());
+                }
+            }else
+                MyNotificationManager.getInstance(getApplicationContext()).displayNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+
         }
+        else
+            MyNotificationManager.getInstance(getApplicationContext()).displayNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+
     }
+    
+
 }

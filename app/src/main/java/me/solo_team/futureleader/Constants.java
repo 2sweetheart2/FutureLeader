@@ -81,6 +81,7 @@ public class Constants {
     public static class ChatsCache{
         public List<Chat> chats = new ArrayList<>();
         public HashMap<Integer, List<Message>> messages = new HashMap<>();
+        public int currentChatId =-1;
 
         public void addMessage(int peerId, Message message){
             if(messages.containsKey(peerId)) {
@@ -114,6 +115,13 @@ public class Constants {
             }
             return null;
         }
+
+        public void setMembers(int peerId, JSONArray jsonArray) throws JSONException {
+            for(Chat chat : chats){
+                if(chat.peerId == peerId)
+                    chat.addAllMembers(jsonArray);
+            }
+        }
     }
 
     public static SocketCache socketCache = new SocketCache();
@@ -135,7 +143,7 @@ public class Constants {
 
         List<Audio> currentPlayList = null;
 
-        private int pos = -1;
+        public int pos = -1;
         public int curList = 0;
         private int oldCurList = -1;
 
@@ -352,6 +360,25 @@ public class Constants {
                         Bitmap finalBitmap = bitmap;
                         if(fragment.getActivity()!=null)
                             fragment.getActivity().runOnUiThread(() -> imageView.setImageBitmap(finalBitmap));
+                    });
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        public void getAndSavePhoto(String url, ImageBitmaps callback, Fragment fragment){
+            try{
+                if (UIDcache.containsKey(url)) {
+                    callback.result(UIDcache.get(url));
+                } else {
+                    Utils.getBitmapFromURL(url, bitmap -> {
+                        if (bitmap == null)
+                        {
+                            callback.result(BitmapFactory.decodeResource(fragment.getResources(),R.drawable.resize_300x0));
+                            return;
+                        }
+                        UIDcache.put(url, bitmap);
+                        callback.result(bitmap);
                     });
                 }
             } catch (Exception ignored) {

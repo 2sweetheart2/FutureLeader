@@ -74,7 +74,7 @@ public class CreateSurveysObject extends AppCompatActivity {
             //Тип получаемых объектов - image:
             photoPickerIntent.setType("image/*");
             //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
-            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
+            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбeрите изображение"), 1);
         });
     }
 
@@ -163,7 +163,7 @@ public class CreateSurveysObject extends AppCompatActivity {
             Uri uri = data.getData();
             try {
                 Bitmap image = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
-                API.uploadImage(new ApiListener() {
+                API.uploadImageNotResized(new ApiListener() {
                     Dialog d;
 
                     @Override

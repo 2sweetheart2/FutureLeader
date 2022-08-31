@@ -31,18 +31,16 @@ import androidx.core.content.ContextCompat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
-import me.solo_team.futureleader.MediaAudioAdapters.VideoAdapter.VideoView;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.ChatMember;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.AddVideo;
 import me.solo_team.futureleader.ui.SelectMembers;
 import me.solo_team.futureleader.ui.menu.statical.Media.AddMusic;
@@ -54,6 +52,7 @@ public class CreateChieldNew extends Her {
     String url;
     ImageView imageView;
     String textUrl;
+    int type = 0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +71,7 @@ public class CreateChieldNew extends Her {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                type = position;
                 switch (position) {
                     case 0:
                         list.removeAllViews();
@@ -98,7 +98,7 @@ public class CreateChieldNew extends Her {
                             //Тип получаемых объектов - image:
                             photoPickerIntent.setType("image/*");
                             //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
-                            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
+                            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выберите изображение"), 1);
                         });
                         break;
                     case 3:
@@ -136,9 +136,10 @@ public class CreateChieldNew extends Her {
                         intent.putExtra("needStuff", false);
                         intent.putExtra("checker", false);
                         intent.putExtra("removeSelf", false);
-                        intent.putExtra("selectOne",true);
-                        intent.putExtra("title","Заявки пользователей");
-                        startActivityIfNeeded(intent, 100);
+                        intent.putExtra("selectOne", true);
+                        intent.putExtra("title", "Выбор пользователя");
+                        intent.putExtra("needUserObject", true);
+                        startActivityIfNeeded(intent, 102);
                 }
             }
 
@@ -151,19 +152,39 @@ public class CreateChieldNew extends Her {
             View v = list.getChildAt(0);
             if (v == null) return;
             JSONObject o = new JSONObject();
-            if (v instanceof TextView) {
-                if (((TextView) v).getText() == null) return;
-                if (((TextView) v).getText().length() == 0) return;
+            if (type == 4) {
                 try {
-                    if(((TextView)v).getHint().toString().equals("ссылка...")){
+                    o.put("type", "video");
+
+                    o.put("value", videoUrl);
+                    o.put("extras", videoName);
+                    Constants.newsCache.curentNew.getJSONArray("objects").put(o);
+                    Constants.newsCache.updObjects();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                finish();
+                return;
+            }
+            if (v instanceof EditText) {
+                if (((EditText) v).getText() == null) return;
+                if (((EditText) v).getText().length() == 0) return;
+                try {
+
+                    if (type == 1) {
+                        if (((EditText) v).getText().toString().split("//").length == 1) {
+                            Utils.ShowSnackBar.show(this, "Ссылка имеет не верный формат!", v);
+                            return;
+                        }
+                        String pref = ((EditText) v).getText().toString().split("//")[0];
+                        if (!pref.equals("https:") && !pref.equals("http:")) {
+                            Utils.ShowSnackBar.show(this, "Ссылка имеет не верный формат!", v);
+                            return;
+                        }
                         o.put("type", "text_link");
-                        o.put("value", ((TextView) v).getText().toString());
-                    }else {
-                        if (videoUrl != null) {
-                            o.put("type", "video");
-                            o.put("value", videoUrl);
-                            o.put("extras", videoName);
-                        } else {
+                        o.put("value", ((EditText) v).getText().toString());
+                    } else {
+                        if (type == 0) {
                             o.put("type", "text");
                             o.put("value", ((TextView) v).getText().toString());
                         }
@@ -187,18 +208,16 @@ public class CreateChieldNew extends Her {
             }
             else if (v instanceof ConstraintLayout){
                 try {
-                    if (audio == null)
-                        return;
-                    if(selectedUser!=null){
-                        o.put("type","user");
-                        o.put("value",selectedUser.getFullName());
-                        o.put("id",String.valueOf(selectedUser.userId));
-                        o.put("extras",selectedUser.profilePicture);
-                    }
-                    else {
+                    if (selectedUser != null) {
+                        o.put("type", "user");
+                        o.put("value", selectedUser.getFullName());
+                        o.put("id", String.valueOf(selectedUser.userId));
+                        o.put("extras", selectedUser.profilePicture);
+                    } else if (audio != null) {
                         o.put("type", "audio");
                         o.put("value", audio.toString());
-                    }
+                    } else
+                        return;
                     Constants.newsCache.curentNew.getJSONArray("objects").put(o);
                     Constants.newsCache.updObjects();
                 } catch (JSONException e) {
@@ -285,7 +304,7 @@ public class CreateChieldNew extends Her {
             Uri selectedImage = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                API.uploadImage(new ApiListener() {
+                API.uploadImageNotResized(new ApiListener() {
                     @Override
                     public void onError(JSONObject json) {
 
@@ -311,7 +330,7 @@ public class CreateChieldNew extends Her {
         if(requestCode==100 && resultCode==1){
             View v = getLayoutInflater().inflate(R.layout.obj_music,null);
             try {
-                 audio = new Audio(new JSONObject(data.getStringExtra("audio")),CreateChieldNew.this);
+                audio = new Audio(new JSONObject(data.getStringExtra("audio")), CreateChieldNew.this);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -321,20 +340,20 @@ public class CreateChieldNew extends Her {
             v.findViewById(R.id.obj_music_fav).setVisibility(View.GONE);
             list.addView(v);
         }
-        if(requestCode==101 && resultCode==1){
+        if (requestCode == 101 && resultCode == 1) {
             TextView textView = new TextView(CreateChieldNew.this);
-            textView.setText("Имя видео файла: "+data.getStringExtra("name"));
+            textView.setText("Имя видео файла: " + data.getStringExtra("name"));
             textView.setTextColor(Color.BLACK);
             list.addView(textView);
             videoName = data.getStringExtra("name");
             videoUrl = data.getStringExtra("url");
         }
-        if(requestCode==100 && resultCode==100){
+        if (requestCode == 102 && resultCode == 1) {
             try {
-                selectedUser = new ChatMember(new JSONObject(data.getStringArrayExtra("users")[0]));
-                View view1 = getLayoutInflater().inflate(R.layout.obj_chat_member,null);
+                selectedUser = new ChatMember(new JSONObject(data.getStringExtra("user")));
+                View view1 = getLayoutInflater().inflate(R.layout.obj_chat_member, null);
                 ((TextView) view1.findViewById(R.id.chat_member_name)).setText(selectedUser.getFullName());
-                Constants.cache.addPhoto(selectedUser.profilePicture,view1.findViewById(R.id.chat_member_image),this);
+                Constants.cache.addPhoto(selectedUser.profilePicture, view1.findViewById(R.id.chat_member_image), this);
                 list.addView(view1);
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -1,12 +1,15 @@
 package me.solo_team.futureleader.ui.profile;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,17 +37,20 @@ import java.util.List;
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
+import me.solo_team.futureleader.ui.EditStatus;
+import me.solo_team.futureleader.ui.menu.statical.dr.DrView;
 
 public class ProfileFragment extends Fragment {
 
-    private ImageView picture;
+    public ImageView picture;
     private TextView name;
-    private TextView description;
+    public TextView description;
     TableLayout tableLayout;
     ProfileInfoGrid grid;
     LinkedHashMap<String, String> notAddedItems = new LinkedHashMap<>();
@@ -63,9 +70,27 @@ public class ProfileFragment extends Fragment {
 
         Constants.currentUser = Constants.user;
 
-
+        description.setOnClickListener(v -> {
+            AlertDialog.Builder obj = new AlertDialog.Builder(requireContext());
+            obj.setTitle("изменить статус?" );
+            obj.setIcon(R.drawable.resize_300x0);
+            obj.setPositiveButton("да", (dialog, which) -> {
+                Intent intent = new Intent(requireContext(), EditStatus.class);
+                intent.putExtra("title","Изменение статуса");
+                intent.putExtra("hint","текст...");
+                startActivityForResult(intent,100);
+            });
+            obj.setNegativeButton("нет", null);
+            obj.show();
+        });
         name.setText(Constants.currentUser.firstName + " " + Constants.currentUser.lastName);
         description.setText(Constants.currentUser.status);
+        if(Constants.currentUser.status.length()==1 && Constants.currentUser.status.equals(" "))
+        {
+            description.setText("*установить статус*");
+            description.setTextColor(Color.GRAY);
+            description.setTypeface(null, Typeface.ITALIC);
+        }
         Constants.cache.addPhoto(Constants.currentUser.profilePictureLink, picture, this);
 
         picture.requestLayout();
@@ -79,8 +104,9 @@ public class ProfileFragment extends Fragment {
             //Тип получаемых объектов - image:
             photoPickerIntent.setType("image/*");
             //Запускаем переход с ожиданием обратного результата в виде информации об изображении:
-            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выбирите изображение"), 1);
+            startActivityForResult(Intent.createChooser(photoPickerIntent, "Выберите изображение"), 1);
         });
+
 
 
         button.setOnClickListener(v -> {
@@ -91,10 +117,6 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                List<Integer> ids = new ArrayList<>();
-                for (String s : Constants.currentUser.achievementsIds.split(",")) {
-                    ids.add(Integer.parseInt(s));
-                }
                 API.getAchievements(new ApiListener() {
                     Dialog d;
 
@@ -116,14 +138,21 @@ public class ProfileFragment extends Fragment {
                     public void onSuccess(JSONObject json) {
                         try {
                             d.dismiss();
-                            Constants.currentUser.achievements = json.getJSONArray("achievements");
-                            AlertAchivementListDialog alertAchivementListDialog = new AlertAchivementListDialog();
+                            Constants.currentUser.achievements.clear();
+                            JSONArray ar = json.getJSONArray("achievement");
+                            for(int i=0;i<ar.length();i++){
+                                Constants.currentUser.achievements.add(new Achievement(ar.getJSONObject(i),false));
+                            }
+                            System.out.println(json);
+                            requireActivity().runOnUiThread(()->{
+                            AlertAchivementListDialog alertAchivementListDialog = new AlertAchivementListDialog(ProfileFragment.this.getParentFragmentManager(),requireContext(),ProfileFragment.this,getLayoutInflater());
                             alertAchivementListDialog.show(getParentFragmentManager(), null);
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                }, new CustomString("token", Constants.user.token));
+                }, new CustomString("token", Constants.user.token),new CustomString("user_id",String.valueOf(Constants.user.id)));
 
 
             }
@@ -160,7 +189,32 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100 && resultCode==1){
+            String text = data.getStringExtra("text");
+            API.setStatus(new ApiListener() {
+                Dialog d;
+                @Override
+                public void onError(JSONObject json) throws JSONException {
+                    d.dismiss();
+                    createNotification(picture,json.getString("message"));
+                }
 
+                @Override
+                public void inProcess() {
+                    d = openWaiter(requireContext());
+                }
+
+                @Override
+                public void onSuccess(JSONObject json) throws JSONException {
+                    d.dismiss();
+                    requireActivity().runOnUiThread(()->{
+                        description.setText(text);
+                        Constants.user.status = text;
+                        Constants.currentUser.status = text;
+                    });
+                }
+            },new CustomString("token",Constants.user.token), new CustomString("status",text));
+        }
         if (requestCode == 1 && data != null) {
             Uri selectedImage = data.getData();
             try {

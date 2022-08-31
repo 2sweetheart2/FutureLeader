@@ -109,7 +109,9 @@ public class FullScreenPhoto extends AppCompatActivity {
                         if (!checkPermissionREAD_EXTERNAL_STORAGE(this)) {
                             return false;
                         }
-                        save(((BitmapDrawable) fragment.image.getDrawable()).getBitmap());
+                        if(fragment.bitmap==null)
+                            return false;
+                        save(fragment.bitmap);
                         return true;
                     })
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);

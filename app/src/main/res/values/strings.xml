@@ -5,7 +5,7 @@
     <string name="title_profile">Профиль</string>
     <string name="previous">\uD83E\uDC60 предыдущие</string>
     <string name="next">следующие \uD83E\uDC62</string>
-
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="notification_channel_name">Player controls</string>
 
