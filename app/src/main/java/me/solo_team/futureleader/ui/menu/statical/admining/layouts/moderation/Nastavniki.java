@@ -33,6 +33,7 @@ import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
 public class Nastavniki extends Her {
+
     ExpandableListView expandableListView;
     public HashMap<ChatMember, List<ChatMember>> mentorsWithUsers = new HashMap<>();
 
