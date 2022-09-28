@@ -2,7 +2,9 @@ package me.solo_team.futureleader.ui.menu.horizontal_menu.messanger;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.EditText;
@@ -15,12 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,40 +88,40 @@ public class CurrentChatView2 extends AppCompatActivity {
         newMessageImage = findViewById(R.id.new_message_dot);
 
         API.getChat(new ApiListener() {
-            @Override
-            public void onError(JSONObject json) throws JSONException {
-                System.out.println(json);
-                finish();
-            }
+                        @Override
+                        public void onError(JSONObject json) throws JSONException {
+                            System.out.println(json);
+                            finish();
+                        }
 
-            @Override
-            public void inProcess() {
+                        @Override
+                        public void inProcess() {
 
-            }
+                        }
 
-            @Override
-            public void onSuccess(JSONObject json) throws JSONException {
-                System.out.println(json);
+                        @Override
+                        public void onSuccess(JSONObject json) throws JSONException {
+                            System.out.println(json);
 
-                JSONArray mesages = json.getJSONArray("messages");
-                Constants.chatsCache.messages.remove(chat.peerId);
-                for (int i = 0; i < mesages.length(); i++) {
-                    Constants.chatsCache.addMessage(chat.peerId, new Message(mesages.getJSONObject(i)));
-                }
-                if (chat.members == null) {
-                    Constants.chatsCache.setMembers(chat.peerId, json.getJSONObject("chat").getJSONArray("members"));
-                    chat.members = Constants.chatsCache.getChatByPeerId(getIntent().getIntExtra("peerId", -1)).members;
-                }
-                if (chat.members.size() == 0) {
-                    Constants.chatsCache.setMembers(chat.peerId, json.getJSONObject("chat").getJSONArray("members"));
-                    chat.members = Constants.chatsCache.getChatByPeerId(getIntent().getIntExtra("peerId", -1)).members;
-                }
-                runOnUiThread(() -> render());
-            }
-        },
+                            JSONArray mesages = json.getJSONArray("messages");
+                            Constants.chatsCache.messages.remove(chat.peerId);
+                            for (int i = 0; i < mesages.length(); i++) {
+                                Constants.chatsCache.addMessage(chat.peerId, new Message(mesages.getJSONObject(i)));
+                            }
+                            if (chat.members == null) {
+                                Constants.chatsCache.setMembers(chat.peerId, json.getJSONObject("chat").getJSONArray("members"));
+                                chat.members = Constants.chatsCache.getChatByPeerId(getIntent().getIntExtra("peerId", -1)).members;
+                            }
+                            if (chat.members.size() == 0) {
+                                Constants.chatsCache.setMembers(chat.peerId, json.getJSONObject("chat").getJSONArray("members"));
+                                chat.members = Constants.chatsCache.getChatByPeerId(getIntent().getIntExtra("peerId", -1)).members;
+                            }
+                            runOnUiThread(() -> render());
+                        }
+                    },
                 new CustomString("token",Constants.user.token),
                 new CustomString("peer_id",String.valueOf(chat.peerId))
-                );
+        );
 
         chatName.setText(chat.name);
 
@@ -140,15 +140,46 @@ public class CurrentChatView2 extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         downBtn.setOnClickListener(v -> {
-            if(onBottom) return;
+            if (onBottom) return;
             list.setSelection(Constants.chatsCache.messages.get(chat.peerId).size());
         });
+        View v = findViewById(R.id.huinaaaaa);
+        v.getViewTreeObserver().addOnGlobalLayoutListener(
+                () -> {
+                    Rect r = new Rect();
+                    v.getWindowVisibleDisplayFrame(r);
+                    int screenHeight = v.getRootView().getHeight();
+                    int keypadHeight = screenHeight - r.bottom;
+                    if (keypadHeight > screenHeight * 0.15) {
+                        if (!isKeyboardShowing) {
+
+                            isKeyboardShowing = true;
+                            onKeyboardVisibilityChanged(true);
+                        }
+                    } else {
+                        if (isKeyboardShowing) {
+                            isKeyboardShowing = false;
+                            onKeyboardVisibilityChanged(false);
+                        }
+                    }
+                });
+    }
+    boolean isKeyboardShowing = false;
+    boolean oldOnBototom = false;
+
+
+    void onKeyboardVisibilityChanged(boolean opened) {
+        System.out.println("KEYBGOARD SHOW " + oldOnBototom);
+        if (opened && oldOnBototom) {
+            list.setSelection(Constants.chatsCache.messages.get(chat.peerId).size());
+            oldOnBototom = false;
+        }
     }
 
 
     private void addMessage(Message message) {
         boolean onBot = onBottom;
-        System.out.println("OB BOT: "+onBot);
+        System.out.println("OB BOT: " + onBot);
         if (chatAdapter != null) {
             chatAdapter.addWithAnimation(message);
         }
@@ -267,7 +298,8 @@ public class CurrentChatView2 extends AppCompatActivity {
                 alreadyAdded=false;
             final int lastItem = firstVisibleItem + visibleItemCount;
             if (lastItem == totalItemCount) {
-                    if(!onBottom) {
+                oldOnBototom = true;
+                if(!onBottom) {
                             downBtn.setVisibility(View.GONE);
                             newMessageImage.setVisibility(View.GONE);
                             onBottom = true;
@@ -277,6 +309,7 @@ public class CurrentChatView2 extends AppCompatActivity {
             else {
                 downBtn.setVisibility(View.VISIBLE);
                 onBottom = false;
+                oldOnBototom = false;
             }
         }
     };

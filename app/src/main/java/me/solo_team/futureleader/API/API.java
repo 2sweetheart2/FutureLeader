@@ -321,4 +321,26 @@ public class API {
     public static void getChhatHistory(ApiListener listener,CustomString...params) {
         HTTPS.sendPost(Methods.GET_CHAT_HISTORY,createJsonObj(params),listener);
     }
+    public static void deleteUnverifiedUser(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.REMOVE_UNVERIFI_USER,createJsonObj(params),listener);
+    }
+    public static void getCurrency(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.GET_ALL_CURRENCY,createJsonObj(params),listener);
+    }
+    public static void addCurrency(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.ADD_CURRENCY,createJsonObj(params),listener);
+    }
+
+    public static void getMentors(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.GET_MENTORS,createJsonObj(params),listener);
+    }
+
+    public static void addMentor(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.ADD_MENTOR,createJsonObj(params),listener);
+    }
+
+    public static void removeUserFromMentor(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.REMOVE_USER_FROM_MENTOR,createJsonObj(params),listener);
+
+    }
 }

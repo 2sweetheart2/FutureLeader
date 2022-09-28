@@ -25,6 +25,7 @@ public class User {
     public List<Achievement> achievements = new ArrayList<>();
     public FieldsStuff fieldsStuff;
     public String mobileToken;
+    public List<ChatMember> mentors = new ArrayList<>();
 
     public Permission permission;
 
@@ -50,8 +51,14 @@ public class User {
                 this.token = payload.getString("token");
             this.currency = payload.getInt("currency");
             permission = new Permission(payload.getJSONObject("permission"));
+
+            JSONArray men = payload.getJSONArray("mentors");
+            for(int i=0;i<men.length();i++){
+                mentors.add(new ChatMember(men.getJSONObject(i)));
+            }
         } catch (JSONException e) {
-            e.printStackTrace();
+            if(!e.getMessage().equals("No value for achievement_ids"))
+                e.printStackTrace();
         }
     }
 
@@ -88,6 +95,7 @@ public class User {
         }
         return text.toString().substring(0, text.toString().length() - 1);
     }
+
 
     public String toChatMemder() {
         return "{\"first_name\":\"" + firstName + "\",\"last_name\":\"" + lastName + "\",\"profile_picture\":\"" + profilePictureLink + "\",\"id\":\"" + id + "\"}";

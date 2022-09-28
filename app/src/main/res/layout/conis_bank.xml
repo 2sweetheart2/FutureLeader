@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/all_fbl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:text="Всего FBL у пользователей:"
+        android:textSize="16dp"
+        />
+    <TextView
+        android:id="@+id/paid_fbl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/all_fbl"
+        android:textColor="@color/black"
+        android:text="Всего FBL было потрачено:"
+        android:textSize="16dp"
+        />
+    <TextView
+        android:id="@+id/ver_fbl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/paid_fbl"
+        android:textColor="@color/black"
+        android:text="Всего FBL было выдано:"
+        android:textSize="16dp"
+        />
+    <Button
+        android:id="@+id/reset_fbl_stat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ver_fbl"
+        android:layout_marginTop="15dp"
+        android:text="сбросить стастику"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <Button
+        android:id="@+id/add_fbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/reset_fbl_stat"
+        android:layout_marginTop="15dp"
+        android:text="выдать FBL"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

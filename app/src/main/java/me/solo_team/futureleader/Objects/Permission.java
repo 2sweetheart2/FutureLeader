@@ -11,6 +11,7 @@ public class Permission implements Serializable {
     public boolean can_view_like_views = false;
     public boolean can_view_admin_panel = false;
     public boolean can_get_ideas = false;
+    public boolean can_edit_profile = false;
     public boolean can_set_ideas_status = false;
     public boolean can_get_users = false;
     public boolean can_get_user = false;
@@ -37,12 +38,21 @@ public class Permission implements Serializable {
     public boolean can_get_who_has_this_role = false;
     public boolean can_update_role = false;
     public boolean can_get_events_tickets = false;
+    public boolean can_get_all_currency = false;
+    public boolean can_remove_unverifi_users = false;
+    public boolean can_add_currency = false;
+    public boolean can_add_mentors = false;
 
     public String name;
     public int id;
 
     public Permission(JSONObject perm) {
         try {
+            can_add_mentors = intToBoolean(perm.getInt("can_add_mentors"));
+            can_edit_profile = intToBoolean(perm.getInt("can_edit_profile"));
+            can_get_all_currency = intToBoolean(perm.getInt("can_get_all_currency"));
+            can_add_currency = intToBoolean(perm.getInt("can_add_currency"));
+            can_remove_unverifi_users = intToBoolean(perm.getInt("can_remove_unverifi_users"));
             can_add_new = intToBoolean(perm.getInt("can_add_new"));
             can_view_new_views = intToBoolean(perm.getInt("can_view_new_views"));
             can_view_like_views = intToBoolean(perm.getInt("can_view_like_views"));

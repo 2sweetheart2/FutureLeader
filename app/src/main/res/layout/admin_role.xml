@@ -234,6 +234,36 @@
                 android:id="@+id/role_can_get_events_tickets"
                 android:text="может просматривать записи на событие"
                 tools:ignore="HardcodedText" />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/role_can_remove_unverifi_users"
+                android:text="может удалять заявки на подтверждение пользователей"
+                tools:ignore="HardcodedText" />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/role_can_get_all_currency"
+                android:text="может просматривать валютный банк"
+                tools:ignore="HardcodedText" />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/role_can_add_currency"
+                android:text="может выдавать валюту"
+                tools:ignore="HardcodedText" />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/role_can_add_mentors"
+                android:text="может просматривать наставников, прикреплять их к участникам"
+                tools:ignore="HardcodedText" />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/role_can_edit_profile"
+                android:text="может изменять информацию чужих профилей"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

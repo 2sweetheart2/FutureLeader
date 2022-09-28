@@ -1,14 +1,19 @@
 package me.solo_team.futureleader.ui.news;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.animation.Animator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -27,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import me.solo_team.futureleader.API.API;
@@ -77,21 +83,30 @@ public class NewsFragment extends Fragment {
     CustomAdapter adapter;
     ArrayList<News> newsList = new ArrayList<>();
 
-    public void createClick(boolean onlySet) throws JSONException {
+    public void createClick(boolean onlySet) {
         newsList.clear();
         try {
-
-            for (int i = Constants.newsCache.news.length() - 1; i >= 0; i--) {
-                JSONObject o = Constants.newsCache.news.getJSONObject(i);
-                News news = new News(o);
-                newsAddWitAnimation.add(news);
-                newsList.add(news);
-            }
-            if (!onlySet) {
-                adapter = new CustomAdapter(newsList, requireContext());
-            }
-            nw.setAdapter(adapter);
-
+            new Thread(() -> {
+                for (int i = Constants.newsCache.news.length() - 1; i >= 0; i--) {
+                    JSONObject o = null;
+                    try {
+                        o = Constants.newsCache.news.getJSONObject(i);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    News news = new News(o);
+                    requireActivity().runOnUiThread(() -> {
+                        newsAddWitAnimation.add(news);
+                        newsList.add(news);
+                    });
+                }
+                if (!onlySet) {
+                    adapter = new CustomAdapter(newsList, requireContext());
+                }
+                requireActivity().runOnUiThread(() -> {
+                    nw.setAdapter(adapter);
+                });
+            }).start();
         }catch (Exception ignored){}
 
     }
@@ -174,11 +189,7 @@ public class NewsFragment extends Fragment {
                     news = json.getJSONArray("news");
                     Constants.newsCache.news = news;
                     requireActivity().runOnUiThread(() -> {
-                        try {
-                            createClick(false);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        createClick(false);
                         if(force)
                             rt.setRefreshing(false);
                     });
@@ -193,14 +204,10 @@ public class NewsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            if (!firstStart)
-                createClick(true);
-            if(lastPosExit>=0)
-                nw.setSelection(lastPosExit);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        if (!firstStart)
+            createClick(true);
+        if(lastPosExit>=0)
+            nw.setSelection(lastPosExit);
     }
 
     @Override
@@ -245,52 +252,58 @@ public class NewsFragment extends Fragment {
 
             final View result;
             ConstraintLayout cn;
-
-
             viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.news_news, parent, false);
 
-            result = convertView;
-            cn = result.findViewById(R.id.news_obj);
-            Constants.cache.addPhoto(dataModel.photoUrl, (ImageView) cn.getChildAt(1), NewsFragment.this);
-            convertView.setTag(viewHolder);
+            if (Constants.newsCache.newsViewCache.containsKey(dataModel)) {
+                result = Constants.newsCache.newsViewCache.get(dataModel);
+            } else {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(R.layout.news_news, parent, false);
 
+                result = convertView;
 
-            if (newsAddWitAnimation.contains(dataModel)) {
-                System.out.println("RESUME: " + resume);
-                System.out.println("FIRST START: " + firstStart);
+                cn = result.findViewById(R.id.news_obj);
+                Constants.cache.addPhoto(dataModel.photoUrl, (ImageView) cn.getChildAt(1), NewsFragment.this);
+                ((TextView) cn.getChildAt(2)).setText(dataModel.title);
+                switch (MainActivity.wightwindowSizeClass) {
+                    case COMPACT:
+                        ((TextView) cn.getChildAt(2)).setTextSize(12f);
+                        break;
+                    case MEDIUM:
+                        ((TextView) cn.getChildAt(2)).setTextSize(15f);
+                        break;
+                    case EXPANDED:
+                        ((TextView) cn.getChildAt(2)).setTextSize(20);
+                        break;
+                }
+                ((TextView) result.findViewById(R.id.news_view_countt)).setText(String.valueOf(dataModel.viewCount));
+                ((TextView) result.findViewById(R.id.news_view_likess)).setText(String.valueOf(dataModel.likes));
 
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.left_ro_right);
-                result.startAnimation(animation);
-                newsAddWitAnimation.remove(dataModel);
+                result.setOnClickListener(v -> {
+                    Intent intent = new Intent(requireContext(), OpenNewsFragment.class);
+                    intent.putExtra("tag", dataModel.title);
+                    intent.putExtra("id", dataModel.id);
+                    startActivity(intent);
+                });
 
+                Constants.newsCache.newsViewCache.put(dataModel, result);
+                convertView.setTag(viewHolder);
+                if (newsAddWitAnimation.contains(dataModel)) {
+                    System.out.println("RESUME: " + resume);
+                    System.out.println("FIRST START: " + firstStart);
+//                    Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.left_ro_right);
+//                    result.startAnimation(animation);
+//                    newsAddWitAnimation.remove(dataModel);
+
+                }
             }
+
+
+
 
             lastPosition = position;
 
 
-            ((TextView) cn.getChildAt(2)).setText(dataModel.title);
-            switch (MainActivity.wightwindowSizeClass) {
-                case COMPACT:
-                    ((TextView) cn.getChildAt(2)).setTextSize(12f);
-                    break;
-                case MEDIUM:
-                    ((TextView) cn.getChildAt(2)).setTextSize(15f);
-                    break;
-                case EXPANDED:
-                    ((TextView) cn.getChildAt(2)).setTextSize(20);
-                    break;
-            }
-            ((TextView) result.findViewById(R.id.news_view_countt)).setText(String.valueOf(dataModel.viewCount));
-            ((TextView) result.findViewById(R.id.news_view_likess)).setText(String.valueOf(dataModel.likes));
-
-            result.setOnClickListener(v -> {
-                Intent intent = new Intent(requireContext(), OpenNewsFragment.class);
-                intent.putExtra("tag", dataModel.title);
-                intent.putExtra("id", dataModel.id);
-                startActivity(intent);
-            });
 
             // Return the completed view to render on screen
             return convertView;

@@ -16,7 +16,9 @@ import java.util.Objects;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.gameifecation.AchievementsLayout;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.gameifecation.CoinsBank;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.GetShopRequests;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.Nastavniki;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.UnverifyUsers;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.AllStat;
 import me.solo_team.futureleader.ui.menu.statical.admining.layouts.stat.LoginStat;
@@ -33,7 +35,7 @@ public class AdminingLayout extends AppCompatActivity {
     private final String[] govno1 = new String[]{"Список пользователей",  "Статусы пользователей"};
     private final String[] govno3 = new String[]{"Достижения",  "Валютный банк"};
     private final String[] govno4 = new String[]{"Опросы", "Сессии опросов", "Идеи"};
-    private final String[] govno5 = new String[]{"Подтверждение регистрации пользователей","заявки в магазине"};
+    private final String[] govno5 = new String[]{"Подтверждение регистрации пользователей","заявки в магазине","наставники"};
     private final String[] govno6 = new String[]{"интеграций не будет, ибо не с чем интегрировать"};
     private final String[] govno7 = new String[]{"Статистика", "Журнал добавления файлов", "Журнал авторизаций"};
 
@@ -106,6 +108,7 @@ public class AdminingLayout extends AppCompatActivity {
         HashMap<Integer, Class> moderarion = new HashMap<>();
         moderarion.put(0, UnverifyUsers.class);
         moderarion.put(1, GetShopRequests.class);
+        moderarion.put(2, Nastavniki.class);
         classes.put(3,moderarion);
 
         HashMap<Integer, Class> stat = new HashMap<>();
@@ -116,6 +119,7 @@ public class AdminingLayout extends AppCompatActivity {
 
         HashMap<Integer, Class> gameifectaion = new HashMap<>();
         gameifectaion.put(0, AchievementsLayout.class);
+        gameifectaion.put(1, CoinsBank.class);
         classes.put(1,gameifectaion);
 
 
@@ -148,7 +152,7 @@ public class AdminingLayout extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==-500)
+        if(requestCode==100 && resultCode==-500)
             Utils.ShowSnackBar.show(AdminingLayout.this,"отказано в доступе!",expandableListView);
     }
 }

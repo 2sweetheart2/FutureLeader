@@ -11,7 +11,7 @@ public class CSettings {
     }
 
     public boolean getStartChecker(){
-        return sp.getBoolean("start_checker",true);
+        return sp.getBoolean("start_checker",false);
     }
 
     public void saveStartChecker(boolean state){

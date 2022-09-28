@@ -40,16 +40,20 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Field;
+import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
 import me.solo_team.futureleader.ui.EditStatus;
+import me.solo_team.futureleader.ui.menu.statical.admining.layouts.moderation.Nastavniki;
 import me.solo_team.futureleader.ui.menu.statical.dr.DrView;
+import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
 public class ProfileFragment extends Fragment {
 
     public ImageView picture;
     private TextView name;
+    private TextView mentors;
     public TextView description;
     TableLayout tableLayout;
     ProfileInfoGrid grid;
@@ -64,12 +68,49 @@ public class ProfileFragment extends Fragment {
         grid = new ProfileInfoGrid(tableLayout, root.getContext(), inflater, container);
         Button achivement_btn = root.findViewById(R.id.achiviment_btn);
         picture = root.findViewById(R.id.profile_picture);
+        mentors = root.findViewById(R.id.profile_mentors);
         name = root.findViewById(R.id.profile_name);
         description = root.findViewById(R.id.profile_description);
         button = root.findViewById(R.id.profile_add_field_btn);
 
         Constants.currentUser = Constants.user;
 
+        if(Constants.user.mentors.size()!=0){
+            if(Constants.user.mentors.size()>1) {
+                mentors.setText("Наставники: " + Constants.user.mentors.get(0).getFullName() + "...");
+            }
+            else{
+                mentors.setText("Наставник: " + Constants.user.mentors.get(0).getFullName());
+                mentors.setOnClickListener(v -> {
+                    API.getUser(new ApiListener() {
+                        Dialog d;
+
+                        @Override
+                        public void onError(JSONObject json) throws JSONException {
+                            d.dismiss();
+                            createNotification(v, json.getString("message"));
+                        }
+
+                        @Override
+                        public void inProcess() {
+                            d = openWaiter(requireContext());
+                        }
+
+                        @Override
+                        public void onSuccess(JSONObject json) throws JSONException {
+                            User user = new User(json.getJSONObject("user"));
+                            d.dismiss();
+                            requireActivity().runOnUiThread(() -> {
+                                Constants.currentUser = user;
+                                Intent intent = new Intent(requireContext(), ViewProfile.class);
+                                intent.putExtra("removeSelf", false);
+                                startActivity(intent);
+                            });
+                        }
+                    }, new CustomString("token", Constants.user.token), new CustomString("id", String.valueOf(Constants.user.mentors.get(0).userId)));
+                });
+            }
+        }else mentors.setVisibility(View.GONE);
         description.setOnClickListener(v -> {
             AlertDialog.Builder obj = new AlertDialog.Builder(requireContext());
             obj.setTitle("изменить статус?" );
@@ -256,6 +297,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Constants.currentUser = Constants.user;
         updateGrid(grid);
     }
 

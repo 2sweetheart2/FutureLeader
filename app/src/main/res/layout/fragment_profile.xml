@@ -75,8 +75,25 @@
             android:textColor="@color/text_color1"
             app:layout_constraintLeft_toRightOf="@id/guideline3"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/profile_picture"
+            app:layout_constraintBottom_toTopOf="@id/profile_mentors"
             app:layout_constraintTop_toBottomOf="@id/profile_name"/>
+
+        <TextView
+            android:layout_margin="5dp"
+            android:gravity="top"
+            android:textAlignment="gravity"
+            android:id="@+id/profile_mentors"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeMinTextSize="14sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:textColor="@color/text_color1"
+            app:layout_constraintLeft_toRightOf="@id/guideline3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/profile_picture"
+            app:layout_constraintTop_toBottomOf="@id/profile_description"/>
 
         <TableLayout
             android:layout_marginLeft="15dp"

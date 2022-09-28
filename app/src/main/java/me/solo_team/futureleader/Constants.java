@@ -25,6 +25,7 @@ import java.util.List;
 import me.solo_team.futureleader.Objects.Audio;
 import me.solo_team.futureleader.Objects.Chat;
 import me.solo_team.futureleader.Objects.Message;
+import me.solo_team.futureleader.Objects.News;
 import me.solo_team.futureleader.Objects.ShopItem;
 import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.Objects.User;
@@ -291,6 +292,7 @@ public class Constants {
 
 
     public static class NewsCache {
+        public HashMap<News,View> newsViewCache = new HashMap<>();
         public JSONArray news = new JSONArray();
         public JSONObject curentNew;
 
@@ -366,7 +368,7 @@ public class Constants {
             }
         }
 
-        public void getAndSavePhoto(String url, ImageBitmaps callback, Fragment fragment){
+        public void getAndSavePhoto(String url, ImageBitmaps callback, Activity fragment){
             try{
                 if (UIDcache.containsKey(url)) {
                     callback.result(UIDcache.get(url));

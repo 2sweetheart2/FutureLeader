@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -37,6 +38,11 @@
             android:name=".ui.menu.horizontal_menu.messanger.CurrentChatView2"
             android:theme="@style/Theme.FutureLeader.NoActionBar"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.menu.statical.admining.layouts.moderation.Nastavniki"
+            android:screenOrientation="portrait"
+            android:exported="true"
+
+            />
 
         <service
             android:name=".API.websocket.SocketService"
@@ -62,10 +68,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.menu.statical.programs.FounderLeadersLayout.nastavniki.NastavninkiLayout"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ui.news.open_news.OpenNewsFragment"
             android:exported="true"
-
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.gameifecation.CoinsBank"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.programs.FounderLeadersLayout.nastavniki.KoychingAndbisnes"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.menu.statical.admining.layouts.moderation.OnlyEditText"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.menu.statical.Founder.FounderLayout"

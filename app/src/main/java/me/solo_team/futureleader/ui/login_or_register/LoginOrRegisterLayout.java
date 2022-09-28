@@ -119,7 +119,7 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
         webView.loadUrl("file:///android_asset/index.html");
-
+        webView.setVisibility(View.GONE);
         huina = findViewById(R.id.huina);
 
 
@@ -214,7 +214,6 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
                         return;
                     }
                     login(login.getText().toString(), pass.getText().toString(), token, false);
-                    // sweet-heart@swht.one f1779008
                 });
             });
         });
@@ -256,41 +255,6 @@ public class LoginOrRegisterLayout extends AppCompatActivity {
                 new CustomString("password", password)
         );
     }
-
-//                button_login.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                API.loginUser(new ApiListener() {
-//                                  Dialog d = null;
-//
-//                                  @Override
-//                                  public void onError(JSONObject json) throws JSONException {
-//                                      this.createNotification(view, json.getString("message"));
-//                                      d.dismiss();
-//                                  }
-//
-//                                  @Override
-//                                  public void inProcess() {
-//                                      d = this.openWaiter(LoginOrRegisterLayout.this);
-//                                  }
-//
-//                                  @Override
-//                                  public void onSuccess(JSONObject json) throws JSONException {
-//                                      User user = new User(json);
-//                                      user.mobileToken = token;
-//                                      Constants.user = user;
-//                                      d.dismiss();
-//                                      startActivity(new Intent(LoginOrRegisterLayout.this, MainActivity.class));
-//                                      finish();
-//                                  }
-//                              },
-//                        new CustomString("email", "sweet-heart@swht.one"),
-//                        new CustomString("password", "f1779008")
-//                );
-//
-//            }
-    //}));
 
 
     Animation.AnimationListener animationFadeOutListener = new Animation.AnimationListener() {

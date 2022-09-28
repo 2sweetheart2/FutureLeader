@@ -58,6 +58,9 @@ public enum Methods {
     CREATE_CHAT("create_chat"),
     CHANGE_CHAT_TITLE("change_chat_name"),
     GET_CHAT_HISTORY("get_chat_history"),
+    REMOVE_UNVERIFI_USER("remove_unverifi_user"),
+    GET_ALL_CURRENCY("get_all_currency"),
+    ADD_CURRENCY("add_currency"),
 
     UPPLOAD_APPLICATION("add_application"),
     ADD_DOCX_FILE("add_docx_file"),
@@ -106,6 +109,11 @@ public enum Methods {
 
     SEND_RESET_PASSWORD("send_reset_password_link"),
     RESET_PASSWORD("reset_password"),
+
+    GET_MENTORS("get_mentors"),
+    ADD_MENTOR("add_mentors"),
+    REMOVE_MENTOR("remove_mentors"),
+    REMOVE_USER_FROM_MENTOR("remove_user_to_mentors")
     ;
 
 

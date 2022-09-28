@@ -40,7 +40,7 @@ public class MenuGrid {
         this.gridLayout = gridLayout;
         this.context = context;
         gridLayout.setColumnCount(2);
-        gridLayout.setRowCount(15);
+        gridLayout.setRowCount(42);
         this.windowManager = windowManager;
     }
 
@@ -93,6 +93,8 @@ public class MenuGrid {
         if (offest % 2 != 0)
             column = 1;
         int row = offest / 2;
+        System.out.println("ROW: "+row);
+        System.out.println("COL: "+column);
 
         GridLayout.Spec col_;
         if (onAllColumn) col_ = GridLayout.spec(column, 2);

@@ -29,7 +29,7 @@ public class VideoView extends AppCompatActivity {
         vw.setOnCompletionListener(mp -> {
             AlertDialog.Builder obj = new AlertDialog.Builder(VideoView.this);
             obj.setTitle("Видео закончилось!");
-            obj.setIcon(R.mipmap.ic_launcher);
+            obj.setIcon(R.drawable.resize_300x0);
             MyListener m = new MyListener();
             obj.setPositiveButton("Начать с начала", m);
             obj.setNegativeButton("Закрыть", m);

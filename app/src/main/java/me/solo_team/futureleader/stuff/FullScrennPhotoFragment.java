@@ -58,16 +58,16 @@ public class FullScrennPhotoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.full_screen_photo_fragment, container, false);
-        onTouch = v -> {
-            mode = !mode;
-            touch.onTouch(mode);
-        };
-
-        image = root.findViewById(R.id.my_image);
-        Constants.cache.getAndSavePhoto(url, bitmap -> requireActivity().runOnUiThread(() -> {
-            image.setImage(ImageSource.bitmap(bitmap));
-            this.bitmap = bitmap;
-        }), this);
+//        onTouch = v -> {
+//            mode = !mode;
+//            touch.onTouch(mode);
+//        };
+//
+//        image = root.findViewById(R.id.my_image);
+//        Constants.cache.getAndSavePhoto(url, bitmap -> requireActivity().runOnUiThread(() -> {
+//            image.setImage(ImageSource.bitmap(bitmap));
+//            this.bitmap = bitmap;
+//        }), this);
 
         return root;
     }

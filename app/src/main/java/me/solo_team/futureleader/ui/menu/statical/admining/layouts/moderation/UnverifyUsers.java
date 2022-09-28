@@ -111,6 +111,18 @@ public class UnverifyUsers extends Her {
             if(resultCode==-500){
                 Utils.ShowSnackBar.show(UnverifyUsers.this,"отказано в доступе!",list);
             }
+            if(resultCode==10){
+                assert data != null;
+                String email = data.getStringExtra("email");
+                list.removeView(views.get(email));
+                for(UnverifiedUser u : unverifiedUsers){
+                    if(u.email.equals(email)){
+                        unverifiedUsers.remove(u);
+                        break;
+                    }
+                }
+                Utils.ShowSnackBar.show(UnverifyUsers.this,"Заявка успешно удалена!",list);
+            }
         }
     }
 

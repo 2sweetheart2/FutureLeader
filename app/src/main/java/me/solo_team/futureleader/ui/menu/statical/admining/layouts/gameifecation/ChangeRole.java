@@ -62,13 +62,22 @@ public class ChangeRole extends Her {
     CheckBox role_can_get_who_has_this_role;
     CheckBox role_can_update_role;
     CheckBox role_can_get_events_tickets;
+    CheckBox role_can_remove_unverifi_users;
+    CheckBox role_can_get_all_currency;
+    CheckBox role_can_add_currency;
+    CheckBox role_can_add_mentors;
+    CheckBox role_can_edit_profile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_role);
 
-
+        role_can_remove_unverifi_users = findViewById(R.id.role_can_remove_unverifi_users);
+        role_can_add_mentors = findViewById(R.id.role_can_add_mentors);
+        role_can_edit_profile = findViewById(R.id.role_can_edit_profile);
+        role_can_add_currency = findViewById(R.id.role_can_add_currency);
+        role_can_get_all_currency = findViewById(R.id.role_can_get_all_currency);
         role_can_update_role = findViewById(R.id.role_can_update_role);
         role_can_get_who_has_this_role = findViewById(R.id.role_can_get_who_has_this_role);
         role_can_remove_role = findViewById(R.id.role_can_remove_role);
@@ -132,10 +141,6 @@ public class ChangeRole extends Her {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    public void getCheckBoxsesInfo() {
-
     }
 
     @Override

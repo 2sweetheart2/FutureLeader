@@ -27,6 +27,7 @@ import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.Objects.FieldsStuff;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.dialogs.SelectFilter;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
@@ -57,6 +58,27 @@ public class UsersLayout extends Her {
         noResult = findViewById(R.id.layout_with_users_no_result);
         menu = findViewById(R.id.layout_with_users_result);
         count = findViewById(R.id.layout_with_users_offset);
+        findViewById(R.id.admining_users_search_filter).setOnClickListener(v -> {
+            SelectFilter selectFilter = new SelectFilter(filter_by);
+            selectFilter.onChange = new SelectFilter.onChange() {
+                @Override
+                public void change(int type) {
+                    filter_by = type;
+                    switch (type){
+                        case 0:
+                            searchUser.setHint("поиск по имени...");
+                            break;
+                        case 1:
+                            searchUser.setHint("поиск по должности...");
+                            break;
+                        case 2:
+                            searchUser.setHint("поиск по подразделению...");
+                            break;
+                    }
+                }
+            };
+            selectFilter.show(getSupportFragmentManager(),null);
+        });
         TextView back = findViewById(R.id.layout_with_users_btn_back);
         TextView next = findViewById(R.id.layout_with_users_btn_next);
         API.getUsers(new ApiListener() {
@@ -148,6 +170,7 @@ public class UsersLayout extends Her {
         filteredList = arr;
         curentSize = filteredList.length();
     }
+    int filter_by = 0;
 
     private void filterArray(String filterName) throws JSONException {
         if (filterName == null) {
@@ -159,11 +182,36 @@ public class UsersLayout extends Her {
             return;
         }
         filteredList = new JSONArray();
-        for (int i = 0; i < arr.length(); i++) {
-            JSONObject o = arr.getJSONObject(i);
-            if (!(o.getString("first_name") + " " + o.getString("last_name")).toLowerCase().contains(filterName.toLowerCase()))
-                continue;
-            filteredList.put(o);
+        switch (filter_by) {
+            case 1:
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject o = arr.getJSONObject(i);
+                    User user = new User(o);
+                    for (Field f : user.fields) {
+                        if (f.name.equals("division"))
+                            if(f.value.toLowerCase().contains(filterName.toLowerCase()))
+                                filteredList.put(o);
+                    }
+                }
+                break;
+            case 0:
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject o = arr.getJSONObject(i);
+                    if (!(o.getString("first_name") + " " + o.getString("last_name")).toLowerCase().contains(filterName.toLowerCase()))
+                        continue;
+                    filteredList.put(o);
+                }
+                break;
+            case 2:
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject o = arr.getJSONObject(i);
+                    User user = new User(o);
+                    for (Field f : user.fields) {
+                        if (f.name.equals("post"))
+                            if(f.value.toLowerCase().contains(filterName.toLowerCase()))
+                                filteredList.put(o);
+                    }
+                }
         }
         curentSize = filteredList.length();
     }

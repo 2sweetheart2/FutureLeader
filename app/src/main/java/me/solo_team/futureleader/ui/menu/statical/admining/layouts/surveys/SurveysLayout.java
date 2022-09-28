@@ -85,7 +85,7 @@ public class SurveysLayout extends Her {
                     Intent intent = new Intent(SurveysLayout.this, SelectMembers.class);
                     intent.putExtra("showStatistic", true);
                     intent.putExtra("needStuff", false);
-                    intent.putExtra("needShowSurveysStat",true);
+                    intent.putExtra("needShowSurveyStat",true);
                     intent.putExtra("id", String.valueOf(s.id));
                     startActivityIfNeeded(intent, 101);
                 });

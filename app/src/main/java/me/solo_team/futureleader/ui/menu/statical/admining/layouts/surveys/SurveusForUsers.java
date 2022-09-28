@@ -50,7 +50,7 @@ public class SurveusForUsers extends AppCompatActivity {
             Intent intent = new Intent(this, SelectMembers.class);
             intent.putExtra("needStuff", false);
             intent.putExtra("checker", true);
-            intent.putExtra("removeSelf", true);
+            intent.putExtra("removeSelf", false);
             startActivityIfNeeded(intent, 101);
         });
         listView = findViewById(R.id.list_view);
@@ -93,17 +93,20 @@ public class SurveusForUsers extends AppCompatActivity {
         if (requestCode == 101) {
             if(resultCode==-500){
                 Utils.ShowSnackBar.show(SurveusForUsers.this,"отказано в доступе!",listView);
+                return;
             }
-            String[] users = data.getStringArrayExtra("users");
-            selectedusers.clear();
-            for (String s : users) {
-                try {
-                    selectedusers.add(new ChatMember(new JSONObject(s)));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            if(resultCode==100) {
+                String[] users = data.getStringArrayExtra("users");
+                selectedusers.clear();
+                for (String s : users) {
+                    try {
+                        selectedusers.add(new ChatMember(new JSONObject(s)));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
+                addIntoAdapter();
             }
-            addIntoAdapter();
         }
 
     }

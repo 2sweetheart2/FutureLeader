@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ import me.solo_team.futureleader.Objects.Field;
 import me.solo_team.futureleader.Objects.Surveys;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
+import me.solo_team.futureleader.dialogs.SelectFilter;
 import me.solo_team.futureleader.ui.menu.horizontal_menu.surveys.DoSurvey;
 import me.solo_team.futureleader.ui.profile.view_prof.ViewProfile;
 
@@ -63,6 +65,7 @@ public class SelectMembers extends AppCompatActivity {
     boolean selectOne = false;
     boolean forChat = false;
     boolean showStat = false;
+    int filter_by = 0;
     HashMap<ChatMember,Surveys> surveys = new HashMap<>();
 
     @Override
@@ -89,6 +92,27 @@ public class SelectMembers extends AppCompatActivity {
         removeSelf = getIntent().getBooleanExtra("removeSelf", false);
         showStat = getIntent().getBooleanExtra("showStatistic", false);
         selectOne = getIntent().getBooleanExtra("selectOne", false);
+        if(needStuff){
+            findViewById(R.id.admining_users_search_filter).setVisibility(View.VISIBLE);
+            findViewById(R.id.admining_users_search_filter).setOnClickListener(v -> {
+                SelectFilter selectFilter = new SelectFilter(filter_by);
+                selectFilter.onChange = type -> {
+                    filter_by = type;
+                    switch (type){
+                        case 0:
+                            searchUser.setHint("поиск по имени...");
+                            break;
+                        case 1:
+                            searchUser.setHint("поиск по должности...");
+                            break;
+                        case 2:
+                            searchUser.setHint("поиск по подразделению...");
+                            break;
+                    }
+                };
+                selectFilter.show(getSupportFragmentManager(),null);
+            });
+        }
 
         if (getIntent().hasExtra("title"))
             setTitle(getIntent().getStringExtra("title"));
@@ -284,14 +308,19 @@ public class SelectMembers extends AppCompatActivity {
             return;
         }
         filteredList = new JSONArray();
-        for (int i = 0; i < arr.length(); i++) {
-            JSONObject o = arr.getJSONObject(i);
-            if (!(o.getString("first_name") + " " + o.getString("last_name")).toLowerCase().contains(filterName.toLowerCase()))
-                continue;
-            if (removeSelf && o.getInt("id") == Constants.user.id)
-                continue;
-            filteredList.put(o);
+        if (filter_by == 0) {
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject o = arr.getJSONObject(i);
+                System.out.println(o);
+
+                if (!(o.getString("first_name") + " " + o.getString("last_name")).toLowerCase().contains(filterName.toLowerCase()))
+                    continue;
+                if (removeSelf && o.getInt("id") == Constants.user.id)
+                    continue;
+                filteredList.put(o);
+            }
         }
+
         curentSize = filteredList.length();
     }
 

@@ -182,7 +182,7 @@ public class CreateSurveys extends Her {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==101){
+        if(requestCode==101 && resultCode==1){
             String[] users = data.getStringArrayExtra("users");
             selectedusers.clear();
             for (String s : users) {

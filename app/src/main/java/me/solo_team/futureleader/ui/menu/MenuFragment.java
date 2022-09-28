@@ -22,6 +22,7 @@ import me.solo_team.futureleader.ui.menu.statical.applications.ApplicationsView;
 import me.solo_team.futureleader.ui.menu.statical.dr.DrView;
 import me.solo_team.futureleader.ui.menu.statical.programs.Endayment;
 import me.solo_team.futureleader.ui.menu.statical.programs.FondCommands;
+import me.solo_team.futureleader.ui.menu.statical.programs.FounderLeadersLayout.nastavniki.NastavninkiLayout;
 import me.solo_team.futureleader.ui.menu.statical.programs.ProgramsLayout;
 import me.solo_team.futureleader.ui.menu.statical.shop.ShopView;
 
@@ -55,7 +56,7 @@ public class MenuFragment extends Fragment {
         ConstraintLayout cn = root.findViewById(R.id.menu_header);
         cn.getChildAt(0).setOnClickListener(v -> startActivity(new Intent(requireContext(), FounderLayout.class)));
         cn.getChildAt(2).setOnClickListener(v -> startActivity(new Intent(requireContext(), ProgramsLayout.class)));
-        cn.getChildAt(4).setOnClickListener(v -> Utils.ShowSnackBar.show(requireContext(), "страница не доступна!", v));
+        cn.getChildAt(4).setOnClickListener(v -> startActivity(new Intent(requireContext(), NastavninkiLayout.class)));
         cn.getChildAt(6).setOnClickListener(v -> startActivity(new Intent(requireContext(), Endayment.class)));
         cn.getChildAt(8).setOnClickListener(v -> startActivity(new Intent(requireContext(), FondCommands.class)));
         return root;

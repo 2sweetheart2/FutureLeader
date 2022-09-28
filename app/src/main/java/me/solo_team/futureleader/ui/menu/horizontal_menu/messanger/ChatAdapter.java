@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -59,6 +60,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         text.setText(message.text);
         text.setMaxWidth(width);
         v.findViewById(R.id.obj_message_image).setVisibility(View.GONE);
+
+
         text.setOnLongClickListener(v1 -> {
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("message", text.getText().toString());
