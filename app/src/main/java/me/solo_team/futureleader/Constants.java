@@ -292,7 +292,7 @@ public class Constants {
 
 
     public static class NewsCache {
-        public HashMap<News,View> newsViewCache = new HashMap<>();
+        public HashMap<Integer,View> newsViewCache = new HashMap<>();
         public JSONArray news = new JSONArray();
         public JSONObject curentNew;
 

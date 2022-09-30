@@ -209,6 +209,7 @@ public class NewsFragment extends Fragment {
         if(lastPosExit>=0)
             nw.setSelection(lastPosExit);
     }
+    public HashMap<Integer,View> newsViewsWithPos= new HashMap<>();
 
     @Override
     public void onPause() {
@@ -254,8 +255,8 @@ public class NewsFragment extends Fragment {
             ConstraintLayout cn;
             viewHolder = new ViewHolder();
 
-            if (Constants.newsCache.newsViewCache.containsKey(dataModel)) {
-                result = Constants.newsCache.newsViewCache.get(dataModel);
+            if (Constants.newsCache.newsViewCache.containsKey(position)) {
+                convertView = Constants.newsCache.newsViewCache.get(position);
             } else {
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(R.layout.news_news, parent, false);
@@ -286,7 +287,7 @@ public class NewsFragment extends Fragment {
                     startActivity(intent);
                 });
 
-                Constants.newsCache.newsViewCache.put(dataModel, result);
+                Constants.newsCache.newsViewCache.put(position, result);
                 convertView.setTag(viewHolder);
                 if (newsAddWitAnimation.contains(dataModel)) {
                     System.out.println("RESUME: " + resume);

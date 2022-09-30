@@ -4,21 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/news_obj"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
-    android:layout_margin="15dp"
+    android:layout_height="240dp"
     android:orientation="vertical"
-    app:contentPadding="10dp">
+    >
 
 
     <View
+        android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/news_obj_123"
         android:background="@drawable/gray_gradient_with_corners"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
+        android:layout_margin="15dp"
         android:id="@+id/news_obj_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -41,14 +43,14 @@
         android:text="news text"
         android:textColor="@color/text_color1"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/news_obj"
+        app:layout_constraintBottom_toBottomOf="@id/news_obj_123"
         app:layout_constraintLeft_toLeftOf="@id/news_obj_image" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/news_obj_image"
         app:layout_constraintBottom_toBottomOf="@id/news_obj"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="@id/news_obj_123"
         android:orientation="horizontal"
         android:layout_marginEnd="10dp"
         >

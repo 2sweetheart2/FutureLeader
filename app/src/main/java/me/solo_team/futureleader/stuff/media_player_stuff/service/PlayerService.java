@@ -158,7 +158,13 @@ public class PlayerService extends Service {
                      Audio track = Constants.audioCache.getCurrentAudio();
                      System.err.println("TRY TO UPDATE LOGO");
                      updateMetadataFromTrack(track);
-                     refreshState(currentState,exoPlayer.getCurrentPosition());
+                     refreshState(currentState,chekDuratation(track));
+                     break;
+                 }
+                 case "update_position":{
+                     Audio track = Constants.audioCache.getCurrentAudio();
+                     updateMetadataFromTrack(track);
+                     refreshState(currentState,chekDuratation(track));
                      break;
                  }
                  case "die":{
@@ -172,10 +178,11 @@ public class PlayerService extends Service {
 
         @Override
         public void onPlay() {
+            Audio audio = Constants.audioCache.getCurrentAudio();
+
             if (!exoPlayer.getPlayWhenReady()) {
                 startService(new Intent(getApplicationContext(), PlayerService.class));
 
-                Audio audio = Constants.audioCache.getCurrentAudio();
 
 
                 updateMetadataFromTrack(audio);
@@ -201,10 +208,15 @@ public class PlayerService extends Service {
                 exoPlayer.setPlayWhenReady(true);
             }
 
-            mediaSession.setPlaybackState(stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1).build());
+            mediaSession.setPlaybackState(stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, chekDuratation(audio), 1).build());
             currentState = PlaybackStateCompat.STATE_PLAYING;
-            lastDuratation.clear();
-
+            if(lastDuratation.size()>1){
+                System.out.println("SIZE: "+lastDuratation.size());
+                for(Map.Entry<Audio, Long> s : lastDuratation.entrySet()){
+                    lastDuratation.remove(s.getKey());
+                    break;
+                }
+            }
             refreshNotificationAndForegroundStatus(currentState);
         }
 
@@ -215,7 +227,7 @@ public class PlayerService extends Service {
                 unregisterReceiver(becomingNoisyReceiver);
             lastDuratation.put(Constants.audioCache.getCurrentAudio(), exoPlayer.getCurrentPosition());
 
-            mediaSession.setPlaybackState(stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1).build());
+            mediaSession.setPlaybackState(stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, chekDuratation(Constants.audioCache.getCurrentAudio()), 1).build());
             currentState = PlaybackStateCompat.STATE_PAUSED;
 
             refreshNotificationAndForegroundStatus(currentState);
@@ -231,7 +243,7 @@ public class PlayerService extends Service {
             // Сообщаем новое состояние
             mediaSession.setPlaybackState(
                     stateBuilder.setState(PlaybackStateCompat.STATE_STOPPED,
-                            PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1).build());
+                            exoPlayer.getCurrentPosition(), 1).build());
             if (becomingNoisyReceiver.isOrderedBroadcast())
                 unregisterReceiver(becomingNoisyReceiver);
             audioManager.abandonAudioFocus(audioFocusChangeListener);
@@ -251,21 +263,21 @@ public class PlayerService extends Service {
 
 
         private long chekDuratation(Audio track) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                try {
-                    if (lastDuratation.containsKey(track)) {
-                        return lastDuratation.get(track);
-                    }
-                    lastDuratation.clear();
-                    return 0;
-                } catch (NullPointerException ignored) {
-                    return 0;
-                }
+            try {
+//                    if (lastDuratation.containsKey(track)) {
+//                        return lastDuratation.get(track);
+//                    }
+//                    lastDuratation.clear();
+                System.out.println("PLAYER POSITION: "+exoPlayer.getCurrentPosition());
+                return exoPlayer.getCurrentPosition();
+            } catch (NullPointerException ignored) {
+                ignored.printStackTrace();
+                return 1000;
             }
-            return 0;
         }
 
         private void refreshState(int state, long position) {
+
             mediaSession.setPlaybackState(stateBuilder.setState(state, position, 1).build());
             currentState = state;
             refreshNotificationAndForegroundStatus(currentState);
@@ -294,7 +306,8 @@ public class PlayerService extends Service {
             metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, audio.imageBitmap);
             metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, audio.name);
             metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, audio.author);
-            metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, audio.duratation);
+            System.out.println("AUDIO DUR: "+exoPlayer.getContentDuration());
+            metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, exoPlayer.getContentDuration());
             mediaSession.setMetadata(metadataBuilder.build());
         }
     };
@@ -419,7 +432,7 @@ public class PlayerService extends Service {
                 .setMediaSession(mediaSession.getSessionToken()));
         builder.setSmallIcon(R.drawable.resize_300x0);
         builder.setColor(ContextCompat.getColor(this, R.color.secondary));
-        builder.setAutoCancel(true);
+        builder.setAutoCancel(false);
         builder.setChannelId(NOTIFICATION_DEFAULT_CHANNEL_ID);
         builder.setShowWhen(false);
         builder.setPriority(NotificationCompat.PRIORITY_HIGH);

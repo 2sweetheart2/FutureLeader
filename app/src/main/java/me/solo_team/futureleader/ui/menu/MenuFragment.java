@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import me.solo_team.futureleader.Constants;
+import me.solo_team.futureleader.Objects.LockableNestedScrollView;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
 import me.solo_team.futureleader.ui.menu.statical.Founder.FounderLayout;
@@ -28,6 +29,7 @@ import me.solo_team.futureleader.ui.menu.statical.shop.ShopView;
 
 public class MenuFragment extends Fragment {
     View root;
+    RecyclerView recyclerView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,10 +40,19 @@ public class MenuFragment extends Fragment {
         MenuGrid grid = new MenuGrid(root.findViewById(R.id.grid), root.getContext(), requireActivity().getWindowManager());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView recyclerView = root.findViewById(R.id.menu_piace);
+        recyclerView = root.findViewById(R.id.menu_piace);
         recyclerView.setLayoutManager(layoutManager);
         RecycleAdapter rcd = new RecycleAdapter(this);
         recyclerView.setAdapter(rcd);
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                ((LockableNestedScrollView)root).setScrollingEnabled(newState != 1);
+
+            }
+        });
 
         //динамическое добавление элементов в сетку
 

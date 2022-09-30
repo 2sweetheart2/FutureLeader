@@ -48,6 +48,7 @@ public class ViewProfile extends Her {
     ProfileInfoGrid grid;
     LinkedHashMap<String, String> notAddedItems = new LinkedHashMap<>();
     Button button;
+    Button openChat;
     View root;
     User currentUser;
     @Override
@@ -62,8 +63,18 @@ public class ViewProfile extends Her {
         description = root.findViewById(R.id.profile_description);
         mentors = root.findViewById(R.id.profile_mentors);
         button = root.findViewById(R.id.profile_add_field_btn);
+        openChat = root.findViewById(R.id.profile_open_chat);
+        String s = "SELECT * FROM table WHERE id=0";
+
         if(currentUser==null)
             currentUser = Constants.currentUser;
+        if(currentUser.id==Constants.user.id)
+            openChat.setVisibility(View.GONE);
+        else
+            openChat.setOnClickListener(view -> {
+                //TODO: сделать метод на сере о проверке созданного чата, и если есть, то открывать, иначе создать и открыть. (сделать удаление истории чата у конкретного пользователя, если же ему или он написал в этот чат, то показывать его, инае не показывать)
+            });
+
         boolean removeSelf = true;
         if(getIntent().hasExtra("removeSelf"))
             removeSelf = getIntent().getBooleanExtra("removeSelf",true);

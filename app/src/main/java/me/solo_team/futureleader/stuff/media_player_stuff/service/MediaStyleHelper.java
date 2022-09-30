@@ -10,6 +10,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
 
+import me.solo_team.futureleader.R;
+
 public class MediaStyleHelper {
     static NotificationCompat.Builder from(Context context, MediaSessionCompat mediaSession) {
         MediaControllerCompat controller = mediaSession.getController();

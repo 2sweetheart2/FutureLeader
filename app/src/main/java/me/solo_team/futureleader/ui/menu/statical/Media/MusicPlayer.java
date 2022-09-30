@@ -59,7 +59,6 @@ public class MusicPlayer extends AppCompatActivity {
         left = findViewById(R.id.music_player_left);
         pause = findViewById(R.id.music_player_pause);
         right = findViewById(R.id.music_player_right);
-        System.out.println(Constants.audioCache.getCurrentAudio().name);
         pause.setOnClickListener(stopPlay);
 
         right.setOnClickListener(v -> {
@@ -100,6 +99,10 @@ public class MusicPlayer extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 MainActivity.mediaController.getTransportControls().sendCustomAction("update", bundle);
             }
+            if(MainActivity.mediaController.getMetadata().getLong(MediaMetadataCompat.METADATA_KEY_DURATION)!=Constants.exoPlayer.getContentDuration()){
+                Bundle bundle = new Bundle();
+                MainActivity.mediaController.getTransportControls().sendCustomAction("update_position", bundle);
+            }
         }
         stopThread = false;
         if(getIntent().hasExtra("audio")) {
@@ -118,12 +121,22 @@ public class MusicPlayer extends AppCompatActivity {
         return DateUtils.formatElapsedTime(dur / 1000); // converting time in millis to minutes:second format eg 14:15 min
     }
 
+    public void updatePos(){
+        if (MainActivity.mediaController.getMetadata() != null) {
+            if(MainActivity.mediaController.getMetadata().getLong(MediaMetadataCompat.METADATA_KEY_DURATION)!=Constants.exoPlayer.getContentDuration() || MainActivity.mediaController.getPlaybackState().getPosition()!=Constants.exoPlayer.getCurrentPosition()){
+                Bundle bundle = new Bundle();
+                MainActivity.mediaController.getTransportControls().sendCustomAction("update_position", bundle);
+            }
+        }
+    }
+
     boolean stopThread = false;
 
     private void zalupa() {
         new Thread(() -> {
             while (true) {
                 if (stopThread) return;
+
                 if (MainActivity.mediaController != null) {
                     if (MainActivity.mediaController.getPlaybackState() != null) {
                         int state = MainActivity.mediaController.getPlaybackState().getState();
@@ -147,12 +160,12 @@ public class MusicPlayer extends AppCompatActivity {
                             if (audio.imageBitmap != null) {
                                 runOnUiThread(() -> image.setImageBitmap(Utils.getRoundedCornerBitmap(audio.imageBitmap, 25)));
                             } else if (audio.urlPhoto != null)
-                                Utils.getBitmapFromURL(audio.urlPhoto, bitmap -> {
+                                Constants.cache.getAndSavePhoto(audio.urlPhoto,bitmap -> {
                                     Bundle bundle = new Bundle();
                                     Constants.audioCache.getCurrentAudio().imageBitmap = bitmap;
                                     MainActivity.mediaController.getTransportControls().sendCustomAction("update_logo", bundle);
                                     runOnUiThread(() -> image.setImageBitmap(Utils.getRoundedCornerBitmap(bitmap, 25)));
-                                });
+                                },this);
                         });
 
                     }
@@ -162,7 +175,8 @@ public class MusicPlayer extends AppCompatActivity {
                         runOnUiThread(() -> {
                             if(Constants.exoPlayer.getContentDuration()>=0) timeBar.setDuration(Constants.exoPlayer.getContentDuration());
                             timeBar.setPosition(Constants.exoPlayer.getCurrentPosition());
-
+                            if(Constants.exoPlayer.isPlaying())
+                                    updatePos();
                             if (!changeTimeStamp)
                                 time.setText(getStringFromMilSec(Constants.exoPlayer.getCurrentPosition()));
                         });
