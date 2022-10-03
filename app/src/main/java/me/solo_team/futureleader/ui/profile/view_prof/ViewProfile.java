@@ -26,12 +26,15 @@ import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Achievement;
+import me.solo_team.futureleader.Objects.Chat;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Field;
+import me.solo_team.futureleader.Objects.Postal;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.dialogs.EditFieldsDialog;
 import me.solo_team.futureleader.stuff.Utils;
+import me.solo_team.futureleader.ui.menu.horizontal_menu.messanger.CurrentChatView2;
 import me.solo_team.futureleader.ui.menu.statical.admining.Her;
 import me.solo_team.futureleader.ui.profile.AddFieldLayout;
 import me.solo_team.futureleader.ui.profile.EditFieldsLayout;
@@ -48,6 +51,7 @@ public class ViewProfile extends Her {
     ProfileInfoGrid grid;
     LinkedHashMap<String, String> notAddedItems = new LinkedHashMap<>();
     Button button;
+    Button postals;
     Button openChat;
     View root;
     User currentUser;
@@ -57,6 +61,7 @@ public class ViewProfile extends Her {
         setContentView(R.layout.fragment_profile);
         root = findViewById(R.id.profile_main);
         tableLayout = root.findViewById(R.id.profile_table_layout);
+        postals = root.findViewById(R.id.postals_btn);
         grid = new ProfileInfoGrid(tableLayout, root.getContext(), getLayoutInflater());
         picture = root.findViewById(R.id.profile_picture);
         name = root.findViewById(R.id.profile_name);
@@ -64,7 +69,6 @@ public class ViewProfile extends Her {
         mentors = root.findViewById(R.id.profile_mentors);
         button = root.findViewById(R.id.profile_add_field_btn);
         openChat = root.findViewById(R.id.profile_open_chat);
-        String s = "SELECT * FROM table WHERE id=0";
 
         if(currentUser==null)
             currentUser = Constants.currentUser;
@@ -72,6 +76,35 @@ public class ViewProfile extends Her {
             openChat.setVisibility(View.GONE);
         else
             openChat.setOnClickListener(view -> {
+                API.checkAndCreateChat(new ApiListener() {
+                    Dialog d;
+                    @Override
+                    public void onError(JSONObject json) throws JSONException {
+                        d.dismiss();
+                        System.out.println(json);
+                        createNotification(tableLayout,json.getString("message"));
+                    }
+
+                    @Override
+                    public void inProcess() {
+                        d = openWaiter(ViewProfile.this);
+                    }
+
+                    @Override
+                    public void onSuccess(JSONObject json) throws JSONException {
+                        Chat chat = new Chat(json.getJSONObject("chat"));
+                        Constants.chatsCache.addChat(chat);
+                        runOnUiThread(() -> {
+                            Intent intent = new Intent(getApplicationContext(), CurrentChatView2.class);
+                            intent.putExtra("peerId",chat.peerId);
+                            startActivity(intent);
+                        });
+                        d.dismiss();
+                    }
+                },
+                        new CustomString("token",Constants.user.token),
+                        new CustomString("user_id",currentUser.id)
+                        );
                 //TODO: сделать метод на сере о проверке созданного чата, и если есть, то открывать, иначе создать и открыть. (сделать удаление истории чата у конкретного пользователя, если же ему или он написал в этот чат, то показывать его, инае не показывать)
             });
 
@@ -80,6 +113,7 @@ public class ViewProfile extends Her {
             removeSelf = getIntent().getBooleanExtra("removeSelf",true);
         if(Constants.currentUser.id==Constants.user.id && removeSelf)
             finish();
+
         Conresume();
     }
 
@@ -136,8 +170,43 @@ public class ViewProfile extends Her {
                 startActivity(intent);
             });
         }else button.setVisibility(View.GONE);
+        postals.setOnClickListener(v -> {
+            API.getPostals(new ApiListener() {
+                Dialog d;
+                @Override
+                public void onError(JSONObject json) throws JSONException {
+                    d.dismiss();
+                    createNotification(picture,json.getString("message"));
+                }
 
+                @Override
+                public void inProcess() {
+                    d = openWaiter(ViewProfile.this);
+                }
 
+                @Override
+                public void onSuccess(JSONObject json) throws JSONException {
+                    JSONArray post = json.getJSONArray("postals");
+                    List<Postal> postals = new ArrayList<>();
+                    for(int i=0;i<post.length();i++){
+                        postals.add(new Postal(post.getJSONObject(i)));
+                    }
+
+                    runOnUiThread(()->{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ViewProfile.this);
+                        View view = getLayoutInflater().inflate(R.layout.profile_alert_dialog_list, null);
+                        builder.setView(view);
+                        RecyclerView recyclerView = view.findViewById(R.id.achivement_list);
+
+                        recyclerView.setLayoutManager(new LinearLayoutManager(ViewProfile.this));
+                        RecycleAdapter2 adapter = new RecycleAdapter2(getSupportFragmentManager(), null,postals, ViewProfile.this);
+                        recyclerView.setAdapter(adapter);
+                        builder.show();
+                    });
+                    d.dismiss();
+                }
+            },new CustomString("token",Constants.user.token),new CustomString("user_id",currentUser.id));
+        });
 
         achivement_btn.setOnClickListener(new View.OnClickListener() {
 
@@ -184,7 +253,7 @@ public class ViewProfile extends Her {
 
                                 recyclerView.setLayoutManager(new LinearLayoutManager(ViewProfile.this));
                                 System.out.println("ACHIEVEMTNS SIZE: " + Constants.currentUser.achievements.size());
-                                RecycleAdapter2 adapter = new RecycleAdapter2(getSupportFragmentManager(), Constants.currentUser.achievements, ViewProfile.this);
+                                RecycleAdapter2 adapter = new RecycleAdapter2(getSupportFragmentManager(), Constants.currentUser.achievements,null, ViewProfile.this);
                                 recyclerView.setAdapter(adapter);
                                 builder.show();
                             });

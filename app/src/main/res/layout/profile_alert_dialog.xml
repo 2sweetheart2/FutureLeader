@@ -23,16 +23,15 @@
         style="@style/first_column"
         android:text=""
         />
+
     <TextView
         android:id="@+id/profile_alert_cost"
+        style="@style/first_column"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/profile_alert_title"
-        app:layout_constraintLeft_toLeftOf="@id/profile_alert_image"
         android:layout_marginTop="25dp"
-        style="@style/first_column"
-        android:text="coins: "
-        />
+        app:layout_constraintLeft_toLeftOf="@id/profile_alert_image"
+        app:layout_constraintTop_toBottomOf="@id/profile_alert_title" />
     <TextView
         android:id="@+id/profile_alert_description"
         android:layout_width="0dp"

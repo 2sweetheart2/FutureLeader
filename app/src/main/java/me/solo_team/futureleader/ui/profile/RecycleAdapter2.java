@@ -21,29 +21,34 @@ import java.util.List;
 
 import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Achievement;
+import me.solo_team.futureleader.Objects.Postal;
 import me.solo_team.futureleader.R;
 
 public class RecycleAdapter2 extends RecyclerView.Adapter<RecycleAdapter2.ViewHolder> {
 
     private final List<Achievement> achievements;
+    private final List<Postal> postals;
     androidx.fragment.app.FragmentManager fragmentManager2;
     Activity activity;
     LayoutInflater inflater;
     Fragment fragment;
 
-    public RecycleAdapter2(FragmentManager fragmentManager2, List<Achievement> achievements, Fragment fragment, LayoutInflater inflater) {
+    public RecycleAdapter2(FragmentManager fragmentManager2, List<Achievement> achievements, List<Postal> postals, Fragment fragment, LayoutInflater inflater) {
         this.fragmentManager2 = fragmentManager2;
         this.achievements = achievements;
+        this.postals = postals;
         this.inflater = inflater;
         this.fragment =fragment;
     }
 
-    public RecycleAdapter2(FragmentManager fragmentManager, List<Achievement> achievements, Activity activity) {
+    public RecycleAdapter2(FragmentManager fragmentManager, List<Achievement> achievements, List<Postal> postals, Activity activity) {
         fragmentManager2 = fragmentManager;
         this.achievements = achievements;
+        this.postals = postals;
         this.activity = activity;
         this.inflater = activity.getLayoutInflater();
     }
+
 
 
     @NotNull
@@ -58,28 +63,56 @@ public class RecycleAdapter2 extends RecyclerView.Adapter<RecycleAdapter2.ViewHo
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.text.setText(achievements.get(position).name);
-        if(activity==null) {
-            Constants.cache.addPhoto(achievements.get(position).image_url, holder.image, fragment);
-            System.out.println("SET NAME: " + achievements.get(position));
-            holder.image.setOnClickListener(view -> {
-                AlertAchivementDialog alertAchivementDialog = new AlertAchivementDialog(Constants.currentUser.achievements.get(position));
-                alertAchivementDialog.show(fragmentManager2, null);
-            });
-        }
-        else{
-            Constants.cache.addPhoto(achievements.get(position).image_url, holder.image, activity);
-            System.out.println("SET NAME: " + achievements.get(position));
-            holder.image.setOnClickListener(view -> {
-                AlertAchivementDialog alertAchivementDialog = new AlertAchivementDialog(Constants.currentUser.achievements.get(position));
-                alertAchivementDialog.show(fragmentManager2, null);
-            });
+        if(postals==null) {
+            holder.text.setText(achievements.get(position).name);
+            if (activity == null) {
+                Constants.cache.addPhoto(achievements.get(position).image_url, holder.image, fragment);
+                System.out.println("SET NAME: " + achievements.get(position));
+                holder.image.setOnClickListener(view -> {
+                    AlertAchivementDialog alertAchivementDialog = new AlertAchivementDialog(Constants.currentUser.achievements.get(position));
+                    alertAchivementDialog.show(fragmentManager2, null);
+                });
+            } else {
+                Constants.cache.addPhoto(achievements.get(position).image_url, holder.image, activity);
+                System.out.println("SET NAME: " + achievements.get(position));
+                holder.image.setOnClickListener(view -> {
+                    AlertAchivementDialog alertAchivementDialog = new AlertAchivementDialog(Constants.currentUser.achievements.get(position));
+                    alertAchivementDialog.show(fragmentManager2, null);
+                });
+            }
+        }else{
+            if(postals.get(position).text!=null) {
+                String text = postals.get(position).text.split(" ")[0];
+                if(text.split(" ").length>=2) {
+                    text += ' ' + postals.get(position).text.split(" ")[1];
+                    holder.text.setText(text + ' ' + postals.get(position).text.split(" ")[2] + "...");
+                }
+                else
+                    holder.text.setText(text+"...");
+            }
+            if (activity == null) {
+                Constants.cache.addPhoto(postals.get(position).photoUrl, holder.image, fragment);
+                System.out.println("SET NAME: " + postals.get(position));
+                holder.image.setOnClickListener(view -> {
+                    AlertAchivementDialog alertAchivementDialog = new AlertAchivementDialog(postals.get(position));
+                    alertAchivementDialog.show(fragmentManager2, null);
+                });
+            } else {
+                Constants.cache.addPhoto(postals.get(position).photoUrl, holder.image, activity);
+                System.out.println("SET NAME: " + postals.get(position));
+                holder.image.setOnClickListener(view -> {
+                    AlertAchivementDialog alertAchivementDialog = new AlertAchivementDialog(postals.get(position));
+                    alertAchivementDialog.show(fragmentManager2, null);
+                });
+            }
         }
     }
 
 
     @Override
     public int getItemCount() {
+        if(postals!=null)
+            return postals.size();
         return achievements.size();
     }
 

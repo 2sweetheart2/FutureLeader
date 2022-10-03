@@ -17,6 +17,7 @@ import me.solo_team.futureleader.Objects.CustomString;
 public class API {
 
 
+
     /**
      * метод для создания из {@link CustomString} единого {@link JSONObject}
      *
@@ -341,6 +342,13 @@ public class API {
 
     public static void removeUserFromMentor(ApiListener listener,CustomString...params) {
         HTTPS.sendPost(Methods.REMOVE_USER_FROM_MENTOR,createJsonObj(params),listener);
+    }
 
+    public static void checkAndCreateChat(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.CHECK_AND_CREATE_CHAT,createJsonObj(params),listener);
+    }
+
+    public static void getPostals(ApiListener listener,CustomString...params) {
+        HTTPS.sendPost(Methods.GET_POSTALS,createJsonObj(params),listener);
     }
 }

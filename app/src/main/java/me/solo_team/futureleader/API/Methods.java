@@ -113,7 +113,9 @@ public enum Methods {
     GET_MENTORS("get_mentors"),
     ADD_MENTOR("add_mentors"),
     REMOVE_MENTOR("remove_mentors"),
-    REMOVE_USER_FROM_MENTOR("remove_user_to_mentors")
+    REMOVE_USER_FROM_MENTOR("remove_user_to_mentors"),
+    CHECK_AND_CREATE_CHAT("check_and_create_chat"),
+    GET_POSTALS("get_postals")
     ;
 
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/profile_main">
@@ -126,27 +125,36 @@
             />
 
 
+        <Button
+            android:id="@+id/achiviment_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Достижения"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="@id/profile_table_layout"
+            app:layout_constraintRight_toRightOf="@id/profile_table_layout"
+            app:layout_constraintTop_toBottomOf="@id/profile_add_field_btn" />
 
-            <Button
-
-                android:layout_marginTop="10dp"
-                android:id="@+id/achiviment_btn"
-                app:layout_constraintLeft_toLeftOf="@id/profile_add_field_btn"
-                app:layout_constraintRight_toRightOf="@id/profile_add_field_btn"
-                app:layout_constraintTop_toBottomOf="@id/profile_add_field_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:text="Достижения"
-                />
+        <Button
+            android:id="@+id/postals_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="открытки"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="@id/profile_table_layout"
+            app:layout_constraintRight_toRightOf="@id/profile_table_layout"
+            app:layout_constraintTop_toBottomOf="@id/achiviment_btn" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="8dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            app:layout_constraintTop_toBottomOf="@id/achiviment_btn"
+            app:layout_constraintTop_toBottomOf="@id/postals_btn"
 
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

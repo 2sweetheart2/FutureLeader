@@ -89,7 +89,7 @@ public class CurrentChatView2 extends AppCompatActivity {
 
         API.getChat(new ApiListener() {
                         @Override
-                        public void onError(JSONObject json) throws JSONException {
+                        public void onError(JSONObject json) {
                             System.out.println(json);
                             finish();
                         }

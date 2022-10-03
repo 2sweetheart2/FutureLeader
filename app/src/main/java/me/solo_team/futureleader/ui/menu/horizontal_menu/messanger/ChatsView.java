@@ -18,7 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import me.solo_team.futureleader.API.API;
 import me.solo_team.futureleader.API.ApiListener;
@@ -33,7 +35,7 @@ import me.solo_team.futureleader.ui.news.open_news.EditNews;
 
 public class ChatsView extends Her {
     LinearLayout list;
-
+    List<Chat> addedChats = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +61,11 @@ public class ChatsView extends Her {
                          @Override
                          public void onSuccess(JSONObject json) throws JSONException {
                              JSONArray chats = json.getJSONArray("results");
+                             System.out.println(chats);
                              for (int i = 0; i < chats.length(); i++) {
                                  Chat chat = new Chat(chats.getJSONObject(i));
                                  Constants.chatsCache.addChat(chat);
-
+                                 addedChats.add(chat);
                              }
                              runOnUiThread(() -> render());
                              d.dismiss();
@@ -86,6 +89,15 @@ public class ChatsView extends Her {
     private void render() {
         list.removeAllViews();
         for (Chat chat : Constants.chatsCache.chats) {
+            boolean need = true;
+            for(Chat chat1 : addedChats) {
+                if (chat1.peerId != chat.peerId) {
+                    need = false;
+                    break;
+                }
+            }
+            if(!need)
+                continue;
             Constants.chatListeners.messageCallbacks.put(chat.peerId, message -> {
                 runOnUiThread(()->updateLastMessage(message,chat));
             });

@@ -24,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +42,7 @@ import me.solo_team.futureleader.Constants;
 import me.solo_team.futureleader.Objects.Achievement;
 import me.solo_team.futureleader.Objects.CustomString;
 import me.solo_team.futureleader.Objects.Field;
+import me.solo_team.futureleader.Objects.Postal;
 import me.solo_team.futureleader.Objects.User;
 import me.solo_team.futureleader.R;
 import me.solo_team.futureleader.stuff.Utils;
@@ -59,11 +62,14 @@ public class ProfileFragment extends Fragment {
     ProfileInfoGrid grid;
     LinkedHashMap<String, String> notAddedItems = new LinkedHashMap<>();
     Button button;
+    Button postals;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         requireActivity().invalidateOptionsMenu();
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
+        root.findViewById(R.id.profile_open_chat).setVisibility(View.GONE);
+        postals = root.findViewById(R.id.postals_btn);
         tableLayout = root.findViewById(R.id.profile_table_layout);
         grid = new ProfileInfoGrid(tableLayout, root.getContext(), inflater, container);
         Button achivement_btn = root.findViewById(R.id.achiviment_btn);
@@ -72,7 +78,6 @@ public class ProfileFragment extends Fragment {
         name = root.findViewById(R.id.profile_name);
         description = root.findViewById(R.id.profile_description);
         button = root.findViewById(R.id.profile_add_field_btn);
-
         Constants.currentUser = Constants.user;
 
         if(Constants.user.mentors.size()!=0){
@@ -111,6 +116,45 @@ public class ProfileFragment extends Fragment {
                 });
             }
         }else mentors.setVisibility(View.GONE);
+
+        postals.setOnClickListener(v -> {
+            API.getPostals(new ApiListener() {
+                Dialog d;
+                @Override
+                public void onError(JSONObject json) throws JSONException {
+                    d.dismiss();
+                    createNotification(picture,json.getString("message"));
+                }
+
+                @Override
+                public void inProcess() {
+                    d = openWaiter(requireContext());
+                }
+
+                @Override
+                public void onSuccess(JSONObject json) throws JSONException {
+                    JSONArray post = json.getJSONArray("postals");
+                    List<Postal> postals = new ArrayList<>();
+                    for(int i=0;i<post.length();i++){
+                        postals.add(new Postal(post.getJSONObject(i)));
+                    }
+
+                    requireActivity().runOnUiThread(()->{
+                        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+                        View view = getLayoutInflater().inflate(R.layout.profile_alert_dialog_list, null);
+                        builder.setView(view);
+                        RecyclerView recyclerView = view.findViewById(R.id.achivement_list);
+
+                        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                        RecycleAdapter2 adapter = new RecycleAdapter2(requireActivity().getSupportFragmentManager(), null,postals, requireActivity());
+                        recyclerView.setAdapter(adapter);
+                        builder.show();
+                    });
+                    d.dismiss();
+                }
+            },new CustomString("token",Constants.user.token),new CustomString("user_id",Constants.user.id));
+        });
+
         description.setOnClickListener(v -> {
             AlertDialog.Builder obj = new AlertDialog.Builder(requireContext());
             obj.setTitle("изменить статус?" );

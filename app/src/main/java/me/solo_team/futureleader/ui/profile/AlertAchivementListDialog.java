@@ -65,9 +65,9 @@ public class AlertAchivementListDialog extends AppCompatDialogFragment {
         System.out.println("ACHIEVEMTNS SIZE: "+Constants.currentUser.achievements.size());
         RecycleAdapter2 adapter;
         if(activity==null)
-            adapter = new RecycleAdapter2(fragmentManager, Constants.currentUser.achievements,fragment,layouInflater);
+            adapter = new RecycleAdapter2(fragmentManager, Constants.currentUser.achievements,null,fragment,layouInflater);
         else
-            adapter = new RecycleAdapter2(fragmentManager, Constants.currentUser.achievements,activity );
+            adapter = new RecycleAdapter2(fragmentManager, Constants.currentUser.achievements,null,activity );
 
         recyclerView.setAdapter(adapter);
 
